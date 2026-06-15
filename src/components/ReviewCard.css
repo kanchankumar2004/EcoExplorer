@@ -1,0 +1,140 @@
+.review-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.2rem;
+  border-left: 4px solid #7fd051;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 2;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.review-author {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.author-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2d5016;
+  margin: 0;
+}
+
+.review-date {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.review-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background-color: #f5fdf0;
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  border: 1px solid #e2f7d8;
+}
+
+.stars {
+  font-size: 0.9rem;
+}
+
+.rating-value {
+  font-weight: bold;
+  color: #2d5016;
+  font-size: 0.85rem;
+}
+
+.review-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.review-text {
+  color: #555;
+  line-height: 1.5;
+  font-size: 0.9rem;
+  margin: 0 0 0.8rem 0;
+}
+
+.review-images {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.review-image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.review-image:hover {
+  transform: scale(1.05);
+}
+
+.review-footer {
+  padding-top: 0.8rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.helpful-btn {
+  background-color: #f8f9fa;
+  color: #555;
+  border: 1px solid #e9ecef;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.helpful-btn:hover {
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+}
+
+.helpful-btn.active {
+  background-color: #7fd051;
+  color: white;
+  border-color: #7fd051;
+}
+
+@media (max-width: 768px) {
+  .review-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .review-images {
+    gap: 0.5rem;
+  }
+
+  .review-image {
+    width: 50px;
+    height: 50px;
+  }
+}

@@ -1,0 +1,45 @@
+.homestays-page {
+  width: 100%;
+  display: block;
+  position: relative;
+  z-index: 0;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.homestays-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.homestays-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.homestays-header h2 {
+  font-size: 2rem;
+  color: #2d5016;
+}
+
+.homestays-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .homestays-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .homestays-grid {
+    grid-template-columns: 1fr;
+  }
+}
