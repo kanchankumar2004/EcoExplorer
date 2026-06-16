@@ -1,87 +1,55 @@
+@reference "../index.css";
+
 .search-container {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  margin: 2rem auto;
-  max-width: 1000px;
-  position: relative;
-  z-index: 2;
-  width: 100%;
+  @apply bg-white p-8 rounded-lg shadow-md my-8 mx-auto max-w-[1000px] relative z-[2] w-full;
 }
 
 .search-bar {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  @apply flex flex-col gap-6;
 }
 
 .search-input-wrapper {
-  display: flex;
-  gap: 1rem;
+  @apply flex gap-4;
 }
 
 .search-input {
-  flex: 1;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 5px;
-  transition: border-color 0.3s ease;
+  @apply flex-1 py-3 px-4 text-base border-2 border-[#e0e0e0] rounded transition-colors duration-300;
 }
 
 .search-input:focus {
-  outline: none;
-  border-color: #7fd051;
+  @apply outline-none border-[#7fd051];
 }
 
 .search-btn {
-  padding: 0.75rem 2rem;
-  background-color: #7fd051;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 1rem;
+  @apply py-3 px-8 bg-[#7fd051] text-white border-none rounded font-bold cursor-pointer transition-colors duration-300 text-base;
 }
 
 .search-btn:hover {
-  background-color: #6fc93e;
+  @apply bg-[#6fc93e];
 }
 
 .search-filters {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
+  @apply grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-4;
 }
 
 .filter-select {
-  padding: 0.75rem 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 5px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: border-color 0.3s ease;
-  background-color: white;
+  @apply py-3 px-4 border-2 border-[#e0e0e0] rounded text-base cursor-pointer transition-colors duration-300 bg-white;
 }
 
 .filter-select:focus {
-  outline: none;
-  border-color: #7fd051;
+  @apply outline-none border-[#7fd051];
 }
 
 @media (max-width: 768px) {
   .search-container {
-    padding: 1rem;
+    @apply p-4;
   }
 
   .search-input-wrapper {
-    flex-direction: column;
+    @apply flex-col;
   }
 
   .search-filters {
-    grid-template-columns: 1fr;
+    @apply grid-cols-1;
   }
 }

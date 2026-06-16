@@ -1,156 +1,107 @@
+@reference "../index.css";
+
 .booking-card {
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  display: grid;
-  grid-template-columns: 250px 1fr;
-  margin-bottom: 1.5rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-  z-index: 2;
+  @apply bg-white rounded-lg overflow-hidden shadow-md grid grid-cols-[250px_1fr] mb-6 transition-all duration-300 relative z-[2];
 }
 
 .booking-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  @apply -translate-y-1 shadow-lg;
 }
 
 .booking-image {
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
-  background-color: #f0f0f0;
+  @apply w-full h-[200px] overflow-hidden bg-[#f0f0f0];
 }
 
 .booking-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  @apply w-full h-full object-cover;
 }
 
 .booking-content {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  @apply p-6 flex flex-col justify-between;
 }
 
 .booking-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
+  @apply flex justify-between items-start mb-4;
 }
 
 .booking-name {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #2d5016;
-  margin: 0 0 0.3rem 0;
+  @apply text-[1.3rem] font-bold text-[#2d5016] m-0 mb-[0.3rem];
 }
 
 .booking-type {
-  font-size: 0.9rem;
-  color: #666;
-  margin: 0;
+  @apply text-sm text-[#666] m-0;
 }
 
 .booking-status {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  white-space: nowrap;
+  @apply py-2 px-4 rounded-[20px] text-xs font-bold whitespace-nowrap;
 }
 
 .status-confirmed {
-  background-color: #c8e6c9;
-  color: #2e7d32;
+  @apply bg-[#c8e6c9] text-[#2e7d32];
 }
 
 .status-pending {
-  background-color: #fff9c4;
-  color: #f57f17;
+  @apply bg-[#fff9c4] text-[#f57f17];
 }
 
 .status-cancelled {
-  background-color: #ffcdd2;
-  color: #c62828;
+  @apply bg-[#ffcdd2] text-[#c62828];
 }
 
 .booking-details {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  margin-bottom: 1rem;
+  @apply grid grid-cols-2 gap-4 mb-4;
 }
 
 .detail-item {
-  display: flex;
-  flex-direction: column;
+  @apply flex flex-col;
 }
 
 .detail-label {
-  font-size: 0.85rem;
-  color: #999;
-  margin-bottom: 0.3rem;
+  @apply text-[0.85rem] text-[#999] mb-[0.3rem];
 }
 
 .detail-value {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #333;
+  @apply text-base font-medium text-[#333];
 }
 
 .booking-actions {
-  display: flex;
-  gap: 1rem;
+  @apply flex gap-4;
 }
 
 .btn {
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
-  font-size: 0.9rem;
+  @apply py-[0.6rem] px-[1.2rem] border-none rounded cursor-pointer font-medium transition-colors duration-300 text-sm;
 }
 
 .btn-primary {
-  background-color: #7fd051;
-  color: white;
+  @apply bg-[#7fd051] text-white;
 }
 
 .btn-primary:hover {
-  background-color: #6fc93e;
+  @apply bg-[#6fc93e];
 }
 
 .btn-secondary {
-  background-color: #f0f0f0;
-  color: #333;
-  border: 1px solid #ddd;
+  @apply bg-[#f0f0f0] text-[#333] border border-[#ddd];
 }
 
 .btn-secondary:hover {
-  background-color: #e0e0e0;
+  @apply bg-[#e0e0e0];
 }
 
 @media (max-width: 768px) {
   .booking-card {
-    grid-template-columns: 1fr;
+    @apply grid-cols-1;
   }
 
   .booking-image {
-    height: 150px;
+    @apply h-[150px];
   }
 
   .booking-details {
-    grid-template-columns: 1fr;
+    @apply grid-cols-1;
   }
 
   .booking-actions {
-    flex-direction: column;
+    @apply flex-col;
   }
 }

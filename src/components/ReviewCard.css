@@ -1,140 +1,87 @@
+@reference "../index.css";
+
 .review-card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.2rem;
-  border-left: 4px solid #7fd051;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  position: relative;
-  z-index: 2;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  @apply bg-white rounded-xl p-[1.2rem] border-l-4 border-l-[#7fd051] mb-4 shadow relative z-[2] transition-all duration-200;
 }
 
 .review-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  @apply -translate-y-[2px] shadow-md;
 }
 
 .review-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.8rem;
+  @apply flex justify-between items-center mb-3;
 }
 
 .review-author {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  @apply flex items-center gap-2;
 }
 
 .author-name {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #2d5016;
-  margin: 0;
+  @apply text-base font-semibold text-[#2d5016] m-0;
 }
 
 .review-date {
-  font-size: 0.8rem;
-  color: #888;
+  @apply text-xs text-[#888];
 }
 
 .review-rating {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  background-color: #f5fdf0;
-  padding: 0.25rem 0.6rem;
-  border-radius: 12px;
-  border: 1px solid #e2f7d8;
+  @apply flex items-center gap-1 bg-[#f5fdf0] py-[0.25rem] px-[0.6rem] rounded-xl border border-[#e2f7d8];
 }
 
 .stars {
-  font-size: 0.9rem;
+  @apply text-[0.9rem];
 }
 
 .rating-value {
-  font-weight: bold;
-  color: #2d5016;
-  font-size: 0.85rem;
+  @apply font-bold text-[#2d5016] text-[0.85rem];
 }
 
 .review-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #333;
-  margin: 0 0 0.5rem 0;
+  @apply text-base font-semibold text-[#333] m-0 mb-2;
 }
 
 .review-text {
-  color: #555;
-  line-height: 1.5;
-  font-size: 0.9rem;
-  margin: 0 0 0.8rem 0;
+  @apply text-[#555] leading-normal text-sm m-0 mb-3;
 }
 
 .review-images {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.8rem;
-  flex-wrap: wrap;
+  @apply flex gap-2 mb-3 flex-wrap;
 }
 
 .review-image {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
+  @apply w-[60px] h-[60px] object-cover rounded cursor-pointer transition-transform duration-300;
 }
 
 .review-image:hover {
-  transform: scale(1.05);
+  @apply scale-105;
 }
 
 .review-footer {
-  padding-top: 0.8rem;
-  border-top: 1px solid #f0f0f0;
+  @apply pt-3 border-t border-[#f0f0f0];
 }
 
 .helpful-btn {
-  background-color: #f8f9fa;
-  color: #555;
-  border: 1px solid #e9ecef;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  @apply bg-[#f8f9fa] text-[#555] border border-[#e9ecef] py-[0.4rem] px-[0.8rem] rounded-[20px] cursor-pointer text-xs font-medium transition-all duration-200;
 }
 
 .helpful-btn:hover {
-  background-color: #e9ecef;
-  border-color: #dee2e6;
+  @apply bg-[#e9ecef] border-[#dee2e6];
 }
 
 .helpful-btn.active {
-  background-color: #7fd051;
-  color: white;
-  border-color: #7fd051;
+  @apply bg-[#7fd051] text-white border-[#7fd051];
 }
 
 @media (max-width: 768px) {
   .review-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    @apply flex-col items-start gap-2;
   }
 
   .review-images {
-    gap: 0.5rem;
+    @apply gap-2;
   }
 
   .review-image {
-    width: 50px;
-    height: 50px;
+    @apply w-[50px] h-[50px];
   }
 }

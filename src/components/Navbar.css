@@ -1,132 +1,79 @@
+@reference "../index.css";
+
 .navbar {
-  background-color: #2d5016;
-  padding: 1rem 0;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
+  @apply bg-[#2d5016] py-4 px-0 sticky top-0 z-[1000] shadow w-full;
 }
 
 .nav-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  @apply max-w-[1200px] mx-auto px-5 flex justify-between items-center;
 }
 
 .nav-logo {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #fff;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  @apply text-[1.8rem] font-bold text-white no-underline flex items-center gap-2;
 }
 
 .nav-logo:hover {
-  color: #7fd051;
+  @apply text-[#7fd051];
 }
 
 .nav-menu {
-  display: flex;
-  list-style: none;
-  gap: 2rem;
-  align-items: center;
+  @apply flex list-none gap-8 items-center;
 }
 
 .nav-item {
-  margin: 0;
+  @apply m-0;
 }
 
 .nav-link {
-  color: #fff;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
+  @apply text-white no-underline font-medium transition-colors duration-300 bg-none border-none cursor-pointer text-base;
 }
 
 .nav-link:hover {
-  color: #7fd051;
+  @apply text-[#7fd051];
 }
 
 .nav-link-btn {
-  background-color: #7fd051;
-  color: #2d5016;
-  padding: 0.5rem 1.5rem;
-  border-radius: 5px;
-  font-weight: bold;
+  @apply bg-[#7fd051] text-[#2d5016] py-2 px-6 rounded font-bold;
 }
 
 .nav-link-btn:hover {
-  background-color: #6fc93e;
-  color: #fff;
+  @apply bg-[#6fc93e] text-white;
 }
 
 .logout-btn {
-  background-color: #ff6b6b;
-  color: white;
-  padding: 0.5rem 1.5rem;
-  border-radius: 5px;
-  font-weight: bold;
+  @apply bg-[#ff6b6b] text-white py-2 px-6 rounded font-bold;
 }
 
 .logout-btn:hover {
-  background-color: #ff5252;
+  @apply bg-[#ff5252];
 }
 
 .hamburger {
-  display: none;
-  flex-direction: column;
-  background: none;
-  border: none;
-  cursor: pointer;
+  @apply hidden flex-col bg-none border-none cursor-pointer;
 }
 
 .hamburger span {
-  width: 25px;
-  height: 3px;
-  background-color: #fff;
-  margin: 5px 0;
-  transition: 0.3s;
+  @apply w-[25px] h-[3px] bg-white my-[5px] mx-0 transition-all duration-300;
 }
 
 @media (max-width: 768px) {
   .hamburger {
-    display: flex;
+    @apply flex;
   }
 
   .nav-menu {
-    position: absolute;
-    top: 70px;
-    left: 0;
-    flex-direction: column;
-    background-color: #2d5016;
-    width: 100%;
-    text-align: center;
-    gap: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
+    @apply absolute top-[70px] left-0 flex-col bg-[#2d5016] w-full text-center gap-0 max-h-0 overflow-hidden transition-[max-height] duration-300 ease-in-out;
   }
 
   .nav-menu.active {
-    max-height: 500px;
+    @apply max-h-[500px];
   }
 
   .nav-item {
-    padding: 1rem 0;
-    border-bottom: 1px solid #1a3009;
+    @apply py-4 px-0 border-b border-[#1a3009];
   }
 
   .nav-link-btn {
-    margin: 0.5rem;
+    @apply m-2;
   }
 }

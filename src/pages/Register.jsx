@@ -26,33 +26,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword) {
-      setError('Please fill in all fields');
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
-      return;
-    }
-
-    try {
-      await register({
-        name: formData.fullName,
-        email: formData.email,
-        password: formData.password,
-        userType: formData.userType
-      });
-      navigate('/');
-    } catch (err) {
-      setError('Registration failed. Please try again.');
-    }
+    setError('Registration is currently disabled.');
   };
 
   return (

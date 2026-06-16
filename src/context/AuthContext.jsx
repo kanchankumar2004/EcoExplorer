@@ -3,38 +3,16 @@ import React, { useState, useContext, createContext } from 'react';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [user, setUser] = useState({ name: 'Eco Traveler', email: 'traveler@ecoexplorer.com', id: '123', userType: 'traveler' });
   const [loading, setLoading] = useState(false);
 
   const login = async (email, password) => {
-    setLoading(true);
-    try {
-      // Simulated login - replace with actual API call
-      setTimeout(() => {
-        setIsAuthenticated(true);
-        setUser({ email, id: '123', name: 'User' });
-        setLoading(false);
-      }, 1000);
-    } catch (error) {
-      setLoading(false);
-      console.error('Login failed:', error);
-    }
+    // Backend login disabled
   };
 
   const register = async (userData) => {
-    setLoading(true);
-    try {
-      // Simulated registration - replace with actual API call
-      setTimeout(() => {
-        setIsAuthenticated(true);
-        setUser(userData);
-        setLoading(false);
-      }, 1000);
-    } catch (error) {
-      setLoading(false);
-      console.error('Registration failed:', error);
-    }
+    // Backend registration disabled
   };
 
   const logout = () => {

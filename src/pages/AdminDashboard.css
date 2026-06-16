@@ -1,194 +1,131 @@
+@reference "../index.css";
+
 .admin-dashboard {
-  width: 100%;
-  display: block;
-  position: relative;
-  z-index: 0;
-  background-color: #f5f5f5;
-  min-height: 100vh;
+  @apply w-full block relative z-0 bg-[#f5f5f5] min-h-screen;
 }
 
 .dashboard-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 20px;
-  position: relative;
-  z-index: 1;
+  @apply max-w-[1200px] mx-auto py-8 px-5 relative z-10;
 }
 
 .dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
+  @apply flex justify-between items-center mb-8;
 }
 
 .dashboard-header h1 {
-  font-size: 2.2rem;
-  color: #2d5016;
+  @apply text-[2.2rem] text-[#2d5016];
 }
 
 .header-actions {
-  display: flex;
-  gap: 1rem;
+  @apply flex gap-4;
 }
 
 .search-box {
-  padding: 0.8rem 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 5px;
-  width: 300px;
-  font-size: 1rem;
+  @apply py-3 px-4 border-2 border-[#e0e0e0] rounded w-[300px] text-base;
 }
 
 .search-box:focus {
-  outline: none;
-  border-color: #7fd051;
+  @apply outline-none border-[#7fd051];
 }
 
 .stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+  @apply grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6 mb-12;
 }
 
 .stat-card {
-  background: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+  @apply bg-white rounded-lg p-6 shadow-md flex items-center gap-4;
 }
 
 .stat-icon {
-  font-size: 2.5rem;
+  @apply text-[2.5rem];
 }
 
 .stat-content {
-  flex: 1;
+  @apply flex-1;
 }
 
 .stat-label {
-  color: #666;
-  margin: 0;
-  font-size: 0.9rem;
+  @apply text-[#666] m-0 text-sm;
 }
 
 .stat-value {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #2d5016;
-  margin: 0.3rem 0 0 0;
+  @apply text-[1.8rem] font-bold text-[#2d5016] mt-1 mx-0 mb-0;
 }
 
 .admin-content {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
+  @apply grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8;
 }
 
 .admin-section {
-  background: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  @apply bg-white rounded-lg p-6 shadow-md;
 }
 
 .admin-section h2 {
-  color: #2d5016;
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-  font-size: 1.5rem;
+  @apply text-[#2d5016] mt-0 mb-6 text-[1.5rem];
 }
 
 .admin-table {
-  width: 100%;
-  border-collapse: collapse;
+  @apply w-full border-collapse;
 }
 
 .admin-table thead {
-  background-color: #f0f0f0;
+  @apply bg-[#f0f0f0];
 }
 
 .admin-table th {
-  padding: 1rem;
-  text-align: left;
-  color: #333;
-  font-weight: 600;
+  @apply p-4 text-left text-[#333] font-semibold;
 }
 
 .admin-table td {
-  padding: 1rem;
-  border-top: 1px solid #e0e0e0;
+  @apply p-4 border-t border-t-[#e0e0e0];
 }
 
 .badge {
-  display: inline-block;
-  padding: 0.4rem 0.8rem;
-  border-radius: 15px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  @apply inline-block py-[0.4rem] px-[0.8rem] rounded-[15px] text-xs font-semibold;
 }
 
 .badge.active {
-  background-color: #c8e6c9;
-  color: #2e7d32;
+  @apply bg-[#c8e6c9] text-[#2e7d32];
 }
 
 .report-list {
-  list-style: none;
-  padding: 0;
+  @apply list-none p-0;
 }
 
 .report-list li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  border-bottom: 1px solid #e0e0e0;
+  @apply flex justify-between items-center p-4 border-b border-b-[#e0e0e0];
 }
 
 .report-list li:last-child {
-  border-bottom: none;
+  @apply border-b-0;
 }
 
 .report-list a {
-  color: #7fd051;
-  text-decoration: none;
-  font-weight: 500;
+  @apply text-[#7fd051] no-underline font-medium;
 }
 
 .report-list a:hover {
-  text-decoration: underline;
+  @apply underline;
 }
 
 .report-count {
-  background-color: #ff6b6b;
-  color: white;
-  padding: 0.4rem 0.8rem;
-  border-radius: 15px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  @apply bg-[#ff6b6b] text-white py-[0.4rem] px-[0.8rem] rounded-[15px] text-xs font-semibold;
 }
 
 @media (max-width: 768px) {
   .dashboard-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+    @apply flex-col items-start gap-4;
   }
 
   .search-box {
-    width: 100%;
+    @apply w-full;
   }
 
   .admin-content {
-    grid-template-columns: 1fr;
+    @apply grid-cols-1;
   }
 
   .stats-grid {
-    grid-template-columns: 1fr;
+    @apply grid-cols-1;
   }
 }

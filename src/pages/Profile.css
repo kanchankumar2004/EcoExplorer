@@ -1,276 +1,164 @@
+@reference "../index.css";
+
 .profile-page {
-  width: 100%;
-  display: block;
-  position: relative;
-  z-index: 0;
-  background-color: #f5f5f5;
-  min-height: 100vh;
+  @apply w-full block relative z-0 bg-[#f5f5f5] min-h-screen;
 }
 
 .profile-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 20px;
-  position: relative;
-  z-index: 1;
+  @apply max-w-[1200px] mx-auto py-8 px-5 relative z-10;
 }
 
 .profile-header {
-  margin-bottom: 2rem;
+  @apply mb-8;
 }
 
 .profile-header h1 {
-  font-size: 2.2rem;
-  color: #2d5016;
+  @apply text-[2.2rem] text-[#2d5016];
 }
 
 .profile-content {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
+  @apply grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8;
 }
 
 .profile-card {
-  background: white;
-  border-radius: 8px;
-  padding: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 2rem;
+  @apply bg-white rounded-lg p-8 shadow-md grid grid-cols-1 md:grid-cols-[150px_1fr] gap-8;
 }
 
 .profile-avatar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+  @apply flex flex-col items-center gap-4;
 }
 
 .avatar {
-  width: 150px;
-  height: 150px;
+  @apply w-[150px] h-[150px] rounded-full flex items-center justify-center text-6xl text-white;
   background: linear-gradient(135deg, #2d5016, #7fd051);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 4rem;
-  color: white;
 }
 
 .avatar-btn {
-  padding: 0.6rem 1.2rem;
-  background-color: #7fd051;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
+  @apply py-[0.6rem] px-[1.2rem] bg-[#7fd051] text-white border-none rounded cursor-pointer text-sm font-medium transition-colors duration-300;
 }
 
 .avatar-btn:hover {
-  background-color: #6fc93e;
+  @apply bg-[#6fc93e];
 }
 
 .profile-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  @apply flex flex-col justify-between;
 }
 
 .info-section h2 {
-  font-size: 1.8rem;
-  color: #2d5016;
-  margin: 0 0 0.5rem 0;
+  @apply text-[1.8rem] text-[#2d5016] m-0 mb-2;
 }
 
 .info-section .email {
-  color: #666;
-  margin: 0;
+  @apply text-[#666] m-0;
 }
 
 .info-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin: 1.5rem 0;
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6 my-6 mx-0;
 }
 
 .info-item {
-  display: flex;
-  flex-direction: column;
+  @apply flex flex-col;
 }
 
 .info-item .label {
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 0.3rem;
+  @apply font-semibold text-[#333] mb-1;
 }
 
 .info-item .value {
-  color: #666;
+  @apply text-[#666];
 }
 
 .edit-btn {
-  padding: 0.8rem 2rem;
-  background-color: #7fd051;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 600;
-  align-self: flex-start;
+  @apply py-[0.8rem] px-8 bg-[#7fd051] text-white border-none rounded cursor-pointer font-semibold self-start transition-colors duration-300;
 }
 
 .edit-btn:hover {
-  background-color: #6fc93e;
+  @apply bg-[#6fc93e];
 }
 
 .edit-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  @apply flex flex-col gap-4;
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
+  @apply flex flex-col;
 }
 
 .form-group label {
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 0.5rem;
+  @apply font-semibold text-[#333] mb-2;
 }
 
 .form-group input,
 .form-group textarea {
-  padding: 0.8rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 0.95rem;
-  font-family: inherit;
+  @apply p-[0.8rem] border border-[#ddd] rounded text-[0.95rem] font-sans;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
-  outline: none;
-  border-color: #7fd051;
+  @apply outline-none border-[#7fd051];
 }
 
 .form-actions {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+  @apply flex gap-4 mt-4;
 }
 
 .save-btn {
-  padding: 0.8rem 1.5rem;
-  background-color: #7fd051;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 600;
+  @apply py-[0.8rem] px-[1.5rem] bg-[#7fd051] text-white border-none rounded cursor-pointer font-semibold transition-colors duration-300;
 }
 
 .save-btn:hover {
-  background-color: #6fc93e;
+  @apply bg-[#6fc93e];
 }
 
 .cancel-btn {
-  padding: 0.8rem 1.5rem;
-  background-color: #f0f0f0;
-  color: #333;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 600;
+  @apply py-[0.8rem] px-[1.5rem] bg-[#f0f0f0] text-[#333] border border-[#ddd] rounded cursor-pointer font-semibold transition-colors duration-300;
 }
 
 .cancel-btn:hover {
-  background-color: #e0e0e0;
+  @apply bg-[#e0e0e0];
 }
 
 .profile-sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  @apply flex flex-col gap-6;
 }
 
 .sidebar-card {
-  background: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  @apply bg-white rounded-lg p-6 shadow-md;
 }
 
 .sidebar-card h3 {
-  color: #2d5016;
-  margin-top: 0;
-  margin-bottom: 1rem;
+  @apply text-[#2d5016] mt-0 mb-4;
 }
 
 .sidebar-card ul {
-  list-style: none;
-  padding: 0;
+  @apply list-none p-0;
 }
 
 .sidebar-card li {
-  margin-bottom: 0.8rem;
+  @apply mb-3;
 }
 
 .sidebar-card a {
-  color: #7fd051;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
+  @apply text-[#7fd051] no-underline font-medium transition-colors duration-300;
 }
 
 .sidebar-card a:hover {
-  color: #6fc93e;
+  @apply text-[#6fc93e];
 }
 
 .action-btn {
-  display: block;
-  width: 100%;
-  padding: 0.8rem;
-  background-color: #f0f0f0;
-  color: #333;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 500;
-  margin-bottom: 0.8rem;
-  transition: all 0.3s ease;
+  @apply block w-full p-[0.8rem] bg-[#f0f0f0] text-[#333] border border-[#ddd] rounded cursor-pointer font-medium mb-3 transition-all duration-300;
 }
 
 .action-btn:hover {
-  background-color: #e0e0e0;
+  @apply bg-[#e0e0e0];
 }
 
 .action-btn.logout-btn {
-  background-color: #ff6b6b;
-  color: white;
-  border-color: #ff6b6b;
+  @apply bg-[#ff6b6b] text-white border-[#ff6b6b];
 }
 
 .action-btn.logout-btn:hover {
-  background-color: #ff5252;
-}
-
-@media (max-width: 768px) {
-  .profile-content {
-    grid-template-columns: 1fr;
-  }
-
-  .profile-card {
-    grid-template-columns: 1fr;
-  }
-
-  .info-grid {
-    grid-template-columns: 1fr;
-  }
+  @apply bg-[#ff5252];
 }

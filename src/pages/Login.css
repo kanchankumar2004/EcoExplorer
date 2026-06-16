@@ -1,233 +1,136 @@
+@reference "../index.css";
+
 .login-page {
-  min-height: 100vh;
+  @apply min-h-screen flex items-center justify-center p-8 relative z-0 w-full;
   background: linear-gradient(135deg, #2d5016 0%, #7fd051 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  position: relative;
-  z-index: 0;
-  width: 100%;
 }
 
 .login-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  max-width: 1200px;
-  width: 100%;
+  @apply grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[1200px] w-full;
 }
 
 .login-card {
-  background: white;
-  border-radius: 12px;
-  padding: 3rem;
+  @apply bg-white rounded-xl p-8 md:p-12;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
 .login-header {
-  text-align: center;
-  margin-bottom: 2rem;
+  @apply text-center mb-8;
 }
 
 .login-header h1 {
-  font-size: 1.8rem;
-  color: #2d5016;
-  margin: 0 0 1rem 0;
+  @apply text-[1.8rem] text-[#2d5016] m-0 mb-4;
 }
 
 .login-header h2 {
-  font-size: 1.5rem;
-  color: #333;
-  margin: 0 0 0.5rem 0;
+  @apply text-2xl text-[#333] m-0 mb-2;
 }
 
 .login-header p {
-  color: #666;
-  margin: 0;
+  @apply text-[#666] m-0;
 }
 
 .error-message {
-  background-color: #ffebee;
-  color: #c62828;
-  padding: 1rem;
-  border-radius: 5px;
-  margin-bottom: 1rem;
-  text-align: center;
+  @apply bg-[#ffebee] text-[#c62828] p-4 rounded mb-4 text-center;
 }
 
 .login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  @apply flex flex-col gap-6;
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
+  @apply flex flex-col;
 }
 
 .form-group label {
-  font-size: 0.95rem;
-  color: #333;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
+  @apply text-[0.95rem] text-[#333] mb-2 font-medium;
 }
 
 .form-group input {
-  padding: 0.8rem 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 5px;
-  font-size: 0.95rem;
-  transition: border-color 0.3s ease;
+  @apply py-3 px-4 border-2 border-[#e0e0e0] rounded text-[0.95rem] transition-colors duration-300 ease-in-out;
 }
 
 .form-group input:focus {
-  outline: none;
-  border-color: #7fd051;
+  @apply outline-none border-[#7fd051];
 }
 
 .form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
+  @apply flex justify-between items-center text-sm;
 }
 
 .remember-me {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  color: #666;
+  @apply flex items-center gap-2 cursor-pointer text-[#666];
 }
 
 .remember-me input {
-  cursor: pointer;
+  @apply cursor-pointer;
 }
 
 .forgot-password {
-  color: #7fd051;
-  text-decoration: none;
-  transition: color 0.3s ease;
+  @apply text-[#7fd051] no-underline transition-colors duration-300;
 }
 
 .forgot-password:hover {
-  color: #6fc93e;
+  @apply text-[#6fc93e];
 }
 
 .login-btn {
-  padding: 0.8rem;
-  background-color: #7fd051;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  @apply p-3 bg-[#7fd051] text-white border-none rounded text-base font-bold cursor-pointer transition-colors duration-300;
 }
 
 .login-btn:hover:not(:disabled) {
-  background-color: #6fc93e;
+  @apply bg-[#6fc93e];
 }
 
 .login-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  @apply opacity-60 cursor-not-allowed;
 }
 
 .login-footer {
-  text-align: center;
-  color: #666;
-  font-size: 0.9rem;
+  @apply text-center text-[#666] text-sm;
 }
 
 .register-link {
-  color: #7fd051;
-  text-decoration: none;
-  margin-left: 0.3rem;
-  font-weight: bold;
-  transition: color 0.3s ease;
+  @apply text-[#7fd051] no-underline ml-1 font-bold transition-colors duration-300;
 }
 
 .register-link:hover {
-  color: #6fc93e;
+  @apply text-[#6fc93e];
 }
 
 .social-login {
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid #e0e0e0;
-  text-align: center;
+  @apply mt-8 pt-4 border-t border-[#e0e0e0] text-center;
 }
 
 .social-login p {
-  color: #999;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
+  @apply text-[#999] text-sm mb-4;
 }
 
 .social-buttons {
-  display: flex;
-  gap: 1rem;
+  @apply flex gap-4;
 }
 
 .social-btn {
-  flex: 1;
-  padding: 0.6rem;
-  border: 1px solid #e0e0e0;
-  background-color: #f9f9f9;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s ease;
+  @apply flex-1 py-2 px-3 border border-[#e0e0e0] bg-[#f9f9f9] rounded cursor-pointer font-medium transition-all duration-300;
 }
 
 .social-btn:hover {
-  border-color: #7fd051;
-  background-color: #fff;
+  @apply border-[#7fd051] bg-white;
 }
 
 .login-benefits {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
+  @apply bg-white rounded-xl p-8 text-[#333] order-first md:order-none;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-  color: #333;
 }
 
 .login-benefits h3 {
-  color: #2d5016;
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-  font-size: 1.3rem;
+  @apply text-[#2d5016] mt-0 mb-6 text-[1.3rem];
 }
 
 .login-benefits ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  @apply list-none p-0 flex flex-col gap-4;
 }
 
 .login-benefits li {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: #666;
-}
-
-@media (max-width: 768px) {
-  .login-container {
-    grid-template-columns: 1fr;
-  }
-
-  .login-card {
-    padding: 2rem;
-  }
-
-  .login-benefits {
-    order: -1;
-  }
+  @apply text-[0.95rem] leading-[1.6] text-[#666];
 }

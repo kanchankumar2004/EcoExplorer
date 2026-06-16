@@ -23,16 +23,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.email || !formData.password) {
-      setError('Please fill in all fields');
-      return;
-    }
-    try {
-      await login(formData.email, formData.password);
-      navigate('/');
-    } catch (err) {
-      setError('Login failed. Please try again.');
-    }
+    setError('Login is currently disabled.');
   };
 
   return (

@@ -1,93 +1,59 @@
+@reference "../index.css";
+
 .favorites-page {
-  width: 100%;
-  display: block;
-  position: relative;
-  z-index: 0;
-  background-color: #f5f5f5;
-  min-height: 100vh;
+  @apply w-full block relative z-0 bg-[#f5f5f5] min-h-screen;
 }
 
 .favorites-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 20px;
-  position: relative;
-  z-index: 1;
+  @apply max-w-[1200px] mx-auto py-8 px-5 relative z-10;
 }
 
 .favorites-header {
-  margin-bottom: 3rem;
+  @apply mb-12;
 }
 
 .favorites-header h1 {
-  font-size: 2.2rem;
-  color: #2d5016;
-  margin: 0 0 0.5rem 0;
+  @apply text-[2.2rem] text-[#2d5016] m-0 mb-2;
 }
 
 .favorites-header p {
-  color: #666;
-  font-size: 1.1rem;
+  @apply text-[#666] text-[1.1rem];
 }
 
 .favorites-section {
-  margin-bottom: 3rem;
+  @apply mb-12;
 }
 
 .favorites-section h2 {
-  font-size: 1.8rem;
-  color: #2d5016;
-  margin-bottom: 1.5rem;
-  border-bottom: 2px solid #7fd051;
-  padding-bottom: 0.5rem;
+  @apply text-[1.8rem] text-[#2d5016] mb-6 border-b-2 border-b-[#7fd051] pb-2;
 }
 
 .favorites-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
+  @apply grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-8;
 }
 
 .favorite-item {
-  position: relative;
+  @apply relative;
 }
 
 .remove-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: #ff6b6b;
-  color: white;
-  border: none;
-  padding: 0.6rem 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.9rem;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 10;
+  @apply absolute top-[10px] right-[10px] bg-[#ff6b6b] text-white border-none py-[0.6rem] px-4 rounded cursor-pointer font-semibold text-sm opacity-0 transition-opacity duration-300 z-10;
 }
 
 .favorite-item:hover .remove-btn {
-  opacity: 1;
+  @apply opacity-100;
 }
 
 .empty-state {
-  text-align: center;
-  padding: 4rem 2rem;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  color: #666;
+  @apply text-center py-16 px-8 bg-[#f9f9f9] rounded-lg text-[#666];
 }
 
 .empty-state p {
-  font-size: 1.1rem;
-  margin: 1rem 0;
+  @apply text-[1.1rem] my-4 mx-0;
 }
 
 @media (max-width: 768px) {
   .favorites-grid {
-    grid-template-columns: 1fr;
+    @apply grid-cols-1;
   }
 }
