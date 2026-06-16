@@ -31,7 +31,7 @@ A modern, fully functional frontend for an eco-tourism and homestay booking plat
 - **MapView** - Location map placeholder
 
 ### Styling
-- Pure CSS (No Tailwind)
+- Pure CSS 
 - Responsive design (Mobile-first approach)
 - Beautiful color scheme (Green theme: #2d5016, #7fd051)
 - Smooth animations and transitions
@@ -210,23 +210,9 @@ npm run preview  # Preview production build locally
 9. **SEO Optimization** - Add meta tags and structured data
 10. **Testing** - Add unit and integration tests
 
-## 📝 Notes
-
-- All components use vanilla CSS (No CSS frameworks)
-- Mobile-first responsive design approach
-- Semantic HTML structure
-- Accessibility considered in design
-- Mock data used throughout for demonstration
-
 ## 🤝 Contributing
 
 Feel free to customize and extend this project according to your needs.
-
-## 📄 License
-
-This project is open source and available under the MIT License.
-
----
 
 **Happy Coding! 🌍🌿**
 
