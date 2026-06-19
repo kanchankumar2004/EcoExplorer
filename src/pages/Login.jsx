@@ -23,7 +23,13 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('Login is currently disabled.');
+    setError('');
+    const success = await login(formData.email, formData.password);
+    if (success) {
+      navigate('/');
+    } else {
+      setError('Invalid email or password. You can try: traveler@ecoexplorer.com / password');
+    }
   };
 
   return (

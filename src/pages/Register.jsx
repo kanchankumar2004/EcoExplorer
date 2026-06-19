@@ -26,7 +26,22 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('Registration is currently disabled.');
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+    setError('');
+    const success = await register({
+      name: formData.fullName,
+      email: formData.email,
+      password: formData.password,
+      userType: formData.userType
+    });
+    if (success) {
+      navigate('/login');
+    } else {
+      setError('Email already exists. Try logging in or using a different email.');
+    }
   };
 
   return (

@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import './Profile.css';
 
 const Profile = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, updateProfile } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     name: user?.name || 'John Doe',
@@ -22,7 +22,11 @@ const Profile = () => {
     }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    await updateProfile({
+      name: profileData.name,
+      email: profileData.email
+    });
     setIsEditing(false);
     console.log('Profile updated:', profileData);
   };

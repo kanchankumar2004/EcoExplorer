@@ -61,7 +61,7 @@ export const destinations = [
     image: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=600&q=80',
     images: [
       'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1598977123418-45f04b615993?auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=300&q=80',
       'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=300&q=80'
     ],
     rating: 4.7,
@@ -195,8 +195,8 @@ export const destinations = [
     name: 'Corbett Eco-Zone',
     image: 'https://images.unsplash.com/photo-1561731216-c3a4d99437d5?auto=format&fit=crop&w=600&q=80',
     images: [
-      'https://images.unsplash.com/photo-1549558549-415fa4fc37eb?auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1532547511301-ad7f4028d6ec?auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1615959189197-484004337a85?auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1575550959106-5a7defe28b56?auto=format&fit=crop&w=300&q=80',
       'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=300&q=80'
     ],
     rating: 4.7,
@@ -240,7 +240,7 @@ export const destinations = [
     name: 'Binsar Sanctuary',
     image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80',
     images: [
-      'https://images.unsplash.com/photo-1504893524553-ac55fce698be?auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=300&q=80',
       'https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&w=300&q=80',
       'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=300&q=80'
     ],
@@ -308,6 +308,28 @@ export const homestays = [
       'Heating system',
       'Hot water supply'
     ],
+    localExperiences: [
+      {
+        id: '1-aipan',
+        title: 'Kumaoni Aipan Art Workshop',
+        price: 15,
+        duration: '2 Hours',
+        instructor: 'Mamta Bisht',
+        category: 'Art & Culture',
+        image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=400&q=80',
+        description: 'Learn the sacred, centuries-old geometric red-and-white ritual folk art of Kumaon painted on thresholds and courtyards.'
+      },
+      {
+        id: '1-stargaze',
+        title: 'High-Altitude Stargazing Session',
+        price: 25,
+        duration: '3 Hours',
+        instructor: 'Deepak Joshi (Astronomer)',
+        category: 'Nature',
+        image: 'https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?auto=format&fit=crop&w=400&q=80',
+        description: 'Observe distant galaxies, planets, and constellations through a high-powered telescope in Kanatal\'s crystal-clear night skies.'
+      }
+    ],
     reviewsList: [
       {
         id: 1,
@@ -354,6 +376,28 @@ export const homestays = [
       'Village trails access',
       'Cooking utensils'
     ],
+    localExperiences: [
+      {
+        id: '2-cooking',
+        title: 'Traditional Kumaoni Cooking Masterclass',
+        price: 20,
+        duration: '3 Hours',
+        instructor: 'Damyanti Devi',
+        category: 'Culinary',
+        image: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=400&q=80',
+        description: 'Cook authentic Pahadi delicacies like Dubuk (lentil paste stew), Bhatt ki Churkani, and Madua (finger millet) rotis over a traditional mud stove.'
+      },
+      {
+        id: '2-pottery',
+        title: 'Earthen Pottery Experience',
+        price: 12,
+        duration: '1.5 Hours',
+        instructor: 'Harish Lal',
+        category: 'Crafts',
+        image: 'https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=400&q=80',
+        description: 'Try your hand at a potter\'s wheel using local Almora clay and learn to bake traditional cups and bowls.'
+      }
+    ],
     reviewsList: [
       {
         id: 1,
@@ -389,6 +433,28 @@ export const homestays = [
       'Shared eco-bathrooms',
       'Rafting booking counter',
       'Bonfire pit'
+    ],
+    localExperiences: [
+      {
+        id: '3-yoga',
+        title: 'Ganges Bank Sunrise Yoga & Meditation',
+        price: 18,
+        duration: '2 Hours',
+        instructor: 'Swami Anand',
+        category: 'Wellness',
+        image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=400&q=80',
+        description: 'Harmonize your mind and body with traditional Hatha yoga practices, pranayama, and meditation at sunrise beside the flowing Ganges.'
+      },
+      {
+        id: '3-kayak',
+        title: 'Guided River Kayaking Lessons',
+        price: 35,
+        duration: '3 Hours',
+        instructor: 'Vikram Singh',
+        category: 'Adventure',
+        image: 'https://images.unsplash.com/photo-1471079688237-3ac9a55f1d6f?auto=format&fit=crop&w=400&q=80',
+        description: 'Learn fundamental paddling techniques and self-rescue basics in calm waters before testing minor rapids in Shivpuri.'
+      }
     ],
     reviewsList: [
       {
@@ -426,6 +492,28 @@ export const homestays = [
       'Direct forest paths',
       'Local tea collection'
     ],
+    localExperiences: [
+      {
+        id: '4-pinehike',
+        title: 'Forest Bathing & Pine Resining Walk',
+        price: 15,
+        duration: '2.5 Hours',
+        instructor: 'Govind Negi (Naturalist)',
+        category: 'Nature',
+        image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=400&q=80',
+        description: 'Immerse yourself in the scent of pine forest trails, spot Himalayan birdlife, and learn about historical pine resin harvesting techniques.'
+      },
+      {
+        id: '4-woodfired',
+        title: 'Traditional Wood-Fired Bread Baking',
+        price: 16,
+        duration: '2 Hours',
+        instructor: 'Champa Negi',
+        category: 'Culinary',
+        image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80',
+        description: 'Learn to bake traditional wheat breads and local Kumaoni sweet patties in a stone, wood-fired outdoor oven.'
+      }
+    ],
     reviewsList: [
       {
         id: 1,
@@ -462,6 +550,28 @@ export const homestays = [
       'Bird watching balcony',
       'Local trekking guide booking'
     ],
+    localExperiences: [
+      {
+        id: '5-woolens',
+        title: 'Bhotia Weaving & Woolcraft Workshop',
+        price: 22,
+        duration: '3 Hours',
+        instructor: 'Savitri Devi',
+        category: 'Crafts',
+        image: 'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&w=400&q=80',
+        description: 'Discover the traditional woolcraft of the local Bhotia tribe, learn about sheep shearing, wool-spinning, and loom-weaving beautiful carpets.'
+      },
+      {
+        id: '5-birding',
+        title: 'Monal & Himalayan Birding Expedition',
+        price: 30,
+        duration: '4 Hours',
+        instructor: 'Devendra Singh',
+        category: 'Nature',
+        image: 'https://images.unsplash.com/photo-1549488344-1f9b8d2bd1f3?auto=format&fit=crop&w=400&q=80',
+        description: 'Track the majestic, colorful Himalayan Monal (state bird of Uttarakhand) and other rare high-altitude species through rhododendron forests.'
+      }
+    ],
     reviewsList: [
       {
         id: 1,
@@ -497,6 +607,28 @@ export const homestays = [
       'Local bicycles',
       'Scenic view veranda',
       'Home-cooked dining hall'
+    ],
+    localExperiences: [
+      {
+        id: '6-jam',
+        title: 'Organic Plum & Apricot Jam Making',
+        price: 18,
+        duration: '2 Hours',
+        instructor: 'Preeti Shah',
+        category: 'Culinary',
+        image: 'https://images.unsplash.com/photo-1590004953392-5aba2e72269a?auto=format&fit=crop&w=400&q=80',
+        description: 'Harvest organic stone fruits directly from our orchards and learn the family recipe for cooking, preserving, and bottling organic jams.'
+      },
+      {
+        id: '6-beekeeping',
+        title: 'Apiculture & Pahadi Honey Harvesting',
+        price: 20,
+        duration: '2 Hours',
+        instructor: 'Ramesh Shah',
+        category: 'Nature',
+        image: 'https://images.unsplash.com/photo-1473081556163-2a17de81fc97?auto=format&fit=crop&w=400&q=80',
+        description: 'Put on a safety suit and inspect beehives, learn about regional flora that shapes the unique bitter-sweet taste of local wildflower honey.'
+      }
     ],
     reviewsList: [
       {

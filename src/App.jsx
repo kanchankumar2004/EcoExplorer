@@ -20,7 +20,8 @@ import AdminDashboard from './pages/AdminDashboard';
 
 // Private Route Component
 const PrivateRoute = ({ children }) => {
-  return children;
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
 function AppContent() {
