@@ -1,8 +1,12 @@
 @reference "../index.css";
 
 .register-page {
-  @apply min-h-screen flex items-center justify-center p-8 relative z-0 w-full;
+  @apply min-h-screen flex items-center justify-center p-8 relative z-0 w-full transition-all duration-300;
   background: linear-gradient(135deg, #2d5016 0%, #7fd051 100%);
+}
+
+.dark .register-page {
+  background: linear-gradient(135deg, #0a0f0a 0%, #121c11 100%);
 }
 
 .register-container {
@@ -10,8 +14,12 @@
 }
 
 .register-card {
-  @apply bg-white rounded-xl p-8 md:p-12;
+  @apply bg-bg-secondary rounded-xl p-8 md:p-12 transition-all duration-300;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.dark .register-card {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
 }
 
 .register-header {
@@ -19,15 +27,15 @@
 }
 
 .register-header h1 {
-  @apply text-[1.8rem] text-[#2d5016] m-0 mb-4;
+  @apply text-[1.8rem] text-text-title m-0 mb-4 transition-colors duration-300;
 }
 
 .register-header h2 {
-  @apply text-2xl text-[#333] m-0 mb-2;
+  @apply text-2xl text-text-primary m-0 mb-2 transition-colors duration-300;
 }
 
 .register-header p {
-  @apply text-[#666] m-0;
+  @apply text-text-secondary m-0 transition-colors duration-300;
 }
 
 .error-message {
@@ -43,17 +51,17 @@
 }
 
 .form-group label {
-  @apply text-[0.95rem] text-[#333] mb-2 font-medium;
+  @apply text-[0.95rem] text-text-primary mb-2 font-medium transition-colors duration-300;
 }
 
 .form-group input,
 .form-group select {
-  @apply py-3 px-4 border-2 border-[#e0e0e0] rounded text-[0.95rem] transition-colors duration-300 ease-in-out;
+  @apply py-3 px-4 border-2 border-border-color bg-bg-tertiary text-text-primary rounded text-[0.95rem] transition-all duration-300 ease-in-out;
 }
 
 .form-group input:focus,
 .form-group select:focus {
-  @apply outline-none border-[#7fd051];
+  @apply outline-none border-[#7fd051] bg-bg-secondary;
 }
 
 .terms {
@@ -65,7 +73,7 @@
 }
 
 .terms label {
-  @apply cursor-pointer text-[#666];
+  @apply cursor-pointer text-text-secondary transition-colors duration-300;
 }
 
 .register-btn {
@@ -81,7 +89,7 @@
 }
 
 .register-footer {
-  @apply text-center text-[#666] text-sm mt-6;
+  @apply text-center text-text-secondary text-sm mt-6 transition-colors duration-300;
 }
 
 .login-link {
@@ -93,12 +101,16 @@
 }
 
 .register-benefits {
-  @apply bg-white rounded-xl p-8 text-[#333] order-first md:order-none;
+  @apply bg-bg-secondary rounded-xl p-8 text-text-primary order-first md:order-none transition-all duration-300;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
+.dark .register-benefits {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
 .register-benefits h3 {
-  @apply text-[#2d5016] mt-0 mb-6 text-[1.3rem];
+  @apply text-text-title mt-0 mb-6 text-[1.3rem] transition-colors duration-300;
 }
 
 .register-benefits ul {
@@ -106,7 +118,7 @@
 }
 
 .register-benefits li {
-  @apply text-[0.95rem] leading-[1.6] text-[#666];
+  @apply text-[0.95rem] leading-[1.6] text-text-secondary transition-colors duration-300;
 }
 
 @media (max-width: 768px) {

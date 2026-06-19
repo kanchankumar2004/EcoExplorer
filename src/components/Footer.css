@@ -1,7 +1,7 @@
 @reference "../index.css";
 
 .footer {
-  @apply bg-[#2d5016] text-white py-12 px-0 pb-4 mt-auto relative z-[50] w-full;
+  @apply bg-[#2d5016] dark:bg-[#0c120c] text-white py-12 px-0 pb-4 mt-auto relative z-[50] w-full transition-colors duration-300;
 }
 
 .footer-container {
@@ -37,7 +37,7 @@
 }
 
 .footer-bottom {
-  @apply text-center pt-4 border-t border-[#1a3009] text-[#999];
+  @apply text-center pt-4 border-t border-[#1a3009] dark:border-border-color text-[#999] transition-colors duration-300;
 }
 
 @media (max-width: 768px) {

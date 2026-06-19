@@ -3,7 +3,7 @@
 /* Premium Travel Planner CSS */
 
 .travel-planner {
-  @apply pb-16 bg-[#f7f9fc] min-h-screen;
+  @apply pb-16 bg-bg-primary min-h-screen transition-colors duration-300;
 }
 
 .planner-container {
@@ -12,7 +12,7 @@
 
 /* Glassmorphic Cards */
 .planner-glass-card {
-  @apply bg-white/85 backdrop-blur-md border border-[#7fd051]/20 rounded-[20px] p-10 shadow mb-10 transition-all duration-300;
+  @apply bg-bg-secondary/85 backdrop-blur-md border border-[#7fd051]/20 rounded-[20px] p-10 shadow mb-10 transition-all duration-300;
 }
 
 .planner-glass-card:hover {
@@ -24,7 +24,7 @@
 }
 
 .section-header h2 {
-  @apply text-[2.2rem] mb-2 font-bold flex items-center justify-center gap-3 text-[#2c3e50];
+  @apply text-[2.2rem] mb-2 font-bold flex items-center justify-center gap-3 text-text-title-secondary transition-colors duration-300;
   font-family: 'Outfit', sans-serif;
 }
 
@@ -33,7 +33,7 @@
 }
 
 .section-header p {
-  @apply text-[#7f8c8d] text-[1.1rem];
+  @apply text-text-secondary text-[1.1rem] transition-colors duration-300;
 }
 
 /* Forms & Inputs */
@@ -50,7 +50,7 @@
 }
 
 .form-group label {
-  @apply font-semibold text-[#34495e] text-[0.95rem] flex items-center gap-2;
+  @apply font-semibold text-text-primary text-[0.95rem] flex items-center gap-2 transition-colors duration-300;
 }
 
 .form-group label i {
@@ -64,7 +64,7 @@
 .input-with-icon input,
 .form-group select,
 .form-group input {
-  @apply w-full py-3 px-4 border-2 border-[#e2e8f0] rounded-xl text-base bg-white text-[#2d3748] transition-all duration-300;
+  @apply w-full py-3 px-4 border-2 border-border-color rounded-xl text-base bg-bg-tertiary text-text-primary transition-all duration-300;
   font-family: 'Outfit', sans-serif;
 }
 
@@ -75,17 +75,17 @@
 .input-with-icon input:focus,
 .form-group select:focus,
 .form-group input:focus {
-  @apply outline-none border-[#7fd051] bg-white shadow-[0_0_0_4px_rgba(127,208,81,0.15)];
+  @apply outline-none border-[#7fd051] bg-bg-secondary shadow-[0_0_0_4px_rgba(127,208,81,0.15)];
 }
 
 .input-icon-span {
-  @apply absolute right-4 text-[#a0aec0] pointer-events-none;
+  @apply absolute right-4 text-text-muted pointer-events-none transition-colors duration-300;
 }
 
 /* Transport Mode */
 .transport-section h3,
 .destinations-section h3 {
-  @apply text-[1.4rem] text-[#2c3e50] mb-4 font-bold flex items-center gap-2;
+  @apply text-[1.4rem] text-text-title-secondary mb-4 font-bold flex items-center gap-2 transition-colors duration-300;
   font-family: 'Outfit', sans-serif;
 }
 
@@ -94,7 +94,7 @@
 }
 
 .transport-card {
-  @apply border-2 border-[#e2e8f0] rounded-2xl p-6 text-center cursor-pointer bg-white relative transition-all duration-300;
+  @apply border-2 border-border-color rounded-2xl p-6 text-center cursor-pointer bg-bg-secondary relative transition-all duration-300;
 }
 
 .transport-card:hover {
@@ -110,11 +110,11 @@
 }
 
 .transport-card h4 {
-  @apply text-[1.15rem] text-[#2d3748] mb-[0.4rem] font-semibold;
+  @apply text-[1.15rem] text-text-primary mb-[0.4rem] font-semibold transition-colors duration-300;
 }
 
 .transport-card p {
-  @apply text-[0.85rem] text-[#718096] leading-normal;
+  @apply text-[0.85rem] text-text-secondary leading-normal transition-colors duration-300;
 }
 
 .selected-check {
@@ -165,11 +165,11 @@
 }
 
 .loading-status-text {
-  @apply text-xl text-[#2d3748] font-semibold mt-4;
+  @apply text-xl text-text-primary font-semibold mt-4 transition-colors duration-300;
 }
 
 .sub-text {
-  @apply text-[#718096] text-[0.95rem] mt-2;
+  @apply text-text-secondary text-[0.95rem] mt-2 transition-colors duration-300;
 }
 
 /* Errors */
@@ -184,11 +184,11 @@
 }
 
 .reset-btn {
-  @apply bg-white text-[#4a5568] border-[1.5px] border-[#cbd5e0] rounded-xl py-[10px] px-5 font-semibold cursor-pointer flex items-center gap-2 transition-all duration-250 text-[0.95rem];
+  @apply bg-bg-tertiary text-text-primary border-[1.5px] border-border-color rounded-xl py-[10px] px-5 font-semibold cursor-pointer flex items-center gap-2 transition-all duration-300 text-[0.95rem];
 }
 
 .reset-btn:hover {
-  @apply border-[#4a5568] bg-[#f7fafc];
+  @apply border-border-color-strong bg-bg-primary;
 }
 
 .download-btn-top {
@@ -207,7 +207,7 @@
 }
 
 .column-title {
-  @apply text-2xl text-[#2c3e50] mb-8 font-bold flex items-center gap-[0.6rem];
+  @apply text-2xl text-text-title-secondary mb-8 font-bold flex items-center gap-[0.6rem] transition-colors duration-300;
   font-family: 'Outfit', sans-serif;
 }
 
@@ -217,7 +217,7 @@
 
 /* Timeline Layout */
 .timeline-path {
-  @apply relative pl-5 border-l-[3px] border-dashed border-[#e2e8f0] ml-5 flex flex-col gap-6;
+  @apply relative pl-5 border-l-[3px] border-dashed border-border-color ml-5 flex flex-col gap-6 transition-colors duration-300;
 }
 
 .timeline-item {
@@ -225,7 +225,7 @@
 }
 
 .timeline-leg {
-  @apply absolute -top-9 -left-5 flex flex-col gap-[0.15rem] text-xs text-[#718096] font-medium bg-[#f7f9fc] py-1 px-[10px] rounded-[20px] border border-[#e2e8f0] z-[5];
+  @apply absolute -top-9 -left-5 flex flex-col gap-[0.15rem] text-xs text-text-secondary font-medium bg-bg-primary py-1 px-[10px] rounded-[20px] border border-border-color z-[5] transition-all duration-300;
 }
 
 .timeline-leg i {
@@ -233,7 +233,7 @@
 }
 
 .timeline-node {
-  @apply bg-white rounded-2xl border border-[#e2e8f0] p-6 shadow-[0_4px_15px_rgba(0,0,0,0.02)] transition-colors duration-300;
+  @apply bg-bg-secondary rounded-2xl border border-border-color p-6 shadow-[0_4px_15px_rgba(0,0,0,0.02)] transition-colors duration-300;
 }
 
 .timeline-node:hover {
@@ -241,7 +241,7 @@
 }
 
 .node-marker {
-  @apply absolute -left-[38px] top-[15px] w-8 h-8 rounded-full text-white flex items-center justify-center font-bold text-[0.95rem] border-4 border-[#f7f9fc] shadow-[0_4px_10px_rgba(127,208,81,0.3)] z-10;
+  @apply absolute -left-[38px] top-[15px] w-8 h-8 rounded-full text-white flex items-center justify-center font-bold text-[0.95rem] border-4 border-bg-primary shadow-[0_4px_10px_rgba(127,208,81,0.3)] z-10 transition-all duration-300;
   background: linear-gradient(135deg, #7fd051 0%, #6fc93e 100%);
 }
 
@@ -250,7 +250,7 @@
 }
 
 .node-header h4 {
-  @apply text-[1.35rem] text-[#2d3748] m-0 font-bold;
+  @apply text-[1.35rem] text-text-primary m-0 font-bold transition-colors duration-300;
   font-family: 'Outfit', sans-serif;
 }
 
@@ -264,24 +264,24 @@
 
 /* Node Venues (Foursquare Recommendations) */
 .node-venues {
-  @apply border-t border-[#edf2f7] pt-4;
+  @apply border-t border-border-color pt-4 transition-colors duration-300;
 }
 
 .venue-tabs {
-  @apply flex gap-2 mb-4 bg-[#f7fafc] p-1 rounded-lg;
+  @apply flex gap-2 mb-4 bg-bg-tertiary p-1 rounded-lg transition-colors duration-300;
 }
 
 .venue-tab-btn {
-  @apply flex-1 bg-none border-none py-2 px-3 text-xs font-semibold text-[#718096] rounded-md cursor-pointer transition-all duration-200;
+  @apply flex-1 bg-none border-none py-2 px-3 text-xs font-semibold text-text-secondary rounded-md cursor-pointer transition-all duration-300;
   font-family: 'Outfit', sans-serif;
 }
 
 .venue-tab-btn:hover {
-  @apply text-[#2d3748] border-transparent;
+  @apply text-text-primary border-transparent;
 }
 
 .venue-tab-btn.active {
-  @apply bg-white text-[#7fd051] shadow-sm;
+  @apply bg-bg-secondary text-[#7fd051] shadow-sm;
 }
 
 .venue-list {
@@ -289,19 +289,19 @@
 }
 
 .venue-list-item {
-  @apply flex flex-col bg-[#f8fafc] rounded-lg py-2 px-3 text-sm border-l-[3px] border-l-[#cbd5e0] relative;
+  @apply flex flex-col bg-bg-tertiary rounded-lg py-2 px-3 text-sm border-l-[3px] border-l-border-color-strong relative transition-all duration-300;
 }
 
 .venue-list-item:hover {
-  @apply border-l-[#7fd051] bg-[#f1f5f9];
+  @apply border-l-[#7fd051] bg-bg-primary;
 }
 
 .venue-name {
-  @apply font-semibold text-[#2d3748];
+  @apply font-semibold text-text-primary transition-colors duration-300;
 }
 
 .venue-cat {
-  @apply text-xs text-[#718096] mt-[2px];
+  @apply text-xs text-text-secondary mt-[2px] transition-colors duration-300;
 }
 
 .venue-rating {
@@ -326,12 +326,12 @@
 .metrics-card h3,
 .breakdown-card h3,
 .fuel-card h3 {
-  @apply text-[1.3rem] text-[#2d3748] mb-6 font-bold flex items-center gap-2 border-b-2 border-[#edf2f7] pb-[0.8rem];
+  @apply text-[1.3rem] text-text-primary mb-6 font-bold flex items-center gap-2 border-b-2 border-border-color pb-[0.8rem] transition-all duration-300;
   font-family: 'Outfit', sans-serif;
 }
 
 .metric-row {
-  @apply flex justify-between py-[10px] px-0 border-b border-b-[#f7fafc] text-[0.95rem];
+  @apply flex justify-between py-[10px] px-0 border-b border-b-border-color text-[0.95rem] transition-colors duration-300;
 }
 
 .metric-row:last-child {
@@ -339,11 +339,11 @@
 }
 
 .metric-label {
-  @apply text-[#718096] font-medium;
+  @apply text-text-secondary font-medium transition-colors duration-300;
 }
 
 .metric-val {
-  @apply text-[#2d3748] font-semibold;
+  @apply text-text-primary font-semibold transition-colors duration-300;
 }
 
 .metric-row.highlight {
@@ -351,7 +351,7 @@
 }
 
 .metric-row.highlight .metric-label {
-  @apply text-[#2c3e50] font-semibold;
+  @apply text-text-title-secondary font-semibold transition-colors duration-300;
 }
 
 .metric-row.highlight .metric-val {
@@ -381,7 +381,7 @@
 
 /* Fuel costs design */
 .fuel-footnote {
-  @apply text-xs text-[#a0aec0] mt-4 leading-normal;
+  @apply text-xs text-text-muted mt-4 leading-normal transition-colors duration-300;
 }
 
 /* MODAL STYLING */
@@ -391,7 +391,7 @@
 }
 
 .fuel-modal-content {
-  @apply bg-white rounded-2xl max-w-[440px] w-[90%] shadow-lg overflow-hidden;
+  @apply bg-bg-secondary rounded-2xl max-w-[440px] w-[90%] shadow-lg overflow-hidden border border-border-color transition-colors duration-300;
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -418,7 +418,7 @@
 }
 
 .modal-form p {
-  @apply text-[#718096] text-sm;
+  @apply text-text-secondary text-sm transition-colors duration-300;
 }
 
 .modal-actions {
@@ -426,11 +426,11 @@
 }
 
 .btn-cancel {
-  @apply bg-[#e2e8f0] text-[#4a5568] border-none rounded-lg py-[10px] px-[18px] cursor-pointer font-semibold transition-colors duration-200;
+  @apply bg-bg-tertiary text-text-primary border-none rounded-lg py-[10px] px-[18px] cursor-pointer font-semibold transition-all duration-300;
 }
 
 .btn-cancel:hover {
-  @apply bg-[#cbd5e0];
+  @apply bg-bg-primary;
 }
 
 .btn-confirm {
@@ -501,17 +501,17 @@
 
 /* Mode Selector Toggle Styles */
 .planner-mode-toggle {
-  @apply flex justify-center gap-4 mb-10 bg-white/70 backdrop-blur-md p-2 rounded-2xl border border-[#7fd051]/20 w-fit mx-auto shadow-sm;
+  @apply flex justify-center gap-4 mb-10 bg-bg-secondary/70 backdrop-blur-md p-2 rounded-2xl border border-[#7fd051]/20 w-fit mx-auto shadow-sm transition-colors duration-300;
 }
 
 .mode-toggle-btn {
-  @apply bg-none border-none py-3 px-6 font-semibold text-[#718096] rounded-xl cursor-pointer flex items-center gap-2 transition-all duration-300;
+  @apply bg-none border-none py-3 px-6 font-semibold text-text-secondary rounded-xl cursor-pointer flex items-center gap-2 transition-all duration-300;
   font-family: 'Outfit', sans-serif;
   font-size: 1rem;
 }
 
 .mode-toggle-btn:hover {
-  @apply text-[#2d3748] bg-black/[0.02];
+  @apply text-text-primary bg-bg-primary;
 }
 
 .mode-toggle-btn.active {
@@ -524,11 +524,11 @@
 }
 
 .chat-tips-card {
-  @apply p-8 bg-white/85 backdrop-blur-md rounded-[20px] border border-[#7fd051]/20 shadow-md;
+  @apply p-8 bg-bg-secondary/85 backdrop-blur-md rounded-[20px] border border-[#7fd051]/20 shadow-md transition-colors duration-300;
 }
 
 .chat-tips-card h3 {
-  @apply text-[1.35rem] text-[#2c3e50] mb-6 font-bold border-b border-[#edf2f7] pb-3 flex items-center gap-2;
+  @apply text-[1.35rem] text-text-title-secondary mb-6 font-bold border-b border-border-color pb-3 flex items-center gap-2 transition-colors duration-300;
   font-family: 'Outfit', sans-serif;
 }
 
@@ -537,7 +537,7 @@
 }
 
 .chat-tips-card li {
-  @apply text-[#4a5568] py-2 px-0 pl-6 relative text-[0.95rem] leading-normal text-left;
+  @apply text-text-primary py-2 px-0 pl-6 relative text-[0.95rem] leading-normal text-left transition-colors duration-300;
 }
 
 .chat-tips-card li:before {

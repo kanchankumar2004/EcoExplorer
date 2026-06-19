@@ -1,7 +1,7 @@
 @reference "../index.css";
 
 .profile-page {
-  @apply w-full block relative z-0 bg-[#f5f5f5] min-h-screen;
+  @apply w-full block relative z-0 bg-bg-primary min-h-screen transition-colors duration-300;
 }
 
 .profile-container {
@@ -13,7 +13,7 @@
 }
 
 .profile-header h1 {
-  @apply text-[2.2rem] text-[#2d5016];
+  @apply text-[2.2rem] text-text-title transition-colors duration-300;
 }
 
 .profile-content {
@@ -21,7 +21,7 @@
 }
 
 .profile-card {
-  @apply bg-white rounded-lg p-8 shadow-md grid grid-cols-1 md:grid-cols-[150px_1fr] gap-8;
+  @apply bg-bg-secondary rounded-lg p-8 shadow-md grid grid-cols-1 md:grid-cols-[150px_1fr] gap-8 transition-colors duration-300;
 }
 
 .profile-avatar {
@@ -46,11 +46,11 @@
 }
 
 .info-section h2 {
-  @apply text-[1.8rem] text-[#2d5016] m-0 mb-2;
+  @apply text-[1.8rem] text-text-title m-0 mb-2 transition-colors duration-300;
 }
 
 .info-section .email {
-  @apply text-[#666] m-0;
+  @apply text-text-secondary m-0 transition-colors duration-300;
 }
 
 .info-grid {
@@ -62,11 +62,11 @@
 }
 
 .info-item .label {
-  @apply font-semibold text-[#333] mb-1;
+  @apply font-semibold text-text-primary mb-1 transition-colors duration-300;
 }
 
 .info-item .value {
-  @apply text-[#666];
+  @apply text-text-secondary transition-colors duration-300;
 }
 
 .edit-btn {
@@ -86,17 +86,17 @@
 }
 
 .form-group label {
-  @apply font-semibold text-[#333] mb-2;
+  @apply font-semibold text-text-primary mb-2 transition-colors duration-300;
 }
 
 .form-group input,
 .form-group textarea {
-  @apply p-[0.8rem] border border-[#ddd] rounded text-[0.95rem] font-sans;
+  @apply p-[0.8rem] border border-border-color bg-bg-tertiary text-text-primary rounded text-[0.95rem] font-sans transition-all duration-300;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
-  @apply outline-none border-[#7fd051];
+  @apply outline-none border-[#7fd051] bg-bg-secondary;
 }
 
 .form-actions {
@@ -112,11 +112,11 @@
 }
 
 .cancel-btn {
-  @apply py-[0.8rem] px-[1.5rem] bg-[#f0f0f0] text-[#333] border border-[#ddd] rounded cursor-pointer font-semibold transition-colors duration-300;
+  @apply py-[0.8rem] px-[1.5rem] bg-bg-tertiary text-text-primary border border-border-color rounded cursor-pointer font-semibold transition-all duration-300;
 }
 
 .cancel-btn:hover {
-  @apply bg-[#e0e0e0];
+  @apply bg-bg-primary;
 }
 
 .profile-sidebar {
@@ -124,11 +124,11 @@
 }
 
 .sidebar-card {
-  @apply bg-white rounded-lg p-6 shadow-md;
+  @apply bg-bg-secondary rounded-lg p-6 shadow-md transition-colors duration-300;
 }
 
 .sidebar-card h3 {
-  @apply text-[#2d5016] mt-0 mb-4;
+  @apply text-text-title mt-0 mb-4 transition-colors duration-300;
 }
 
 .sidebar-card ul {
@@ -148,11 +148,11 @@
 }
 
 .action-btn {
-  @apply block w-full p-[0.8rem] bg-[#f0f0f0] text-[#333] border border-[#ddd] rounded cursor-pointer font-medium mb-3 transition-all duration-300;
+  @apply block w-full p-[0.8rem] bg-bg-tertiary text-text-primary border border-border-color rounded cursor-pointer font-medium mb-3 transition-all duration-300;
 }
 
 .action-btn:hover {
-  @apply bg-[#e0e0e0];
+  @apply bg-bg-primary;
 }
 
 .action-btn.logout-btn {

@@ -1,7 +1,7 @@
 @reference "../index.css";
 
 .destination-details {
-  @apply w-full block relative z-0 bg-[#f8fbf7] min-h-screen;
+  @apply w-full block relative z-0 bg-bg-primary min-h-screen transition-colors duration-300;
 }
 
 .details-hero {
@@ -32,11 +32,11 @@
 }
 
 .favorite-btn {
-  @apply absolute top-8 right-[10%] bg-white/85 backdrop-blur-md border border-white/30 py-[0.7rem] px-[1.2rem] rounded-[30px] text-[0.95rem] font-semibold text-[#2d5016] cursor-pointer transition-all duration-300 ease-out z-[5] shadow flex items-center gap-[0.4rem];
+  @apply absolute top-8 right-[10%] bg-bg-secondary/85 backdrop-blur-md border border-border-color py-[0.7rem] px-[1.2rem] rounded-[30px] text-[0.95rem] font-semibold text-text-title cursor-pointer transition-all duration-300 ease-out z-[5] shadow flex items-center gap-[0.4rem];
 }
 
 .favorite-btn:hover {
-  @apply -translate-y-[2px] bg-white shadow-md;
+  @apply -translate-y-[2px] bg-bg-secondary shadow-md;
 }
 
 .favorite-btn.active {
@@ -52,16 +52,16 @@
 }
 
 .details-section {
-  @apply bg-white rounded-2xl p-8 shadow-[0_4px_20px_rgba(45,80,22,0.04)] border border-[#2d5016]/[0.03];
+  @apply bg-bg-secondary rounded-2xl p-8 shadow-[var(--card-shadow)] border border-border-color transition-colors duration-300;
 }
 
 .details-section h2 {
-  @apply text-2xl font-bold text-[#2d5016] mb-5 border-b-2 border-b-[#7fd051] pb-[0.6rem] inline-block;
+  @apply text-2xl font-bold text-text-title mb-5 border-b-2 border-b-[#7fd051] pb-[0.6rem] inline-block transition-colors duration-300;
   font-family: 'Outfit', 'Segoe UI', sans-serif;
 }
 
 .details-section p {
-  @apply text-[#4a5545] leading-relaxed text-base m-0;
+  @apply text-text-primary leading-relaxed text-base m-0 transition-colors duration-300;
 }
 
 .highlights-list {
@@ -69,11 +69,11 @@
 }
 
 .highlights-list li {
-  @apply text-[#4a5545] text-[0.95rem] py-[0.6rem] px-4 bg-[#f7faf6] rounded border-l-[3px] border-l-[#7fd051] font-medium transition-transform duration-200;
+  @apply text-text-primary text-[0.95rem] py-[0.6rem] px-4 bg-bg-tertiary rounded border-l-[3px] border-l-[#7fd051] font-medium transition-all duration-200;
 }
 
 .highlights-list li:hover {
-  @apply translate-x-1 bg-[#f1f7ef];
+  @apply translate-x-1 bg-bg-primary;
 }
 
 .details-sidebar {
@@ -85,28 +85,28 @@
 }
 
 .detail-booking-card {
-  @apply bg-white rounded-2xl p-8 shadow-[0_10px_30px_rgba(45,80,22,0.06)] border border-[#2d5016]/[0.04] flex flex-col gap-6;
+  @apply bg-bg-secondary rounded-2xl p-8 shadow-[var(--card-shadow-hover)] border border-border-color flex flex-col gap-6 transition-colors duration-300;
 }
 
 .price-section {
-  @apply flex items-baseline justify-between border-b border-b-[#f0f0f0] pb-[1.2rem];
+  @apply flex items-baseline justify-between border-b border-b-border-color pb-[1.2rem] transition-colors duration-300;
 }
 
 .price {
-  @apply text-[2rem] font-extrabold text-[#2d5016];
+  @apply text-[2rem] font-extrabold text-text-title transition-colors duration-300;
   font-family: 'Outfit', sans-serif;
 }
 
 .rating {
-  @apply text-[0.95rem] text-[#666] font-semibold;
+  @apply text-[0.95rem] text-text-secondary font-semibold transition-colors duration-300;
 }
 
 .amenities-section h3 {
-  @apply text-[#2d5016] text-[1.1rem] mb-[0.8rem] font-bold;
+  @apply text-text-title text-[1.1rem] mb-[0.8rem] font-bold transition-colors duration-300;
 }
 
 .amenities-section p {
-  @apply text-[#555] text-[0.95rem] my-2 mx-0 flex items-center gap-[0.4rem];
+  @apply text-text-secondary text-[0.95rem] my-2 mx-0 flex items-center gap-[0.4rem] transition-colors duration-300;
 }
 
 .book-btn {
@@ -119,19 +119,19 @@
 }
 
 .contact-btn {
-  @apply w-full p-[0.9rem] bg-[#f7faf6] text-[#2d5016] border border-[#2d5016]/15 rounded-lg text-[0.95rem] font-semibold cursor-pointer transition-all duration-200;
+  @apply w-full p-[0.9rem] bg-bg-tertiary text-text-title border border-border-color-strong rounded-lg text-[0.95rem] font-semibold cursor-pointer transition-all duration-300;
 }
 
 .contact-btn:hover {
-  @apply bg-[#f1f7ef] border-[#2d5016];
+  @apply bg-bg-primary border-border-color-strong;
 }
 
 .share-section {
-  @apply bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(45,80,22,0.06)] border border-[#2d5016]/[0.04];
+  @apply bg-bg-secondary rounded-2xl p-6 shadow-[var(--card-shadow)] border border-border-color transition-colors duration-300;
 }
 
 .share-section h3 {
-  @apply text-[#2d5016] text-[1.1rem] mb-4 font-bold;
+  @apply text-text-title text-[1.1rem] mb-4 font-bold transition-colors duration-300;
 }
 
 .share-buttons {
@@ -139,7 +139,7 @@
 }
 
 .share-btn {
-  @apply p-[0.6rem] bg-[#f7faf6] border border-[#2d5016]/[0.08] rounded font-semibold text-[0.85rem] text-[#4a5545] cursor-pointer transition-all duration-200;
+  @apply p-[0.6rem] bg-bg-tertiary border border-border-color rounded font-semibold text-[0.85rem] text-text-primary cursor-pointer transition-all duration-300;
 }
 
 .share-btn:hover {

@@ -1,7 +1,7 @@
 @reference "../index.css";
 
 .owner-dashboard {
-  @apply w-full block relative z-0 bg-[#f5f5f5] min-h-screen;
+  @apply w-full block relative z-0 bg-bg-primary min-h-screen transition-colors duration-300;
 }
 
 .dashboard-container {
@@ -13,7 +13,7 @@
 }
 
 .dashboard-header h1 {
-  @apply text-[2.2rem] text-[#2d5016];
+  @apply text-[2.2rem] text-text-title transition-colors duration-300;
 }
 
 .add-listing-btn {
@@ -29,7 +29,7 @@
 }
 
 .stat-card {
-  @apply bg-white rounded-lg p-6 shadow-md flex items-center gap-4;
+  @apply bg-bg-secondary rounded-lg p-6 shadow-md flex items-center gap-4 transition-colors duration-300;
 }
 
 .stat-icon {
@@ -41,11 +41,11 @@
 }
 
 .stat-label {
-  @apply text-[#666] m-0 text-sm;
+  @apply text-text-secondary m-0 text-sm transition-colors duration-300;
 }
 
 .stat-value {
-  @apply text-[1.8rem] font-bold text-[#2d5016] mt-1 mx-0 mb-0;
+  @apply text-[1.8rem] font-bold text-text-title mt-1 mx-0 mb-0 transition-colors duration-300;
 }
 
 .dashboard-content {
@@ -53,11 +53,11 @@
 }
 
 .section {
-  @apply bg-white rounded-lg p-6 shadow-md;
+  @apply bg-bg-secondary rounded-lg p-6 shadow-md transition-colors duration-300;
 }
 
 .section h2 {
-  @apply text-[#2d5016] mt-0 mb-6 text-[1.5rem];
+  @apply text-text-title mt-0 mb-6 text-[1.5rem] transition-colors duration-300;
 }
 
 .bookings-table {
@@ -65,15 +65,15 @@
 }
 
 .bookings-table thead {
-  @apply bg-[#f0f0f0];
+  @apply bg-bg-tertiary transition-colors duration-300;
 }
 
 .bookings-table th {
-  @apply p-4 text-left text-[#333] font-semibold;
+  @apply p-4 text-left text-text-primary font-semibold transition-colors duration-300;
 }
 
 .bookings-table td {
-  @apply p-4 border-t border-t-[#e0e0e0];
+  @apply p-4 border-t border-t-border-color transition-colors duration-300;
 }
 
 .action-link {
@@ -89,7 +89,7 @@
 }
 
 .listing-card {
-  @apply bg-[#f9f9f9] rounded-lg p-6 text-center border border-[#e0e0e0];
+  @apply bg-bg-tertiary rounded-lg p-6 text-center border border-border-color transition-colors duration-300;
 }
 
 .listing-image {
@@ -97,11 +97,11 @@
 }
 
 .listing-card h3 {
-  @apply text-[#2d5016] my-2 mx-0;
+  @apply text-text-title my-2 mx-0 transition-colors duration-300;
 }
 
 .listing-card p {
-  @apply text-[#666] my-1 mx-0 text-sm;
+  @apply text-text-secondary my-1 mx-0 text-sm transition-colors duration-300;
 }
 
 .status {

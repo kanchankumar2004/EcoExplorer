@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import './Navbar.css';
 
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -83,6 +85,11 @@ const Navbar = () => {
               </li>
             </>
           )}
+          <li className="nav-item theme-toggle-item">
+            <button className="theme-toggle-btn" onClick={toggleTheme} title="Toggle Theme" aria-label="Toggle Theme">
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
+          </li>
         </ul>
       </div>
     </nav>

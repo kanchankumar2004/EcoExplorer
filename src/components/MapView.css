@@ -1,16 +1,20 @@
 @reference "../index.css";
 
 .map-view {
-  @apply w-full rounded-lg overflow-hidden shadow bg-[#f0f0f0] relative z-[1] min-h-[300px];
+  @apply w-full rounded-lg overflow-hidden shadow bg-bg-tertiary relative z-[1] min-h-[300px] transition-colors duration-300;
 }
 
 .map-placeholder {
-  @apply w-full h-full flex items-center justify-center border-2 border-[#81c784];
+  @apply w-full h-full flex items-center justify-center border-2 border-[#81c784] dark:border-border-color transition-all duration-300;
   background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
 }
 
+.dark .map-placeholder {
+  background: linear-gradient(135deg, #121c11 0%, #0a0f0a 100%);
+}
+
 .map-content {
-  @apply text-center text-[#2d5016];
+  @apply text-center text-text-title transition-colors duration-300;
 }
 
 .map-content p {

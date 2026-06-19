@@ -1,7 +1,7 @@
 @reference "../index.css";
 
 .search-container {
-  @apply bg-white p-8 rounded-lg shadow-md my-8 mx-auto max-w-[1000px] relative z-[2] w-full;
+  @apply bg-bg-secondary p-8 rounded-lg shadow-[var(--card-shadow)] my-8 mx-auto max-w-[1000px] relative z-[2] w-full transition-colors duration-300;
 }
 
 .search-bar {
@@ -13,7 +13,7 @@
 }
 
 .search-input {
-  @apply flex-1 py-3 px-4 text-base border-2 border-[#e0e0e0] rounded transition-colors duration-300;
+  @apply flex-1 py-3 px-4 text-base border-2 border-border-color bg-bg-tertiary text-text-primary rounded transition-all duration-300;
 }
 
 .search-input:focus {
@@ -33,7 +33,7 @@
 }
 
 .filter-select {
-  @apply py-3 px-4 border-2 border-[#e0e0e0] rounded text-base cursor-pointer transition-colors duration-300 bg-white;
+  @apply py-3 px-4 border-2 border-border-color rounded text-base cursor-pointer bg-bg-tertiary text-text-primary transition-all duration-300;
 }
 
 .filter-select:focus {

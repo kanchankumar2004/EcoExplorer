@@ -1,7 +1,7 @@
 @reference "../index.css";
 
 .homestays-page {
-  @apply w-full block relative z-0 bg-[#f5f5f5] min-h-screen;
+  @apply w-full block relative z-0 bg-bg-primary min-h-screen transition-colors duration-300;
 }
 
 .homestays-container {
@@ -13,7 +13,7 @@
 }
 
 .homestays-header h2 {
-  @apply text-3xl text-[#2d5016];
+  @apply text-3xl text-text-title transition-colors duration-300;
 }
 
 .homestays-grid {

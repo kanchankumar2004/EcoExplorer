@@ -1,7 +1,7 @@
 @reference "../index.css";
 
 .booking-card {
-  @apply bg-white rounded-lg overflow-hidden shadow-md grid grid-cols-[250px_1fr] mb-6 transition-all duration-300 relative z-[2];
+  @apply bg-bg-secondary rounded-lg overflow-hidden shadow-[var(--card-shadow)] grid grid-cols-[250px_1fr] mb-6 transition-all duration-300 relative z-[2];
 }
 
 .booking-card:hover {
@@ -9,7 +9,7 @@
 }
 
 .booking-image {
-  @apply w-full h-[200px] overflow-hidden bg-[#f0f0f0];
+  @apply w-full h-[200px] overflow-hidden bg-bg-tertiary;
 }
 
 .booking-image img {
@@ -25,11 +25,11 @@
 }
 
 .booking-name {
-  @apply text-[1.3rem] font-bold text-[#2d5016] m-0 mb-[0.3rem];
+  @apply text-[1.3rem] font-bold text-text-title m-0 mb-[0.3rem] transition-colors duration-300;
 }
 
 .booking-type {
-  @apply text-sm text-[#666] m-0;
+  @apply text-sm text-text-secondary m-0 transition-colors duration-300;
 }
 
 .booking-status {
@@ -57,11 +57,11 @@
 }
 
 .detail-label {
-  @apply text-[0.85rem] text-[#999] mb-[0.3rem];
+  @apply text-[0.85rem] text-text-muted mb-[0.3rem] transition-colors duration-300;
 }
 
 .detail-value {
-  @apply text-base font-medium text-[#333];
+  @apply text-base font-medium text-text-primary transition-colors duration-300;
 }
 
 .booking-actions {
@@ -81,11 +81,11 @@
 }
 
 .btn-secondary {
-  @apply bg-[#f0f0f0] text-[#333] border border-[#ddd];
+  @apply bg-bg-tertiary text-text-primary border border-border-color;
 }
 
 .btn-secondary:hover {
-  @apply bg-[#e0e0e0];
+  @apply bg-bg-primary;
 }
 
 @media (max-width: 768px) {

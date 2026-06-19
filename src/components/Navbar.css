@@ -1,7 +1,7 @@
 @reference "../index.css";
 
 .navbar {
-  @apply bg-[#2d5016] py-4 px-0 sticky top-0 z-[1000] shadow w-full;
+  @apply bg-[#2d5016] dark:bg-[#121c11] py-4 px-0 sticky top-0 z-[1000] shadow w-full transition-colors duration-300;
 }
 
 .nav-container {
@@ -62,7 +62,7 @@
   }
 
   .nav-menu {
-    @apply absolute top-[70px] left-0 flex-col bg-[#2d5016] w-full text-center gap-0 max-h-0 overflow-hidden transition-[max-height] duration-300 ease-in-out;
+    @apply absolute top-[70px] left-0 flex-col bg-[#2d5016] dark:bg-[#121c11] w-full text-center gap-0 max-h-0 overflow-hidden transition-[max-height] duration-300 ease-in-out;
   }
 
   .nav-menu.active {
@@ -70,10 +70,23 @@
   }
 
   .nav-item {
-    @apply py-4 px-0 border-b border-[#1a3009];
+    @apply py-4 px-0 border-b border-[#1a3009] dark:border-border-color;
   }
 
   .nav-link-btn {
     @apply m-2;
+  }
+}
+
+.theme-toggle-btn {
+  @apply bg-transparent border-none text-white cursor-pointer text-xl p-2 rounded-full hover:bg-white/10 transition-colors flex items-center justify-center outline-none;
+}
+
+@media (max-width: 768px) {
+  .theme-toggle-item {
+    @apply py-4 flex justify-center;
+  }
+  .theme-toggle-btn {
+    @apply text-2xl;
   }
 }

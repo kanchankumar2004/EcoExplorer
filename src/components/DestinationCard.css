@@ -1,7 +1,7 @@
 @reference "../index.css";
 
 .destination-card {
-  @apply bg-white rounded-lg overflow-hidden shadow-md transition-all duration-300 no-underline text-inherit flex flex-col h-full relative z-[1];
+  @apply bg-bg-secondary rounded-lg overflow-hidden shadow-[var(--card-shadow)] transition-all duration-300 no-underline text-text-primary flex flex-col h-full relative z-[1];
 }
 
 .destination-card:hover {
@@ -9,7 +9,7 @@
 }
 
 .card-image-wrapper {
-  @apply relative w-full h-[200px] overflow-hidden bg-[#f0f0f0];
+  @apply relative w-full h-[200px] overflow-hidden bg-bg-tertiary;
 }
 
 .card-image {
@@ -29,11 +29,11 @@
 }
 
 .card-title {
-  @apply text-[1.3rem] font-bold m-0 mb-2 text-[#2d5016];
+  @apply text-[1.3rem] font-bold m-0 mb-2 text-text-title transition-colors duration-300;
 }
 
 .card-description {
-  @apply text-sm text-[#666] m-0 mb-4 leading-normal line-clamp-3 overflow-hidden text-ellipsis;
+  @apply text-sm text-text-secondary m-0 mb-4 leading-normal line-clamp-3 overflow-hidden text-ellipsis transition-colors duration-300;
 }
 
 .card-tags {
@@ -41,11 +41,11 @@
 }
 
 .tag {
-  @apply inline-block bg-[#f0f0f0] text-[#333] py-[0.3rem] px-[0.8rem] rounded-[15px] text-[0.75rem] font-medium;
+  @apply inline-block bg-bg-tertiary text-text-primary py-[0.3rem] px-[0.8rem] rounded-[15px] text-[0.75rem] font-medium transition-colors duration-300;
 }
 
 .card-footer {
-  @apply flex justify-between items-center pt-4 border-t border-[#e0e0e0] mt-auto;
+  @apply flex justify-between items-center pt-4 border-t border-border-color mt-auto transition-colors duration-300;
 }
 
 .card-rating {
@@ -53,11 +53,11 @@
 }
 
 .stars {
-  @apply font-bold text-[#2d5016];
+  @apply font-bold text-text-title transition-colors duration-300;
 }
 
 .reviews {
-  @apply text-[#999];
+  @apply text-text-muted transition-colors duration-300;
 }
 
 .card-price {

@@ -1,18 +1,65 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light;
-  color: rgba(0, 0, 0, 0.87);
-  background-color: #ffffff;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Theme variables - Light Mode */
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f9f9f9;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --text-title: #2d5016;
+  --text-title-secondary: #2c3e50;
+  --border-color: #e0e0e0;
+  --border-color-strong: #cbd5e0;
+  --card-shadow: 0 4px 15px rgba(45, 80, 22, 0.04);
+  --card-shadow-hover: 0 10px 30px rgba(45, 80, 22, 0.08);
+}
+
+.dark {
+  color-scheme: dark;
+  
+  /* Theme variables - Dark Mode */
+  --bg-primary: #0a0f0a; /* Premium dark forest-tinted black background */
+  --bg-secondary: #121c11; /* Dark forest green container background */
+  --bg-tertiary: #192618; /* Slightly lighter forest green */
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-title: #7fd051; /* Vibrant light green */
+  --text-title-secondary: #e2e8f0;
+  --border-color: rgba(127, 208, 81, 0.15); /* Muted green borders */
+  --border-color-strong: rgba(127, 208, 81, 0.3);
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --card-shadow-hover: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+@theme {
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-title: var(--text-title);
+  --color-text-title-secondary: var(--text-title-secondary);
+  --color-border-color: var(--border-color);
+  --color-border-color-strong: var(--border-color-strong);
 }
 
 * {
@@ -26,6 +73,7 @@ html, body {
   margin: 0;
   padding: 0;
   height: auto;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 #root {

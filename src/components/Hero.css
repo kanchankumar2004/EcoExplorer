@@ -5,7 +5,7 @@
 }
 
 .hero-overlay {
-  @apply absolute inset-0 bg-[#2d5016]/50 z-[1];
+  @apply absolute inset-0 bg-[#2d5016]/50 dark:bg-[#0a0f0a]/75 z-[1] transition-colors duration-300;
 }
 
 .hero-content {

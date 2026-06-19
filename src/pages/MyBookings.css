@@ -1,7 +1,7 @@
 @reference "../index.css";
 
 .my-bookings-page {
-  @apply w-full block relative z-0 bg-[#f5f5f5] min-h-screen;
+  @apply w-full block relative z-0 bg-bg-primary min-h-screen transition-colors duration-300;
 }
 
 .bookings-container {
@@ -13,7 +13,7 @@
 }
 
 .bookings-header h1 {
-  @apply text-[2.2rem] text-[#2d5016] m-0 mb-6;
+  @apply text-[2.2rem] text-text-title m-0 mb-6 transition-colors duration-300;
 }
 
 .filter-tabs {
@@ -21,11 +21,11 @@
 }
 
 .tab {
-  @apply py-[0.8rem] px-[1.5rem] bg-[#f0f0f0] text-[#333] border-2 border-transparent rounded cursor-pointer font-medium transition-all duration-300;
+  @apply py-[0.8rem] px-[1.5rem] bg-bg-tertiary text-text-primary border-2 border-transparent rounded cursor-pointer font-medium transition-all duration-300;
 }
 
 .tab:hover {
-  @apply bg-[#e0e0e0];
+  @apply bg-bg-primary;
 }
 
 .tab.active {
@@ -37,7 +37,7 @@
 }
 
 .empty-state {
-  @apply text-center py-16 px-8 bg-[#f9f9f9] rounded-lg text-[#666];
+  @apply text-center py-16 px-8 bg-bg-secondary rounded-lg text-text-secondary transition-colors duration-300;
 }
 
 .empty-state p {

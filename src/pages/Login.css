@@ -1,8 +1,12 @@
 @reference "../index.css";
 
 .login-page {
-  @apply min-h-screen flex items-center justify-center p-8 relative z-0 w-full;
+  @apply min-h-screen flex items-center justify-center p-8 relative z-0 w-full transition-all duration-300;
   background: linear-gradient(135deg, #2d5016 0%, #7fd051 100%);
+}
+
+.dark .login-page {
+  background: linear-gradient(135deg, #0a0f0a 0%, #121c11 100%);
 }
 
 .login-container {
@@ -10,8 +14,12 @@
 }
 
 .login-card {
-  @apply bg-white rounded-xl p-8 md:p-12;
+  @apply bg-bg-secondary rounded-xl p-8 md:p-12 transition-all duration-300;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.dark .login-card {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
 }
 
 .login-header {
@@ -19,15 +27,15 @@
 }
 
 .login-header h1 {
-  @apply text-[1.8rem] text-[#2d5016] m-0 mb-4;
+  @apply text-[1.8rem] text-text-title m-0 mb-4 transition-colors duration-300;
 }
 
 .login-header h2 {
-  @apply text-2xl text-[#333] m-0 mb-2;
+  @apply text-2xl text-text-primary m-0 mb-2 transition-colors duration-300;
 }
 
 .login-header p {
-  @apply text-[#666] m-0;
+  @apply text-text-secondary m-0 transition-colors duration-300;
 }
 
 .error-message {
@@ -43,15 +51,15 @@
 }
 
 .form-group label {
-  @apply text-[0.95rem] text-[#333] mb-2 font-medium;
+  @apply text-[0.95rem] text-text-primary mb-2 font-medium transition-colors duration-300;
 }
 
 .form-group input {
-  @apply py-3 px-4 border-2 border-[#e0e0e0] rounded text-[0.95rem] transition-colors duration-300 ease-in-out;
+  @apply py-3 px-4 border-2 border-border-color bg-bg-tertiary text-text-primary rounded text-[0.95rem] transition-all duration-300 ease-in-out;
 }
 
 .form-group input:focus {
-  @apply outline-none border-[#7fd051];
+  @apply outline-none border-[#7fd051] bg-bg-secondary;
 }
 
 .form-options {
@@ -59,7 +67,7 @@
 }
 
 .remember-me {
-  @apply flex items-center gap-2 cursor-pointer text-[#666];
+  @apply flex items-center gap-2 cursor-pointer text-text-secondary transition-colors duration-300;
 }
 
 .remember-me input {
@@ -87,7 +95,7 @@
 }
 
 .login-footer {
-  @apply text-center text-[#666] text-sm;
+  @apply text-center text-text-secondary text-sm transition-colors duration-300;
 }
 
 .register-link {
@@ -99,11 +107,11 @@
 }
 
 .social-login {
-  @apply mt-8 pt-4 border-t border-[#e0e0e0] text-center;
+  @apply mt-8 pt-4 border-t border-border-color text-center transition-colors duration-300;
 }
 
 .social-login p {
-  @apply text-[#999] text-sm mb-4;
+  @apply text-text-muted text-sm mb-4 transition-colors duration-300;
 }
 
 .social-buttons {
@@ -111,20 +119,24 @@
 }
 
 .social-btn {
-  @apply flex-1 py-2 px-3 border border-[#e0e0e0] bg-[#f9f9f9] rounded cursor-pointer font-medium transition-all duration-300;
+  @apply flex-1 py-2 px-3 border border-border-color bg-bg-tertiary text-text-primary rounded cursor-pointer font-medium transition-all duration-300;
 }
 
 .social-btn:hover {
-  @apply border-[#7fd051] bg-white;
+  @apply border-[#7fd051] bg-bg-secondary;
 }
 
 .login-benefits {
-  @apply bg-white rounded-xl p-8 text-[#333] order-first md:order-none;
+  @apply bg-bg-secondary rounded-xl p-8 text-text-primary order-first md:order-none transition-all duration-300;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
+.dark .login-benefits {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
 .login-benefits h3 {
-  @apply text-[#2d5016] mt-0 mb-6 text-[1.3rem];
+  @apply text-text-title mt-0 mb-6 text-[1.3rem] transition-colors duration-300;
 }
 
 .login-benefits ul {
@@ -132,5 +144,5 @@
 }
 
 .login-benefits li {
-  @apply text-[0.95rem] leading-[1.6] text-[#666];
+  @apply text-[0.95rem] leading-[1.6] text-text-secondary transition-colors duration-300;
 }

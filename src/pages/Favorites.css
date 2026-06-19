@@ -1,7 +1,7 @@
 @reference "../index.css";
 
 .favorites-page {
-  @apply w-full block relative z-0 bg-[#f5f5f5] min-h-screen;
+  @apply w-full block relative z-0 bg-bg-primary min-h-screen transition-colors duration-300;
 }
 
 .favorites-container {
@@ -13,11 +13,11 @@
 }
 
 .favorites-header h1 {
-  @apply text-[2.2rem] text-[#2d5016] m-0 mb-2;
+  @apply text-[2.2rem] text-text-title m-0 mb-2 transition-colors duration-300;
 }
 
 .favorites-header p {
-  @apply text-[#666] text-[1.1rem];
+  @apply text-text-secondary text-[1.1rem] transition-colors duration-300;
 }
 
 .favorites-section {
@@ -25,7 +25,7 @@
 }
 
 .favorites-section h2 {
-  @apply text-[1.8rem] text-[#2d5016] mb-6 border-b-2 border-b-[#7fd051] pb-2;
+  @apply text-[1.8rem] text-text-title mb-6 border-b-2 border-b-[#7fd051] pb-2 transition-colors duration-300;
 }
 
 .favorites-grid {
@@ -45,7 +45,7 @@
 }
 
 .empty-state {
-  @apply text-center py-16 px-8 bg-[#f9f9f9] rounded-lg text-[#666];
+  @apply text-center py-16 px-8 bg-bg-secondary rounded-lg text-text-secondary transition-colors duration-300;
 }
 
 .empty-state p {
