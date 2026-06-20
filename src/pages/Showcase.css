@@ -1,0 +1,47 @@
+@reference "../index.css";
+
+.showcase-page {
+  @apply w-full block bg-bg-primary min-h-screen transition-colors duration-300 pb-16;
+}
+
+.showcase-container {
+  @apply max-w-[1000px] mx-auto py-8 px-5 relative z-10;
+}
+
+.showcase-header {
+  @apply text-center mb-12;
+}
+
+.showcase-header h1 {
+  @apply text-[2.5rem] font-bold text-text-title mb-2 transition-colors duration-300;
+  font-family: 'Outfit', sans-serif;
+}
+
+.showcase-header p {
+  @apply text-text-secondary text-[1.1rem] transition-colors duration-300;
+}
+
+.showcase-section {
+  @apply bg-bg-secondary p-8 rounded-2xl shadow-[var(--card-shadow)] border border-border-color mb-10 transition-colors duration-300;
+}
+
+.showcase-section h2 {
+  @apply text-xl font-bold text-text-title-secondary m-0 mb-2 pb-2 border-b border-border-color transition-colors duration-300;
+  font-family: 'Outfit', sans-serif;
+}
+
+.section-desc {
+  @apply text-sm text-text-secondary mb-6 transition-colors duration-300;
+}
+
+.showcase-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-8;
+}
+
+.showcase-group h3 {
+  @apply text-sm font-semibold text-text-secondary mb-4 uppercase tracking-wider transition-colors duration-300;
+}
+
+.showcase-items {
+  @apply flex flex-wrap gap-4 items-center;
+}

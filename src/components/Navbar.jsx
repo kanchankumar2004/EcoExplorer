@@ -47,6 +47,11 @@ const Navbar = () => {
               Travel Planner
             </Link>
           </li>
+          <li className="nav-item">
+            <Link to="/showcase" className="nav-link" onClick={() => setMenuOpen(false)}>
+              Showcase
+            </Link>
+          </li>
           
           {isAuthenticated ? (
             <>

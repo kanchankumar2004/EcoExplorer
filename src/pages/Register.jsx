@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Button, Input } from '../components/ui';
 import './Register.css';
 
 const Register = () => {
@@ -57,57 +58,49 @@ const Register = () => {
           {error && <div className="error-message">{error}</div>}
 
           <form className="register-form" onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="fullName">Full Name</label>
-              <input
-                type="text"
-                id="fullName"
-                name="fullName"
-                placeholder="John Doe"
-                value={formData.fullName}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <Input
+              label="Full Name"
+              type="text"
+              id="fullName"
+              name="fullName"
+              placeholder="John Doe"
+              value={formData.fullName}
+              onChange={handleChange}
+              required
+            />
 
-            <div className="form-group">
-              <label htmlFor="email">Email Address</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="your@email.com"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <Input
+              label="Email Address"
+              type="email"
+              id="email"
+              name="email"
+              placeholder="your@email.com"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
 
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <Input
+              label="Password"
+              type="password"
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
 
-            <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
-              <input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                placeholder="••••••••"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <Input
+              label="Confirm Password"
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="••••••••"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+            />
 
             <div className="form-group">
               <label htmlFor="userType">I am a</label>
@@ -130,9 +123,9 @@ const Register = () => {
               </label>
             </div>
 
-            <button type="submit" className="register-btn" disabled={loading}>
-              {loading ? 'Creating Account...' : 'Create Account'}
-            </button>
+            <Button type="submit" className="register-btn" loading={loading}>
+              Create Account
+            </Button>
           </form>
 
           <div className="register-footer">

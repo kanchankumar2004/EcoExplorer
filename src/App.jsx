@@ -18,6 +18,7 @@ import Favorites from './pages/Favorites';
 import MyBookings from './pages/MyBookings';
 import OwnerDashboard from './pages/OwnerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import Showcase from './pages/Showcase';
 
 // Private Route Component
 const PrivateRoute = ({ children }) => {
@@ -137,6 +138,15 @@ function AppContent() {
               <AdminDashboard />
             </MainLayout>
           </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/showcase"
+        element={
+          <MainLayout>
+            <Showcase />
+          </MainLayout>
         }
       />
 

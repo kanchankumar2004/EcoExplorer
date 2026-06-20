@@ -1,0 +1,66 @@
+@reference "../../index.css";
+
+.ui-toast {
+  @apply fixed bottom-5 right-5 flex items-center gap-3 py-3.5 px-5 rounded-xl shadow-lg border text-sm max-w-[380px] z-[10000] overflow-hidden;
+  animation: ui-toast-slide-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ui-toast-icon {
+  @apply text-base flex items-center justify-center;
+}
+
+.ui-toast-message {
+  @apply font-medium text-text-primary pr-3;
+}
+
+.ui-toast-close-btn {
+  @apply bg-transparent border-none text-lg text-text-secondary cursor-pointer hover:text-text-primary transition-colors p-0.5 ml-auto flex items-center justify-center outline-none;
+}
+
+/* Progress bar inside Toast */
+.ui-toast-progress {
+  @apply absolute bottom-0 left-0 h-[3px] w-full;
+  animation: ui-toast-progress-bar linear forwards;
+}
+
+/* Toast Colorings */
+.ui-toast-success {
+  @apply bg-bg-secondary border-[#c8e6c9] dark:border-border-color;
+}
+
+.ui-toast-success .ui-toast-progress {
+  @apply bg-[#7fd051];
+}
+
+.ui-toast-error {
+  @apply bg-bg-secondary border-[#ffcdd2] dark:border-border-color;
+}
+
+.ui-toast-error .ui-toast-progress {
+  @apply bg-[#ff6b6b];
+}
+
+.ui-toast-info {
+  @apply bg-bg-secondary border-border-color;
+}
+
+.ui-toast-info .ui-toast-progress {
+  @apply bg-[#4f6ef2];
+}
+
+/* Toast Animations */
+@keyframes ui-toast-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ui-toast-progress-bar {
+  from { width: 100%; }
+  to { width: 0%; }
+}

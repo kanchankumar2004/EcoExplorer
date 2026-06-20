@@ -1,0 +1,49 @@
+@reference "../../index.css";
+
+.ui-modal-overlay {
+  @apply fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto;
+  animation: ui-modal-fade-in 0.2s ease-out;
+}
+
+.ui-modal-container {
+  @apply bg-bg-secondary rounded-2xl max-w-[500px] w-full shadow-2xl relative border border-border-color flex flex-col overflow-hidden;
+  animation: ui-modal-scale-up 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ui-modal-header {
+  @apply flex justify-between items-center py-5 px-6 border-b border-border-color bg-bg-tertiary;
+}
+
+.ui-modal-title {
+  @apply m-0 text-lg font-bold text-text-title-secondary;
+  font-family: 'Outfit', sans-serif;
+}
+
+.ui-modal-close-btn {
+  @apply bg-transparent border-none text-2xl leading-none text-text-secondary cursor-pointer hover:text-text-primary transition-colors duration-150 p-1 flex items-center justify-center outline-none;
+}
+
+.ui-modal-body {
+  @apply p-6 text-sm text-text-primary leading-relaxed overflow-y-auto max-h-[70vh];
+}
+
+.ui-modal-footer {
+  @apply flex justify-end gap-3 py-4 px-6 border-t border-border-color bg-bg-tertiary;
+}
+
+/* Modal Animations */
+@keyframes ui-modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes ui-modal-scale-up {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

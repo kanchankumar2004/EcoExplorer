@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Button, Input } from '../components/ui';
 import './Login.css';
 
 const Login = () => {
@@ -45,31 +46,27 @@ const Login = () => {
           {error && <div className="error-message">{error}</div>}
 
           <form className="login-form" onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="email">Email Address</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="your@email.com"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <Input
+              label="Email Address"
+              type="email"
+              id="email"
+              name="email"
+              placeholder="your@email.com"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
 
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <Input
+              label="Password"
+              type="password"
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
 
             <div className="form-options">
               <label className="remember-me">
@@ -79,9 +76,9 @@ const Login = () => {
               <Link to="#" className="forgot-password">Forgot password?</Link>
             </div>
 
-            <button type="submit" className="login-btn" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign In'}
-            </button>
+            <Button type="submit" className="login-btn" loading={loading}>
+              Sign In
+            </Button>
           </form>
 
           <div className="login-footer">

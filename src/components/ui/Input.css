@@ -1,0 +1,47 @@
+@reference "../../index.css";
+
+.ui-input-group {
+  @apply flex flex-col w-full gap-1.5;
+}
+
+.ui-input-label {
+  @apply text-sm font-semibold text-text-primary transition-colors duration-300;
+}
+
+.ui-input-wrapper {
+  @apply relative flex items-center w-full;
+}
+
+.ui-input-icon {
+  @apply absolute left-4 text-text-muted flex items-center justify-center pointer-events-none;
+}
+
+.ui-input-field {
+  @apply w-full py-3 px-4 border-2 border-border-color rounded-xl text-base bg-bg-tertiary text-text-primary transition-all duration-300 outline-none;
+  font-family: inherit;
+}
+
+.ui-input-field:focus {
+  @apply border-[#7fd051] bg-bg-secondary shadow-[0_0_0_4px_rgba(127,208,81,0.15)];
+}
+
+.ui-input-field:disabled {
+  @apply opacity-60 bg-bg-primary cursor-not-allowed;
+}
+
+.ui-input-with-icon {
+  @apply pl-[42px];
+}
+
+/* Error States */
+.ui-input-has-error .ui-input-field {
+  @apply border-[#ff6b6b] bg-[#ff6b6b]/5;
+}
+
+.ui-input-has-error .ui-input-field:focus {
+  @apply border-[#ff5252] shadow-[0_0_0_4px_rgba(255,107,107,0.15)];
+}
+
+.ui-input-error-msg {
+  @apply text-xs text-[#ff6b6b] font-medium mt-0.5;
+}
