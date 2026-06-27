@@ -27,21 +27,52 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+
+    // Client-side validations
+    const nameTrimmed = formData.fullName.trim();
+    if (nameTrimmed.length < 3) {
+      setError('Full Name must be at least 3 characters long.');
       return;
     }
+    const nameRegex = /^[A-Za-z\s]+$/;
+    if (!nameRegex.test(nameTrimmed)) {
+      setError('Full Name must contain only letters and spaces.');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
+    if (!passwordRegex.test(formData.password)) {
+      setError('Password must contain at least one letter and one number.');
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+
     setError('');
-    const success = await register({
-      name: formData.fullName,
-      email: formData.email,
+    const result = await register({
+      name: nameTrimmed,
+      email: formData.email.trim(),
       password: formData.password,
       userType: formData.userType
     });
-    if (success) {
+
+    if (result.success) {
       navigate('/login');
     } else {
-      setError('Email already exists. Try logging in or using a different email.');
+      setError(result.message || 'Registration failed.');
     }
   };
 

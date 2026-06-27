@@ -24,12 +24,24 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    if (!formData.password) {
+      setError('Password is required.');
+      return;
+    }
+
     setError('');
-    const success = await login(formData.email, formData.password);
-    if (success) {
+    const result = await login(formData.email.trim(), formData.password);
+    if (result.success) {
       navigate('/');
     } else {
-      setError('Invalid email or password. You can try: traveler@ecoexplorer.com / password');
+      setError(result.message || 'Invalid email or password.');
     }
   };
 

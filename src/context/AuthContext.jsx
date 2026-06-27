@@ -1,114 +1,89 @@
-import React, { useState, useContext, createContext } from 'react';
+import React, { useState, useContext, createContext, useEffect } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
-const DEFAULT_USERS = [
-  {
-    id: '123',
-    name: 'Eco Traveler',
-    email: 'traveler@ecoexplorer.com',
-    password: 'password',
-    userType: 'traveler'
-  },
-  {
-    id: '456',
-    name: 'Eco Host',
-    email: 'host@ecoexplorer.com',
-    password: 'password',
-    userType: 'host'
-  },
-  {
-    id: '789',
-    name: 'Eco Admin',
-    email: 'admin@ecoexplorer.com',
-    password: 'password',
-    userType: 'admin'
-  }
-];
-
 export const AuthProvider = ({ children }) => {
-  const [users, setUsers] = useState(() => {
-    const localUsers = localStorage.getItem('eco_users');
-    if (localUsers) return JSON.parse(localUsers);
-    localStorage.setItem('eco_users', JSON.stringify(DEFAULT_USERS));
-    return DEFAULT_USERS;
-  });
+  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const [user, setUser] = useState(() => {
-    const sessionUser = localStorage.getItem('eco_session_user');
-    return sessionUser ? JSON.parse(sessionUser) : null;
-  });
-
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem('eco_session_user') !== null;
-  });
-
-  const [loading, setLoading] = useState(false);
+  // Load user session on startup if token exists
+  useEffect(() => {
+    const loadUser = async () => {
+      const token = localStorage.getItem('eco_token');
+      if (token) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        try {
+          const res = await axios.get('/api/auth/me');
+          setUser(res.data);
+          setIsAuthenticated(true);
+        } catch (error) {
+          console.error('Failed to load user session:', error);
+          localStorage.removeItem('eco_token');
+          delete axios.defaults.headers.common['Authorization'];
+          setUser(null);
+          setIsAuthenticated(false);
+        }
+      }
+      setLoading(false);
+    };
+    loadUser();
+  }, []);
 
   const login = async (email, password) => {
     setLoading(true);
-    // Simulate brief network delay
-    await new Promise(resolve => setTimeout(resolve, 300));
-    const foundUser = users.find(
-      u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
-    );
-    if (foundUser) {
-      const { password: _, ...sessionUser } = foundUser;
-      setUser(sessionUser);
+    try {
+      const res = await axios.post('/api/auth/login', { email, password });
+      const data = res.data;
+      
+      localStorage.setItem('eco_token', data.token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+      
+      const { token, ...userData } = data;
+      setUser(userData);
       setIsAuthenticated(true);
-      localStorage.setItem('eco_session_user', JSON.stringify(sessionUser));
       setLoading(false);
-      return true;
+      return { success: true };
+    } catch (error) {
+      setLoading(false);
+      const message = error.response?.data?.message || 'Invalid email or password';
+      return { success: false, message };
     }
-    setLoading(false);
-    return false;
   };
 
   const register = async (userData) => {
     setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 300));
-    const exists = users.some(u => u.email.toLowerCase() === userData.email.toLowerCase());
-    if (exists) {
+    try {
+      await axios.post('/api/auth/register', userData);
       setLoading(false);
-      return false;
+      return { success: true };
+    } catch (error) {
+      setLoading(false);
+      const message = error.response?.data?.message || 'Registration failed';
+      return { success: false, message };
     }
-    const newUser = {
-      id: Date.now().toString(),
-      name: userData.name,
-      email: userData.email,
-      password: userData.password,
-      userType: userData.userType || 'traveler'
-    };
-    const updatedUsers = [...users, newUser];
-    setUsers(updatedUsers);
-    localStorage.setItem('eco_users', JSON.stringify(updatedUsers));
-    setLoading(false);
-    return true;
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     setUser(null);
-    localStorage.removeItem('eco_session_user');
+    localStorage.removeItem('eco_token');
+    delete axios.defaults.headers.common['Authorization'];
   };
 
   const updateProfile = async (profileData) => {
     setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 300));
-    const updatedUsers = users.map(u => {
-      if (u.id === user.id) {
-        return { ...u, ...profileData };
-      }
-      return u;
-    });
-    setUsers(updatedUsers);
-    localStorage.setItem('eco_users', JSON.stringify(updatedUsers));
-
-    const updatedSessionUser = { ...user, ...profileData };
-    setUser(updatedSessionUser);
-    localStorage.setItem('eco_session_user', JSON.stringify(updatedSessionUser));
-    setLoading(false);
-    return true;
+    try {
+      const res = await axios.put('/api/auth/profile', profileData);
+      setUser(res.data);
+      setLoading(false);
+      return { success: true };
+    } catch (error) {
+      setLoading(false);
+      const message = error.response?.data?.message || 'Failed to update profile';
+      return { success: false, message };
+    }
   };
 
   return (
