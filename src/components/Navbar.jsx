@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import './Navbar.css';
@@ -28,47 +28,47 @@ const Navbar = () => {
 
         <ul className={`nav-menu ${menuOpen ? 'active' : ''}`}>
           <li className="nav-item">
-            <Link to="/" className="nav-link" onClick={() => setMenuOpen(false)}>
+            <NavLink to="/" end className="nav-link" onClick={() => setMenuOpen(false)}>
               Home
-            </Link>
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link to="/destinations" className="nav-link" onClick={() => setMenuOpen(false)}>
+            <NavLink to="/destinations" className="nav-link" onClick={() => setMenuOpen(false)}>
               Destinations
-            </Link>
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link to="/homestays" className="nav-link" onClick={() => setMenuOpen(false)}>
+            <NavLink to="/homestays" className="nav-link" onClick={() => setMenuOpen(false)}>
               Homestays
-            </Link>
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link to="/travel-planner" className="nav-link" onClick={() => setMenuOpen(false)}>
+            <NavLink to="/travel-planner" className="nav-link" onClick={() => setMenuOpen(false)}>
               Travel Planner
-            </Link>
+            </NavLink>
           </li>
           <li className="nav-item">
-            <Link to="/showcase" className="nav-link" onClick={() => setMenuOpen(false)}>
+            <NavLink to="/showcase" className="nav-link" onClick={() => setMenuOpen(false)}>
               Showcase
-            </Link>
+            </NavLink>
           </li>
           
           {isAuthenticated ? (
             <>
               <li className="nav-item">
-                <Link to="/favorites" className="nav-link" onClick={() => setMenuOpen(false)}>
+                <NavLink to="/favorites" className="nav-link" onClick={() => setMenuOpen(false)}>
                   Favorites
-                </Link>
+                </NavLink>
               </li>
               <li className="nav-item">
-                <Link to="/my-bookings" className="nav-link" onClick={() => setMenuOpen(false)}>
+                <NavLink to="/my-bookings" className="nav-link" onClick={() => setMenuOpen(false)}>
                   My Bookings
-                </Link>
+                </NavLink>
               </li>
               <li className="nav-item">
-                <Link to="/profile" className="nav-link" onClick={() => setMenuOpen(false)}>
+                <NavLink to="/profile" className="nav-link" onClick={() => setMenuOpen(false)}>
                   Profile
-                </Link>
+                </NavLink>
               </li>
               <li className="nav-item">
                 <button className="nav-link logout-btn" onClick={() => { logout(); setMenuOpen(false); }}>
@@ -79,14 +79,14 @@ const Navbar = () => {
           ) : (
             <>
               <li className="nav-item">
-                <Link to="/login" className="nav-link" onClick={() => setMenuOpen(false)}>
+                <NavLink to="/login" className="nav-link" onClick={() => setMenuOpen(false)}>
                   Login
-                </Link>
+                </NavLink>
               </li>
               <li className="nav-item">
-                <Link to="/register" className="nav-link nav-link-btn" onClick={() => setMenuOpen(false)}>
+                <NavLink to="/register" className="nav-link nav-link-btn" onClick={() => setMenuOpen(false)}>
                   Register
-                </Link>
+                </NavLink>
               </li>
             </>
           )}

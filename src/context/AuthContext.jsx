@@ -86,6 +86,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const changePassword = async (currentPassword, newPassword) => {
+    setLoading(true);
+    try {
+      const res = await axios.put('/api/auth/change-password', { currentPassword, newPassword });
+      setLoading(false);
+      return { success: true, message: res.data.message || 'Password changed successfully!' };
+    } catch (error) {
+      setLoading(false);
+      const message = error.response?.data?.message || 'Failed to change password';
+      return { success: false, message };
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -96,6 +109,7 @@ export const AuthProvider = ({ children }) => {
         register,
         logout,
         updateProfile,
+        changePassword,
       }}
     >
       {children}

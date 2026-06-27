@@ -177,3 +177,112 @@
     @apply top-4 right-5 py-2 px-4 text-[0.85rem];
   }
 }
+/* Booking Form Styles copied from HomestayDetails.css */
+.booking-form {
+  @apply flex flex-col gap-5;
+}
+
+.form-group {
+  @apply flex flex-col gap-2;
+}
+
+.form-group label {
+  @apply text-xs text-text-primary font-bold uppercase tracking-wider transition-colors duration-300;
+}
+
+.form-group input,
+.form-group select {
+  @apply py-3 px-4 border border-border-color rounded-lg text-[0.95rem] text-text-primary bg-bg-tertiary transition-all duration-300;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  @apply outline-none border-[#7fd051] bg-bg-secondary shadow-[0_0_0_3px_rgba(127,208,81,0.15)];
+}
+
+.price-breakdown {
+  @apply bg-bg-tertiary p-5 rounded-lg flex flex-col gap-2 border border-dashed border-border-color transition-colors duration-300;
+}
+
+.breakdown-item {
+  @apply flex justify-between text-sm text-text-secondary font-medium transition-colors duration-300;
+}
+
+.breakdown-item.total {
+  @apply border-t border-t-border-color pt-3 mt-1 font-bold text-base text-text-title transition-colors duration-300;
+}
+
+/* Modal Styling */
+.booking-modal-overlay {
+  @apply fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto;
+}
+
+.booking-success-modal {
+  @apply bg-bg-secondary rounded-3xl p-8 max-w-[480px] w-full text-center shadow-2xl relative z-[10000] border border-border-color animate-[scaleUp_0.3s_ease-out] transition-colors duration-300;
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-icon {
+  @apply text-5xl mb-4;
+}
+
+.booking-success-modal h2 {
+  @apply text-2xl font-bold text-text-title m-0 mb-1 transition-colors duration-300;
+  font-family: 'Outfit', sans-serif;
+}
+
+.modal-subtitle {
+  @apply text-sm text-text-secondary m-0 mb-6 leading-relaxed transition-colors duration-300;
+}
+
+.modal-summary-card {
+  @apply bg-bg-tertiary border border-border-color rounded-2xl p-5 text-left flex flex-col gap-2.5 mb-6 transition-colors duration-300;
+}
+
+.modal-summary-card h3 {
+  @apply text-lg font-bold text-text-title m-0 leading-normal transition-colors duration-300;
+  font-family: 'Outfit', sans-serif;
+}
+
+.modal-location {
+  @apply text-xs text-text-secondary m-0 transition-colors duration-300;
+}
+
+.modal-divider {
+  @apply h-[1px] bg-border-color my-1 transition-colors duration-300;
+}
+
+.summary-row {
+  @apply flex justify-between text-xs text-text-secondary transition-colors duration-300;
+}
+
+.summary-row strong {
+  @apply text-text-title font-semibold transition-colors duration-300;
+}
+
+.modal-total-row {
+  @apply flex justify-between items-baseline pt-2 mt-1 font-bold text-sm text-text-title transition-colors duration-300;
+}
+
+.grand-price {
+  @apply text-xl text-[#7fd051] font-extrabold;
+}
+
+.modal-close-btn {
+  @apply w-full p-3.5 text-white border-none rounded-xl text-sm font-bold cursor-pointer transition-all duration-200 shadow-[0_4px_15px_rgba(111,201,62,0.2)];
+  background: linear-gradient(135deg, #7fd051 0%, #6fc93e 100%);
+}
+
+.modal-close-btn:hover {
+  @apply brightness-[1.05] shadow-[0_6px_20px_rgba(111,201,62,0.3)] -translate-y-[1px];
+}

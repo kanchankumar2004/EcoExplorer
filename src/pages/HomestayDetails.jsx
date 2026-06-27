@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import { useFavorites } from '../context/FavoritesContext';
 import ReviewCard from '../components/ReviewCard';
 import MapView from '../components/MapView';
 import { homestays } from '../utils/mockData';
@@ -7,7 +10,11 @@ import './HomestayDetails.css';
 
 const HomestayDetails = () => {
   const { id } = useParams();
-  const [isFavorite, setIsFavorite] = useState(false);
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  
+  const { addFavorite, removeFavorite, isFavorite: checkIsFavorite } = useFavorites();
+  
   const [selectedDates, setSelectedDates] = useState({ checkIn: '', checkOut: '' });
   const [selectedExperiences, setSelectedExperiences] = useState([]);
   const [guests, setGuests] = useState(1);
@@ -21,8 +28,15 @@ const HomestayDetails = () => {
     reviews: foundHomestay.reviewsList || []
   };
 
+  const isFavorite = homestay ? checkIsFavorite(homestay.id) : false;
+
   const handleFavorite = () => {
-    setIsFavorite(!isFavorite);
+    if (!homestay) return;
+    if (isFavorite) {
+      removeFavorite(homestay.id);
+    } else {
+      addFavorite(homestay, 'homestay');
+    }
   };
 
   const toggleExperience = (expId) => {
@@ -52,13 +66,35 @@ const HomestayDetails = () => {
 
   const grandTotal = stayTotal + experiencesTotal;
 
-  const handleBooking = (e) => {
+  const handleBooking = async (e) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      alert("Please login to book this homestay!");
+      navigate('/login');
+      return;
+    }
     if (nights <= 0) {
       alert("Please check your Check-in and Check-out dates. Ensure checkout is after check-in.");
       return;
     }
-    setShowBookingSuccess(true);
+
+    try {
+      const bookingPayload = {
+        name: homestay.name,
+        type: 'Homestay',
+        checkIn: selectedDates.checkIn,
+        checkOut: selectedDates.checkOut,
+        guests: Number(guests),
+        totalPrice: grandTotal,
+        image: homestay.image
+      };
+
+      await axios.post('/api/bookings', bookingPayload);
+      setShowBookingSuccess(true);
+    } catch (err) {
+      console.error('Error creating booking:', err);
+      alert(err.response?.data?.message || 'Failed to submit booking. Please try again.');
+    }
   };
 
   return (

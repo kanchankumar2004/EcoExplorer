@@ -90,3 +90,7 @@
     @apply text-2xl;
   }
 }
+
+.nav-link.active {
+  @apply text-[#7fd051] border-b-2 border-[#7fd051] pb-1 font-bold;
+}

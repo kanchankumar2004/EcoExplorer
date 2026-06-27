@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { FavoritesProvider } from './context/FavoritesContext';
 import MainLayout from './layouts/MainLayout';
 
 // Pages
@@ -160,7 +161,9 @@ function App() {
     <Router>
       <ThemeProvider>
         <AuthProvider>
-          <AppContent />
+          <FavoritesProvider>
+            <AppContent />
+          </FavoritesProvider>
         </AuthProvider>
       </ThemeProvider>
     </Router>

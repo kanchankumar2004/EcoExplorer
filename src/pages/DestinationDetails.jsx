@@ -1,26 +1,109 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import { useFavorites } from '../context/FavoritesContext';
 import ReviewCard from '../components/ReviewCard';
 import MapView from '../components/MapView';
-import { destinations } from '../utils/mockData';
 import './DestinationDetails.css';
 
 const DestinationDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { isAuthenticated } = useAuth();
+  
+  const { addFavorite, removeFavorite, isFavorite: checkIsFavorite } = useFavorites();
+  
+  const [destination, setDestination] = useState(null);
+  const [loading, setLoading] = useState(true);
+  
+  const [selectedDates, setSelectedDates] = useState({ checkIn: '', checkOut: '' });
+  const [guests, setGuests] = useState(1);
+  const [showBookingSuccess, setShowBookingSuccess] = useState(false);
 
-  const destinationId = parseInt(id, 10);
-  const foundDestination = destinations.find(d => d.id === destinationId) || destinations[0];
+  useEffect(() => {
+    const fetchDestination = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/destinations/${id}`);
+        // Mock reviews since backend doesn't store them yet
+        setDestination({
+          ...response.data,
+          reviews: [] 
+        });
+      } catch (error) {
+        console.error('Error fetching destination:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const destination = {
-    ...foundDestination,
-    reviews: foundDestination.reviewsList || []
-  };
+    fetchDestination();
+  }, [id]);
+
+  const isFavorite = destination ? checkIsFavorite(destination._id) : false;
 
   const handleFavorite = () => {
-    setIsFavorite(!isFavorite);
+    if (!destination) return;
+    if (isFavorite) {
+      removeFavorite(destination._id);
+    } else {
+      addFavorite(destination, 'destination');
+    }
   };
+
+  const parsePrice = (priceStr) => {
+    if (!priceStr) return 0;
+    const match = priceStr.match(/\d+/);
+    return match ? parseInt(match[0], 10) : 0;
+  };
+
+  const calculateNights = () => {
+    if (!selectedDates.checkIn || !selectedDates.checkOut) return 0;
+    const start = new Date(selectedDates.checkIn);
+    const end = new Date(selectedDates.checkOut);
+    const differenceInTime = end.getTime() - start.getTime();
+    const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+    return differenceInDays > 0 ? differenceInDays : 0;
+  };
+
+  const nights = calculateNights();
+  const pricePerNight = destination ? parsePrice(destination.price) : 0;
+  const stayTotal = pricePerNight * nights;
+  const grandTotal = stayTotal;
+
+  const handleBooking = async (e) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      alert("Please login to book this destination!");
+      navigate('/login');
+      return;
+    }
+    if (nights <= 0) {
+      alert("Please check your Check-in and Check-out dates. Ensure checkout is after check-in.");
+      return;
+    }
+
+    try {
+      const bookingPayload = {
+        name: destination.name,
+        type: 'Destination',
+        checkIn: selectedDates.checkIn,
+        checkOut: selectedDates.checkOut,
+        guests: Number(guests),
+        totalPrice: grandTotal,
+        image: destination.image
+      };
+
+      await axios.post('/api/bookings', bookingPayload);
+      setShowBookingSuccess(true);
+    } catch (err) {
+      console.error('Error creating booking:', err);
+      alert(err.response?.data?.message || 'Failed to submit booking. Please try again.');
+    }
+  };
+
+  if (loading) return <div className="loading">Loading destination details...</div>;
+  if (!destination) return <div className="error">Destination not found</div>;
 
   return (
     <div className="destination-details">
@@ -89,7 +172,60 @@ const DestinationDetails = () => {
                 ))}
               </div>
 
-              <button className="book-btn">Book Now</button>
+              <form onSubmit={handleBooking} className="booking-form" style={{ marginTop: '20px' }}>
+                <div className="form-group">
+                  <label>Check-in Date</label>
+                  <input 
+                    type="date" 
+                    value={selectedDates.checkIn}
+                    onChange={(e) => setSelectedDates({...selectedDates, checkIn: e.target.value})}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Check-out Date</label>
+                  <input 
+                    type="date"
+                    value={selectedDates.checkOut}
+                    onChange={(e) => setSelectedDates({...selectedDates, checkOut: e.target.value})}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Number of Guests</label>
+                  <select 
+                    value={guests} 
+                    onChange={(e) => setGuests(parseInt(e.target.value, 10))} 
+                    required
+                  >
+                    {[1, 2, 3, 4, 5, 6].map(num => (
+                      <option key={num} value={num}>{num} guest{num > 1 ? 's' : ''}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {nights > 0 && (
+                  <div className="price-breakdown">
+                    <div className="breakdown-item">
+                      <span>Price per night:</span>
+                      <span>${pricePerNight}</span>
+                    </div>
+                    <div className="breakdown-item">
+                      <span>Number of nights:</span>
+                      <span>{nights} {nights === 1 ? 'night' : 'nights'}</span>
+                    </div>
+                    <div className="breakdown-item total">
+                      <span>Total:</span>
+                      <span>${grandTotal}</span>
+                    </div>
+                  </div>
+                )}
+
+                <button type="submit" className="book-btn" style={{ marginTop: '15px' }}>Book Now</button>
+              </form>
+
               <button className="contact-btn">Contact Host</button>
             </div>
 
@@ -104,6 +240,58 @@ const DestinationDetails = () => {
           </div>
         </div>
       </div>
+
+      {/* BOOKING SUCCESS MODAL */}
+      {showBookingSuccess && (
+        <div className="booking-modal-overlay">
+          <div className="booking-success-modal">
+            <div className="modal-icon">✅</div>
+            <h2>Booking Confirmed!</h2>
+            <p className="modal-subtitle">
+              Your eco-adventure at {destination.location.split(',')[0]} is locked in.
+            </p>
+            
+            <div className="modal-summary-card">
+              <h3>{destination.name}</h3>
+              <p className="modal-location">📍 {destination.location}</p>
+              <div className="modal-divider"></div>
+              
+              <div className="summary-row">
+                <span>Check-in:</span>
+                <strong>{selectedDates.checkIn}</strong>
+              </div>
+              <div className="summary-row">
+                <span>Check-out:</span>
+                <strong>{selectedDates.checkOut}</strong>
+              </div>
+              <div className="summary-row">
+                <span>Guests:</span>
+                <strong>{guests} guest{guests > 1 ? 's' : ''}</strong>
+              </div>
+              <div className="summary-row">
+                <span>Nights:</span>
+                <strong>{nights} night{nights > 1 ? 's' : ''}</strong>
+              </div>
+              
+              <div className="modal-divider"></div>
+              <div className="modal-total-row">
+                <span>Grand Total:</span>
+                <span className="grand-price">${grandTotal}</span>
+              </div>
+            </div>
+            
+            <button 
+              className="modal-close-btn" 
+              onClick={() => {
+                setShowBookingSuccess(false);
+                navigate('/my-bookings');
+              }}
+            >
+              View My Bookings
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

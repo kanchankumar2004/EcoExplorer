@@ -4,8 +4,11 @@ import dotenv from 'dotenv';
 import path from 'path';
 import dns from 'dns';
 import { fileURLToPath } from 'url';
+import { errorHandler } from './middleware/errorMiddleware.js';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
+import bookingRoutes from './routes/bookingRoutes.js';
+import destinationRoutes from './routes/destinationRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,6 +38,8 @@ app.use((req, res, next) => {
 
 // Setup Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/destinations', destinationRoutes);
 
 // Root route
 app.get('/', (req, res) => {
@@ -42,10 +47,7 @@ app.get('/', (req, res) => {
 });
 
 // Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: err.message || 'Something went wrong on the server' });
-});
+app.use(errorHandler);
 
 // Start listening
 app.listen(PORT, () => {

@@ -40,6 +40,30 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    avatar: {
+      type: String,
+      default: '',
+    },
+    settings: {
+      notifications: {
+        emailAlerts: { type: Boolean, default: true },
+        weeklyNewsletter: { type: Boolean, default: false },
+        bookingUpdates: { type: Boolean, default: true },
+      },
+      privacy: {
+        profilePublic: { type: Boolean, default: true },
+        showActivity: { type: Boolean, default: true },
+      },
+      paymentMethods: [
+        {
+          id: { type: String, required: true },
+          cardholderName: { type: String, required: true },
+          cardType: { type: String, required: true },
+          last4: { type: String, required: true },
+          expiry: { type: String, required: true },
+        }
+      ],
+    },
   },
   {
     timestamps: true,

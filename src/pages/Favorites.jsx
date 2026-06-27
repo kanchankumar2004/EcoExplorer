@@ -1,31 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DestinationCard from '../components/DestinationCard';
 import HomestayCard from '../components/HomestayCard';
-import { destinations, homestays } from '../utils/mockData';
+import { useFavorites } from '../context/FavoritesContext';
 import './Favorites.css';
 
 const Favorites = () => {
-  const [favorites, setFavorites] = useState([
-    {
-      ...destinations[0],
-      type: 'destination'
-    },
-    {
-      ...homestays[0],
-      type: 'homestay'
-    },
-    {
-      ...destinations[1],
-      type: 'destination'
-    }
-  ]);
+  const { favorites, removeFavorite } = useFavorites();
+  const [loading, setLoading] = useState(true);
 
-  const handleRemove = (index) => {
-    setFavorites(favorites.filter((_, i) => i !== index));
+  useEffect(() => {
+    // Simulate loading for better UX
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }, []);
+
+  const handleRemove = (id) => {
+    removeFavorite(id);
   };
 
   const destinations = favorites.filter(f => f.type === 'destination');
   const homestays = favorites.filter(f => f.type === 'homestay');
+
+  if (loading) return <div className="loading">Loading favorites...</div>;
 
   return (
     <div className="favorites-page">
@@ -39,12 +36,12 @@ const Favorites = () => {
           <div className="favorites-section">
             <h2>Favorite Destinations ({destinations.length})</h2>
             <div className="favorites-grid">
-              {destinations.map((item, idx) => (
-                <div key={idx} className="favorite-item">
-                  <DestinationCard {...item} />
+              {destinations.map((item) => (
+                <div key={item.id || item._id} className="favorite-item">
+                  <DestinationCard {...item} id={item.id || item._id} />
                   <button 
                     className="remove-btn"
-                    onClick={() => handleRemove(idx)}
+                    onClick={() => handleRemove(item.id || item._id)}
                   >
                     ✕ Remove
                   </button>
@@ -58,12 +55,12 @@ const Favorites = () => {
           <div className="favorites-section">
             <h2>Favorite Homestays ({homestays.length})</h2>
             <div className="favorites-grid">
-              {homestays.map((item, idx) => (
-                <div key={idx} className="favorite-item">
-                  <HomestayCard {...item} />
+              {homestays.map((item) => (
+                <div key={item.id || item._id} className="favorite-item">
+                  <HomestayCard {...item} id={item.id || item._id} />
                   <button 
                     className="remove-btn"
-                    onClick={() => handleRemove(destinations.length + idx)}
+                    onClick={() => handleRemove(item.id || item._id)}
                   >
                     ✕ Remove
                   </button>

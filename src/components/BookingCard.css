@@ -105,3 +105,10 @@
     @apply flex-col;
   }
 }
+.btn-danger {
+  @apply bg-[#ff5252] text-white border-none;
+}
+
+.btn-danger:hover {
+  @apply bg-[#e04343];
+}

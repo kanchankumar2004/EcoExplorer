@@ -94,6 +94,12 @@ export const registerUser = async (req, res) => {
         bio: user.bio,
         country: user.country,
         city: user.city,
+        avatar: user.avatar || '',
+        settings: user.settings || {
+          notifications: { emailAlerts: true, weeklyNewsletter: false, bookingUpdates: true },
+          privacy: { profilePublic: true, showActivity: true },
+          paymentMethods: []
+        },
         token: generateToken(user._id)
       });
     } else {
@@ -143,6 +149,12 @@ export const loginUser = async (req, res) => {
       bio: user.bio || '',
       country: user.country || '',
       city: user.city || '',
+      avatar: user.avatar || '',
+      settings: user.settings || {
+        notifications: { emailAlerts: true, weeklyNewsletter: false, bookingUpdates: true },
+        privacy: { profilePublic: true, showActivity: true },
+        paymentMethods: []
+      },
       token: generateToken(user._id)
     });
   } catch (error) {
@@ -162,7 +174,7 @@ export const getMe = async (req, res) => {
 // @route   PUT /api/auth/profile
 // @access  Private
 export const updateUserProfile = async (req, res) => {
-  const { name, email, phone, bio, country, city } = req.body;
+  const { name, email, phone, bio, country, city, avatar, settings } = req.body;
   const userId = req.user.id;
 
   try {
@@ -201,6 +213,8 @@ export const updateUserProfile = async (req, res) => {
     if (bio !== undefined) updatedData.bio = bio;
     if (country !== undefined) updatedData.country = country.trim();
     if (city !== undefined) updatedData.city = city.trim();
+    if (avatar !== undefined) updatedData.avatar = avatar;
+    if (settings !== undefined) updatedData.settings = settings;
 
     // Perform DB update
     const updatedUser = await User.findByIdAndUpdate(
@@ -213,5 +227,48 @@ export const updateUserProfile = async (req, res) => {
   } catch (error) {
     console.error('Update profile error:', error);
     res.status(500).json({ message: 'Server error during profile update' });
+  }
+};
+
+// @desc    Change user password
+// @route   PUT /api/auth/change-password
+// @access  Private
+export const changePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const userId = req.user.id;
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ message: 'Please include current password and new password' });
+  }
+
+  try {
+    // Find user by ID and include password field (by default selected, but let's be safe)
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Compare with current password
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Incorrect current password' });
+    }
+
+    // Validate new password format
+    if (!validatePassword(newPassword)) {
+      return res.status(400).json({
+        message: 'Password must be at least 6 characters long and contain both letters and numbers'
+      });
+    }
+
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    await user.save();
+
+    res.status(200).json({ message: 'Password changed successfully' });
+  } catch (error) {
+    console.error('Change password error:', error);
+    res.status(500).json({ message: 'Server error during password update' });
   }
 };

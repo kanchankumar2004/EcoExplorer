@@ -89,6 +89,30 @@ npm run dev
 http://localhost:3000
 ```
 
+### How to run backend locally
+
+The project includes an Express/MongoDB backend located in the `backend/` directory.
+
+1. Create a `.env` file in the root directory and add the required environment variables. You can copy the structure from `.env.example`:
+```bash
+cp .env.example .env
+```
+Ensure you provide a valid `MONGO_URI` (MongoDB connection string) and a `JWT_SECRET`.
+
+2. Install dependencies (if you haven't already in the main setup):
+```bash
+npm install
+```
+
+3. Start the backend server:
+```bash
+npm run server
+```
+
+The server will start on port `5000` (or the port specified in your `.env` file). You should see:
+`🌿 EcoExplorer Server running on port 5000`
+`📡 MongoDB Connected`
+
 ## 📦 Build
 
 To create a production build:
@@ -200,3 +224,11 @@ npm run preview  # Preview production build locally
 Feel free to customize and extend this project according to your needs.
 
 **Happy Coding! 🌍🌿**
+
+## How to run backend locally
+
+1. Navigate to the backend directory: `cd backend`
+2. Install dependencies: `npm install`
+3. Create a `.env` file based on `.env.example` and provide your MongoDB URI and JWT Secret.
+4. Run the server: `npm start` or `npm run server`
+
