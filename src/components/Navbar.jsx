@@ -5,7 +5,7 @@ import { useTheme } from '../context/ThemeContext';
 import './Navbar.css';
 
 const Navbar = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -55,16 +55,34 @@ const Navbar = () => {
           
           {isAuthenticated ? (
             <>
-              <li className="nav-item">
-                <NavLink to="/favorites" className="nav-link" onClick={() => setMenuOpen(false)}>
-                  Favorites
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/my-bookings" className="nav-link" onClick={() => setMenuOpen(false)}>
-                  My Bookings
-                </NavLink>
-              </li>
+              {user?.userType === 'admin' && (
+                <li className="nav-item">
+                  <NavLink to="/admin-dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
+                    Admin Panel
+                  </NavLink>
+                </li>
+              )}
+              {user?.userType === 'host' && (
+                <li className="nav-item">
+                  <NavLink to="/owner-dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
+                    Host Dashboard
+                  </NavLink>
+                </li>
+              )}
+              {(!user?.userType || user?.userType === 'traveler' || user?.userType === 'both') && (
+                <>
+                  <li className="nav-item">
+                    <NavLink to="/favorites" className="nav-link" onClick={() => setMenuOpen(false)}>
+                      Favorites
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink to="/my-bookings" className="nav-link" onClick={() => setMenuOpen(false)}>
+                      My Bookings
+                    </NavLink>
+                  </li>
+                </>
+              )}
               <li className="nav-item">
                 <NavLink to="/profile" className="nav-link" onClick={() => setMenuOpen(false)}>
                   Profile

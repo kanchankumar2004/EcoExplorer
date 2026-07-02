@@ -39,7 +39,13 @@ const Login = () => {
     setError('');
     const result = await login(formData.email.trim(), formData.password);
     if (result.success) {
-      navigate('/');
+      if (result.user?.userType === 'admin') {
+        navigate('/admin-dashboard');
+      } else if (result.user?.userType === 'host') {
+        navigate('/owner-dashboard');
+      } else {
+        navigate('/');
+      }
     } else {
       setError(result.message || 'Invalid email or password.');
     }

@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
       setUser(userData);
       setIsAuthenticated(true);
       setLoading(false);
-      return { success: true };
+      return { success: true, user: userData };
     } catch (error) {
       setLoading(false);
       const message = error.response?.data?.message || 'Invalid email or password';

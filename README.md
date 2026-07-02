@@ -89,24 +89,95 @@ npm run dev
 http://localhost:3000
 ```
 
-### How to run backend locally
+## 🗄️ Database Choice & Schema
+
+**Database Chosen:** MongoDB (with Mongoose)
+
+**Why:** 
+1. **Flexibility:** As an eco-tourism platform, destinations and homestays can have highly variable data structures (e.g., varying amenities, highlights, and tags). A NoSQL document database like MongoDB easily accommodates this schema flexibility without requiring complex migrations.
+2. **Scalability:** MongoDB's horizontal scaling capabilities make it suitable for handling high volumes of searches, bookings, and user activity as the platform grows.
+3. **JSON-like Documents:** Since the backend is built with Node.js/Express and the frontend with React, using BSON/JSON throughout the entire stack allows for seamless data processing and faster development.
+
+### Schema Diagram
+
+```mermaid
+erDiagram
+    USER ||--o{ BOOKING : "makes"
+    USER {
+        ObjectId _id
+        String name
+        String email
+        String password
+        String userType
+        String phone
+        String bio
+        String country
+        String city
+        String avatar
+        Object settings
+        Date createdAt
+        Date updatedAt
+    }
+    DESTINATION {
+        ObjectId _id
+        String name
+        String image
+        Array images
+        Number rating
+        Number reviews
+        Number reviewsCount
+        String price
+        String location
+        Number latitude
+        Number longitude
+        Array tags
+        String description
+        String longDescription
+        Array highlights
+        Array amenities
+        Date createdAt
+        Date updatedAt
+    }
+    BOOKING {
+        ObjectId _id
+        ObjectId user FK
+        String name
+        String type
+        Date checkIn
+        Date checkOut
+        Number guests
+        Number totalPrice
+        String status
+        String image
+        Date createdAt
+        Date updatedAt
+    }
+```
+
+### Set up the database and run backend locally
 
 The project includes an Express/MongoDB backend located in the `backend/` directory.
 
-1. Create a `.env` file in the root directory and add the required environment variables. You can copy the structure from `.env.example`:
+1. Navigate to the backend directory:
 ```bash
-cp .env.example .env
+cd backend
 ```
-Ensure you provide a valid `MONGO_URI` (MongoDB connection string) and a `JWT_SECRET`.
 
-2. Install dependencies (if you haven't already in the main setup):
+2. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Start the backend server:
+3. Set up the environment variables:
+Create a `.env` file in the `backend` directory by copying the provided `.env.example`:
 ```bash
-npm run server
+cp ../.env.example .env
+```
+Ensure you provide a valid `MONGO_URI` (MongoDB connection string from MongoDB Atlas or local instance) and a `JWT_SECRET`.
+
+4. Start the backend server:
+```bash
+npm run dev
 ```
 
 The server will start on port `5000` (or the port specified in your `.env` file). You should see:
@@ -225,10 +296,4 @@ Feel free to customize and extend this project according to your needs.
 
 **Happy Coding! 🌍🌿**
 
-## How to run backend locally
-
-1. Navigate to the backend directory: `cd backend`
-2. Install dependencies: `npm install`
-3. Create a `.env` file based on `.env.example` and provide your MongoDB URI and JWT Secret.
-4. Run the server: `npm start` or `npm run server`
 

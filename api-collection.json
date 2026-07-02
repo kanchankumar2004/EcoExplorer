@@ -1,16 +1,58 @@
 {
   "info": {
+    "_postman_id": "c3fbda59-6721-4f1b-bb48-8dfca38495a6",
     "name": "EcoExplorer API",
     "description": "API Collection for EcoExplorer REST API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
+      "name": "Welcome Endpoint",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            ""
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "html",
+          "body": "EcoExplorer Auth Backend is running..."
+        }
+      ]
+    },
+    {
       "name": "1. Auth - Register",
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -19,9 +61,15 @@
         "url": {
           "raw": "http://localhost:5000/api/auth/register",
           "protocol": "http",
-          "host": [ "localhost" ],
+          "host": [
+            "localhost"
+          ],
           "port": "5000",
-          "path": [ "api", "auth", "register" ]
+          "path": [
+            "api",
+            "auth",
+            "register"
+          ]
         }
       },
       "response": [
@@ -30,7 +78,10 @@
           "originalRequest": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -39,9 +90,15 @@
             "url": {
               "raw": "http://localhost:5000/api/auth/register",
               "protocol": "http",
-              "host": [ "localhost" ],
+              "host": [
+                "localhost"
+              ],
               "port": "5000",
-              "path": [ "api", "auth", "register" ]
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
             }
           },
           "status": "Created",
@@ -56,7 +113,10 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -65,9 +125,15 @@
         "url": {
           "raw": "http://localhost:5000/api/auth/login",
           "protocol": "http",
-          "host": [ "localhost" ],
+          "host": [
+            "localhost"
+          ],
           "port": "5000",
-          "path": [ "api", "auth", "login" ]
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
         }
       },
       "response": [
@@ -76,7 +142,10 @@
           "originalRequest": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -85,9 +154,15 @@
             "url": {
               "raw": "http://localhost:5000/api/auth/login",
               "protocol": "http",
-              "host": [ "localhost" ],
+              "host": [
+                "localhost"
+              ],
               "port": "5000",
-              "path": [ "api", "auth", "login" ]
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
           },
           "status": "OK",
@@ -102,8 +177,14 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" },
-          { "key": "Authorization", "value": "Bearer {{token}}" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -112,9 +193,14 @@
         "url": {
           "raw": "http://localhost:5000/api/bookings",
           "protocol": "http",
-          "host": [ "localhost" ],
+          "host": [
+            "localhost"
+          ],
           "port": "5000",
-          "path": [ "api", "bookings" ]
+          "path": [
+            "api",
+            "bookings"
+          ]
         }
       },
       "response": [
@@ -123,8 +209,14 @@
           "originalRequest": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{token}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -133,9 +225,14 @@
             "url": {
               "raw": "http://localhost:5000/api/bookings",
               "protocol": "http",
-              "host": [ "localhost" ],
+              "host": [
+                "localhost"
+              ],
               "port": "5000",
-              "path": [ "api", "bookings" ]
+              "path": [
+                "api",
+                "bookings"
+              ]
             }
           },
           "status": "Created",
@@ -150,14 +247,22 @@
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{token}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
         ],
         "url": {
           "raw": "http://localhost:5000/api/bookings",
           "protocol": "http",
-          "host": [ "localhost" ],
+          "host": [
+            "localhost"
+          ],
           "port": "5000",
-          "path": [ "api", "bookings" ]
+          "path": [
+            "api",
+            "bookings"
+          ]
         }
       },
       "response": [
@@ -166,14 +271,22 @@
           "originalRequest": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "url": {
               "raw": "http://localhost:5000/api/bookings",
               "protocol": "http",
-              "host": [ "localhost" ],
+              "host": [
+                "localhost"
+              ],
               "port": "5000",
-              "path": [ "api", "bookings" ]
+              "path": [
+                "api",
+                "bookings"
+              ]
             }
           },
           "status": "OK",
@@ -188,14 +301,23 @@
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{token}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
         ],
         "url": {
           "raw": "http://localhost:5000/api/bookings/65d1a2b3c4d5e6f7g8h9i0j1",
           "protocol": "http",
-          "host": [ "localhost" ],
+          "host": [
+            "localhost"
+          ],
           "port": "5000",
-          "path": [ "api", "bookings", "65d1a2b3c4d5e6f7g8h9i0j1" ]
+          "path": [
+            "api",
+            "bookings",
+            "65d1a2b3c4d5e6f7g8h9i0j1"
+          ]
         }
       },
       "response": [
@@ -204,14 +326,23 @@
           "originalRequest": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "url": {
               "raw": "http://localhost:5000/api/bookings/65d1a2b3c4d5e6f7g8h9i0j1",
               "protocol": "http",
-              "host": [ "localhost" ],
+              "host": [
+                "localhost"
+              ],
               "port": "5000",
-              "path": [ "api", "bookings", "65d1a2b3c4d5e6f7g8h9i0j1" ]
+              "path": [
+                "api",
+                "bookings",
+                "65d1a2b3c4d5e6f7g8h9i0j1"
+              ]
             }
           },
           "status": "OK",
@@ -226,14 +357,24 @@
       "request": {
         "method": "PUT",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{token}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
         ],
         "url": {
           "raw": "http://localhost:5000/api/bookings/65d1a2b3c4d5e6f7g8h9i0j1/cancel",
           "protocol": "http",
-          "host": [ "localhost" ],
+          "host": [
+            "localhost"
+          ],
           "port": "5000",
-          "path": [ "api", "bookings", "65d1a2b3c4d5e6f7g8h9i0j1", "cancel" ]
+          "path": [
+            "api",
+            "bookings",
+            "65d1a2b3c4d5e6f7g8h9i0j1",
+            "cancel"
+          ]
         }
       },
       "response": [
@@ -242,14 +383,24 @@
           "originalRequest": {
             "method": "PUT",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "url": {
               "raw": "http://localhost:5000/api/bookings/65d1a2b3c4d5e6f7g8h9i0j1/cancel",
               "protocol": "http",
-              "host": [ "localhost" ],
+              "host": [
+                "localhost"
+              ],
               "port": "5000",
-              "path": [ "api", "bookings", "65d1a2b3c4d5e6f7g8h9i0j1", "cancel" ]
+              "path": [
+                "api",
+                "bookings",
+                "65d1a2b3c4d5e6f7g8h9i0j1",
+                "cancel"
+              ]
             }
           },
           "status": "OK",
@@ -264,14 +415,23 @@
       "request": {
         "method": "DELETE",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{token}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
         ],
         "url": {
           "raw": "http://localhost:5000/api/bookings/65d1a2b3c4d5e6f7g8h9i0j1",
           "protocol": "http",
-          "host": [ "localhost" ],
+          "host": [
+            "localhost"
+          ],
           "port": "5000",
-          "path": [ "api", "bookings", "65d1a2b3c4d5e6f7g8h9i0j1" ]
+          "path": [
+            "api",
+            "bookings",
+            "65d1a2b3c4d5e6f7g8h9i0j1"
+          ]
         }
       },
       "response": [
@@ -280,14 +440,23 @@
           "originalRequest": {
             "method": "DELETE",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "url": {
               "raw": "http://localhost:5000/api/bookings/65d1a2b3c4d5e6f7g8h9i0j1",
               "protocol": "http",
-              "host": [ "localhost" ],
+              "host": [
+                "localhost"
+              ],
               "port": "5000",
-              "path": [ "api", "bookings", "65d1a2b3c4d5e6f7g8h9i0j1" ]
+              "path": [
+                "api",
+                "bookings",
+                "65d1a2b3c4d5e6f7g8h9i0j1"
+              ]
             }
           },
           "status": "OK",
@@ -302,16 +471,29 @@
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{token}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
         ],
         "url": {
           "raw": "http://localhost:5000/api/bookings/filter/status?status=Confirmed",
           "protocol": "http",
-          "host": [ "localhost" ],
+          "host": [
+            "localhost"
+          ],
           "port": "5000",
-          "path": [ "api", "bookings", "filter", "status" ],
+          "path": [
+            "api",
+            "bookings",
+            "filter",
+            "status"
+          ],
           "query": [
-            { "key": "status", "value": "Confirmed" }
+            {
+              "key": "status",
+              "value": "Confirmed"
+            }
           ]
         }
       },
@@ -321,16 +503,29 @@
           "originalRequest": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "url": {
               "raw": "http://localhost:5000/api/bookings/filter/status?status=Confirmed",
               "protocol": "http",
-              "host": [ "localhost" ],
+              "host": [
+                "localhost"
+              ],
               "port": "5000",
-              "path": [ "api", "bookings", "filter", "status" ],
+              "path": [
+                "api",
+                "bookings",
+                "filter",
+                "status"
+              ],
               "query": [
-                { "key": "status", "value": "Confirmed" }
+                {
+                  "key": "status",
+                  "value": "Confirmed"
+                }
               ]
             }
           },
