@@ -1,11 +1,12 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { validationResult } from 'express-validator';
 import User from '../models/User.js';
 
 // Helper to generate JWT
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET || 'ecoexplorer_super_secret_jwt_key_2026', {
-    expiresIn: '30d',
+    expiresIn: '7d',
   });
 };
 
@@ -31,28 +32,12 @@ const validateName = (name) => {
 // @route   POST /api/auth/register
 // @access  Public
 export const registerUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ message: errors.array()[0].msg, errors: errors.array() });
+  }
+
   const { name, email, password, userType } = req.body;
-
-  // 1. Validation
-  if (!name || !email || !password) {
-    return res.status(400).json({ message: 'Please include all required fields' });
-  }
-
-  if (!validateName(name.trim())) {
-    return res.status(400).json({ 
-      message: 'Name must be at least 3 characters and contain only letters and spaces' 
-    });
-  }
-
-  if (!validateEmail(email)) {
-    return res.status(400).json({ message: 'Please enter a valid email address' });
-  }
-
-  if (!validatePassword(password)) {
-    return res.status(400).json({ 
-      message: 'Password must be at least 6 characters long and contain both letters and numbers' 
-    });
-  }
 
   const validRoles = ['traveler', 'host', 'both', 'admin'];
   const role = userType || 'traveler';
@@ -68,7 +53,7 @@ export const registerUser = async (req, res) => {
     }
 
     // 3. Hash password
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(12);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // 4. Create user in DB
@@ -115,16 +100,12 @@ export const registerUser = async (req, res) => {
 // @route   POST /api/auth/login
 // @access  Public
 export const loginUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ message: errors.array()[0].msg, errors: errors.array() });
+  }
+
   const { email, password } = req.body;
-
-  // 1. Validation
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Please include email and password' });
-  }
-
-  if (!validateEmail(email)) {
-    return res.status(400).json({ message: 'Please enter a valid email address' });
-  }
 
   try {
     // 2. Check for user email
@@ -262,7 +243,7 @@ export const changePassword = async (req, res) => {
     }
 
     // Hash the new password
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(12);
     user.password = await bcrypt.hash(newPassword, salt);
     await user.save();
 

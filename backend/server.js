@@ -6,6 +6,8 @@ import dns from 'dns';
 import { fileURLToPath } from 'url';
 import { errorHandler } from './middleware/errorMiddleware.js';
 import connectDB from './config/db.js';
+import configurePassport from './config/passport.js';
+import passport from 'passport';
 import authRoutes from './routes/authRoutes.js';
 import bookingRoutes from './routes/bookingRoutes.js';
 import destinationRoutes from './routes/destinationRoutes.js';
@@ -25,10 +27,20 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Configure Passport
+configurePassport();
+
 // Setup Middleware
-app.use(cors());
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? process.env.FRONTEND_URL 
+    : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
 
 // Log requests
 app.use((req, res, next) => {

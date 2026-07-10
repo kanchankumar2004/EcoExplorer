@@ -16,6 +16,11 @@ const Register = () => {
   });
   const [error, setError] = useState('');
 
+  const handleOAuthLogin = (provider) => {
+    const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+    window.location.href = `${backendUrl}/api/auth/${provider}`;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -163,6 +168,14 @@ const Register = () => {
             <p>Already have an account? 
               <Link to="/login" className="login-link">Sign in here</Link>
             </p>
+          </div>
+
+          <div className="social-login">
+            <p>Or continue with</p>
+            <div className="social-buttons">
+              <button type="button" className="social-btn google" onClick={() => handleOAuthLogin('google')}>Google</button>
+              <button type="button" className="social-btn github" onClick={() => handleOAuthLogin('github')}>GitHub</button>
+            </div>
           </div>
         </div>
 

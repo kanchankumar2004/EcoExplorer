@@ -99,6 +99,27 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const loginWithToken = async (token) => {
+    setLoading(true);
+    localStorage.setItem('eco_token', token);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    try {
+      const res = await axios.get('/api/auth/me');
+      setUser(res.data);
+      setIsAuthenticated(true);
+      setLoading(false);
+      return { success: true, user: res.data };
+    } catch (error) {
+      console.error('Failed to load user session with token:', error);
+      localStorage.removeItem('eco_token');
+      delete axios.defaults.headers.common['Authorization'];
+      setUser(null);
+      setIsAuthenticated(false);
+      setLoading(false);
+      return { success: false };
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -106,6 +127,7 @@ export const AuthProvider = ({ children }) => {
         user,
         loading,
         login,
+        loginWithToken,
         register,
         logout,
         updateProfile,

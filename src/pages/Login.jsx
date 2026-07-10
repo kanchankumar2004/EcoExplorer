@@ -1,17 +1,39 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button, Input } from '../components/ui';
 import './Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login, loading } = useAuth();
+  const { login, loginWithToken, loading } = useAuth();
+  const location = useLocation();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
   const [error, setError] = useState('');
+
+  // Handle OAuth callback token from URL
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const token = params.get('token');
+    
+    if (token) {
+      loginWithToken(token).then((result) => {
+        if (result.success) {
+          navigate('/');
+        } else {
+          setError('OAuth login failed.');
+        }
+      });
+    }
+  }, [location, loginWithToken, navigate]);
+
+  const handleOAuthLogin = (provider) => {
+    const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+    window.location.href = `${backendUrl}/api/auth/${provider}`;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -108,8 +130,8 @@ const Login = () => {
           <div className="social-login">
             <p>Or continue with</p>
             <div className="social-buttons">
-              <button className="social-btn google">Google</button>
-              <button className="social-btn facebook">Facebook</button>
+              <button type="button" className="social-btn google" onClick={() => handleOAuthLogin('google')}>Google</button>
+              <button type="button" className="social-btn github" onClick={() => handleOAuthLogin('github')}>GitHub</button>
             </div>
           </div>
         </div>
