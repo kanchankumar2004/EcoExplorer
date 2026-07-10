@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import './Profile.css';
 
 const Profile = () => {
-  const { user, logout, updateProfile, changePassword } = useAuth();
+  const { user, logout, updateProfile, changePassword, deleteAccount } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [alert, setAlert] = useState({ text: '', type: '' });
   const [activeModal, setActiveModal] = useState(null); // 'password', 'notifications', 'privacy', 'payments', 'avatar'
@@ -210,6 +210,15 @@ const Profile = () => {
       setActiveModal(null);
     } else {
       showAlert(res.message, 'error');
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      const res = await deleteAccount();
+      if (!res.success) {
+        showAlert(res.message, 'error');
+      }
     }
   };
 
@@ -458,6 +467,7 @@ const Profile = () => {
               <h3>Actions</h3>
               <button className="action-btn" onClick={handleDownloadData}>Download My Data</button>
               <button className="action-btn logout-btn" onClick={logout}>Logout</button>
+              <button className="action-btn delete-account-btn" style={{marginTop: '10px', backgroundColor: '#dc3545', color: 'white', borderColor: '#dc3545'}} onClick={handleDeleteAccount}>Delete Account</button>
             </div>
           </div>
         </div>

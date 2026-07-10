@@ -75,7 +75,11 @@ const Register = () => {
     });
 
     if (result.success) {
-      navigate('/login');
+      if (result.requiresVerification) {
+        navigate('/verify-email', { state: { email: result.email } });
+      } else {
+        navigate('/login');
+      }
     } else {
       setError(result.message || 'Registration failed.');
     }
@@ -173,7 +177,6 @@ const Register = () => {
           <div className="social-login">
             <p>Or continue with</p>
             <div className="social-buttons">
-              <button type="button" className="social-btn google" onClick={() => handleOAuthLogin('google')}>Google</button>
               <button type="button" className="social-btn github" onClick={() => handleOAuthLogin('github')}>GitHub</button>
             </div>
           </div>

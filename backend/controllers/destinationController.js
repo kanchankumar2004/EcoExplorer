@@ -12,6 +12,18 @@ export const getDestinations = async (req, res, next) => {
   }
 };
 
+// @desc    Fetch logged in host's destinations
+// @route   GET /api/destinations/my-listings
+// @access  Private/Host
+export const getMyDestinations = async (req, res, next) => {
+  try {
+    const destinations = await Destination.find({ host: req.user._id });
+    res.status(200).json(destinations);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Fetch single destination
 // @route   GET /api/destinations/:id
 // @access  Public
@@ -32,10 +44,13 @@ export const getDestinationById = async (req, res, next) => {
 
 // @desc    Create a destination
 // @route   POST /api/destinations
-// @access  Private/Admin (Placeholder for now, keeping it open for seeding)
+// @access  Private/Host
 export const createDestination = async (req, res, next) => {
   try {
-    const destination = new Destination(req.body);
+    const destination = new Destination({
+      ...req.body,
+      host: req.user._id
+    });
     const createdDestination = await destination.save();
     res.status(201).json(createdDestination);
   } catch (error) {
@@ -45,12 +60,18 @@ export const createDestination = async (req, res, next) => {
 
 // @desc    Update a destination
 // @route   PUT /api/destinations/:id
-// @access  Private/Admin
+// @access  Private/Host
 export const updateDestination = async (req, res, next) => {
   try {
     const destination = await Destination.findById(req.params.id);
 
     if (destination) {
+      // Check if user is the host or an admin
+      if (destination.host.toString() !== req.user._id.toString() && req.user.userType !== 'admin') {
+        res.status(403);
+        throw new Error('Not authorized to update this destination');
+      }
+
       Object.assign(destination, req.body);
       const updatedDestination = await destination.save();
       res.status(200).json(updatedDestination);
@@ -65,12 +86,18 @@ export const updateDestination = async (req, res, next) => {
 
 // @desc    Delete a destination
 // @route   DELETE /api/destinations/:id
-// @access  Private/Admin
+// @access  Private/Host
 export const deleteDestination = async (req, res, next) => {
   try {
     const destination = await Destination.findById(req.params.id);
 
     if (destination) {
+      // Check if user is the host or an admin
+      if (destination.host.toString() !== req.user._id.toString() && req.user.userType !== 'admin') {
+        res.status(403);
+        throw new Error('Not authorized to delete this destination');
+      }
+
       await destination.deleteOne();
       res.status(200).json({ message: 'Destination removed' });
     } else {

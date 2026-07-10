@@ -1,9 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import AddListingModal from '../components/AddListingModal';
 import './OwnerDashboard.css';
 
 const OwnerDashboard = () => {
+  const { token } = useAuth();
+  const [listings, setListings] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        const config = { headers: { Authorization: `Bearer ${token}` } };
+        const { data } = await axios.get('/api/destinations/my-listings', config);
+        setListings(data);
+      } catch (error) {
+        console.error('Failed to fetch listings', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    if (token) {
+      fetchListings();
+    }
+  }, [token]);
+
+  const handleListingAdded = (newListing) => {
+    setListings(prev => [...prev, newListing]);
+  };
+
   const stats = {
-    totalListings: 3,
+    totalListings: listings.length,
     totalBookings: 24,
     revenue: '$5,400',
     ratings: 4.8
@@ -19,7 +49,9 @@ const OwnerDashboard = () => {
       <div className="dashboard-container">
         <div className="dashboard-header">
           <h1>Host Dashboard</h1>
-          <button className="add-listing-btn">+ Add New Listing</button>
+          <button className="add-listing-btn" onClick={() => setIsModalOpen(true)}>
+            + Add New Listing
+          </button>
         </div>
 
         <div className="stats-grid">
@@ -85,23 +117,31 @@ const OwnerDashboard = () => {
 
           <div className="section">
             <h2>My Listings</h2>
-            <div className="listings-grid">
-              <div className="listing-card">
-                <div className="listing-image">🏡</div>
-                <h3>Mountain Retreat</h3>
-                <p>uttarakhandIndia</p>
-                <p className="status">✓ Active</p>
+            {loading ? (
+              <p>Loading listings...</p>
+            ) : listings.length === 0 ? (
+              <p>You haven't added any listings yet.</p>
+            ) : (
+              <div className="listings-grid">
+                {listings.map(listing => (
+                  <div className="listing-card" key={listing._id}>
+                    <div className="listing-image" style={{ backgroundImage: `url(${listing.image})`, backgroundSize: 'cover', backgroundPosition: 'center', height: '150px' }}></div>
+                    <h3>{listing.name}</h3>
+                    <p>{listing.location}</p>
+                    <p className="status">✓ Active • {listing.price}</p>
+                  </div>
+                ))}
               </div>
-              <div className="listing-card">
-                <div className="listing-image">🏖️</div>
-                <h3>Coastal Cottage</h3>
-                <p>Costa Rica Coast</p>
-                <p className="status">✓ Active</p>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
+      
+      <AddListingModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onListingAdded={handleListingAdded}
+      />
     </div>
   );
 };

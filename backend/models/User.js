@@ -17,13 +17,17 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
     },
-    googleId: {
-      type: String,
-      default: null,
-    },
     githubId: {
       type: String,
       default: null,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      default: '',
     },
     userType: {
       type: String,

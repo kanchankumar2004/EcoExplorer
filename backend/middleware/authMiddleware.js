@@ -31,3 +31,11 @@ export const protect = async (req, res, next) => {
     return res.status(401).json({ message: 'Not authorized, no token provided' });
   }
 };
+
+export const isHost = (req, res, next) => {
+  if (req.user && (req.user.userType === 'host' || req.user.userType === 'both' || req.user.userType === 'admin')) {
+    next();
+  } else {
+    res.status(403).json({ message: 'Not authorized as a host' });
+  }
+};

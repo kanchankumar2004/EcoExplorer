@@ -69,7 +69,11 @@ const Login = () => {
         navigate('/');
       }
     } else {
-      setError(result.message || 'Invalid email or password.');
+      if (result.requiresVerification) {
+        navigate('/verify-email', { state: { email: result.email } });
+      } else {
+        setError(result.message || 'Invalid email or password.');
+      }
     }
   };
 
@@ -130,7 +134,6 @@ const Login = () => {
           <div className="social-login">
             <p>Or continue with</p>
             <div className="social-buttons">
-              <button type="button" className="social-btn google" onClick={() => handleOAuthLogin('google')}>Google</button>
               <button type="button" className="social-btn github" onClick={() => handleOAuthLogin('github')}>GitHub</button>
             </div>
           </div>

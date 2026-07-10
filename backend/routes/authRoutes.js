@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser, getMe, updateUserProfile, changePassword } from '../controllers/authController.js';
+import { registerUser, loginUser, getMe, updateUserProfile, changePassword, verifyEmail, deleteAccount } from '../controllers/authController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { check } from 'express-validator';
 import rateLimit from 'express-rate-limit';
@@ -27,9 +27,11 @@ const loginValidation = [
 
 router.post('/register', authLimiter, registerValidation, registerUser);
 router.post('/login', authLimiter, loginValidation, loginUser);
+router.post('/verify-email', verifyEmail);
 router.get('/me', protect, getMe);
 router.put('/profile', protect, updateUserProfile);
 router.put('/change-password', protect, changePassword);
+router.delete('/profile', protect, deleteAccount);
 
 // OAuth Helper
 const generateToken = (id) => {
@@ -38,13 +40,6 @@ const generateToken = (id) => {
   });
 };
 
-// Google OAuth Routes
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
-router.get('/google/callback', passport.authenticate('google', { session: false, failureRedirect: '/login' }), (req, res) => {
-  const token = generateToken(req.user._id);
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-  res.redirect(`${frontendUrl}/login?token=${token}`);
-});
 
 // GitHub OAuth Routes
 router.get('/github', passport.authenticate('github', { scope: ['user:email'], session: false }));

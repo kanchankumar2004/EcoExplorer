@@ -14,6 +14,7 @@ import HomestayDetails from './pages/HomestayDetails';
 import TravelPlanner from './pages/TravelPlanner';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import VerifyEmail from './pages/VerifyEmail';
 import Profile from './pages/Profile';
 import Favorites from './pages/Favorites';
 import MyBookings from './pages/MyBookings';
@@ -32,6 +33,7 @@ function AppContent() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/verify-email" element={<VerifyEmail />} />
 
       <Route
         path="/"

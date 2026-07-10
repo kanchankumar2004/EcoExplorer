@@ -47,20 +47,42 @@ export const AuthProvider = ({ children }) => {
       return { success: true, user: userData };
     } catch (error) {
       setLoading(false);
-      const message = error.response?.data?.message || 'Invalid email or password';
-      return { success: false, message };
+      const data = error.response?.data || {};
+      const message = data.message || 'Invalid email or password';
+      return { success: false, message, requiresVerification: data.requiresVerification, email: data.email };
     }
   };
 
   const register = async (userData) => {
     setLoading(true);
     try {
-      await axios.post('/api/auth/register', userData);
+      const res = await axios.post('/api/auth/register', userData);
       setLoading(false);
-      return { success: true };
+      return { success: true, requiresVerification: res.data.requiresVerification, email: res.data.email };
     } catch (error) {
       setLoading(false);
       const message = error.response?.data?.message || 'Registration failed';
+      return { success: false, message };
+    }
+  };
+
+  const verifyEmailCode = async (email, token) => {
+    setLoading(true);
+    try {
+      const res = await axios.post('/api/auth/verify-email', { email, token });
+      const data = res.data;
+
+      localStorage.setItem('eco_token', data.token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+      
+      const { token: jwtToken, ...userData } = data;
+      setUser(userData);
+      setIsAuthenticated(true);
+      setLoading(false);
+      return { success: true, user: userData };
+    } catch (error) {
+      setLoading(false);
+      const message = error.response?.data?.message || 'Verification failed';
       return { success: false, message };
     }
   };
@@ -99,6 +121,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const deleteAccount = async () => {
+    setLoading(true);
+    try {
+      await axios.delete('/api/auth/profile');
+      logout();
+      return { success: true };
+    } catch (error) {
+      setLoading(false);
+      const message = error.response?.data?.message || 'Failed to delete account';
+      return { success: false, message };
+    }
+  };
+
   const loginWithToken = async (token) => {
     setLoading(true);
     localStorage.setItem('eco_token', token);
@@ -129,9 +164,11 @@ export const AuthProvider = ({ children }) => {
         login,
         loginWithToken,
         register,
+        verifyEmailCode,
         logout,
         updateProfile,
         changePassword,
+        deleteAccount,
       }}
     >
       {children}

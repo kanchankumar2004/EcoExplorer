@@ -2,6 +2,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
 import User from '../models/User.js';
+import crypto from 'crypto';
+import sendEmail from '../utils/sendEmail.js';
 
 // Helper to generate JWT
 const generateToken = (id) => {
@@ -56,12 +58,17 @@ export const registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(12);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // 4. Create user in DB
+    // 4. Generate verification token (6 digit OTP)
+    const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // 5. Create user in DB (unverified)
     const user = await User.create({
       name: name.trim(),
       email: email.toLowerCase().trim(),
       password: hashedPassword,
       userType: role,
+      isVerified: false,
+      verificationToken,
       phone: '',
       bio: '',
       country: '',
@@ -69,23 +76,24 @@ export const registerUser = async (req, res) => {
     });
 
     if (user) {
-      // 5. Respond with token
+      // 6. Send verification email
+      const message = `Welcome to EcoExplorer!\n\nYour verification code is: ${verificationToken}\n\nPlease enter this code on the verification page to activate your account.`;
+      
+      try {
+        await sendEmail({
+          email: user.email,
+          subject: 'EcoExplorer - Verify your email',
+          message,
+        });
+      } catch (err) {
+        console.error('Email sending failed:', err);
+        // We still created the user, but maybe tell them email failed
+      }
+
       res.status(201).json({
-        id: user._id,
-        name: user.name,
+        message: 'Registration successful! Please check your email to verify your account.',
         email: user.email,
-        userType: user.userType,
-        phone: user.phone,
-        bio: user.bio,
-        country: user.country,
-        city: user.city,
-        avatar: user.avatar || '',
-        settings: user.settings || {
-          notifications: { emailAlerts: true, weeklyNewsletter: false, bookingUpdates: true },
-          privacy: { profilePublic: true, showActivity: true },
-          paymentMethods: []
-        },
-        token: generateToken(user._id)
+        requiresVerification: true
       });
     } else {
       res.status(400).json({ message: 'Invalid user data' });
@@ -112,6 +120,15 @@ export const loginUser = async (req, res) => {
     const user = await User.findOne({ email: email.toLowerCase().trim() });
     if (!user) {
       return res.status(400).json({ message: 'Invalid email or password' });
+    }
+
+    // 2.5 Check if user is verified
+    if (!user.isVerified) {
+      return res.status(403).json({ 
+        message: 'Please verify your email address before logging in.',
+        requiresVerification: true,
+        email: user.email 
+      });
     }
 
     // 3. Compare password
@@ -141,6 +158,60 @@ export const loginUser = async (req, res) => {
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ message: 'Server error during login' });
+  }
+};
+
+// @desc    Verify email with OTP
+// @route   POST /api/auth/verify-email
+// @access  Public
+export const verifyEmail = async (req, res) => {
+  const { email, token } = req.body;
+  
+  if (!email || !token) {
+    return res.status(400).json({ message: 'Email and token are required' });
+  }
+
+  try {
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user.isVerified) {
+      return res.status(400).json({ message: 'Email is already verified' });
+    }
+
+    if (user.verificationToken !== token) {
+      return res.status(400).json({ message: 'Invalid verification code' });
+    }
+
+    // Mark as verified
+    user.isVerified = true;
+    user.verificationToken = '';
+    await user.save();
+
+    // Generate login token automatically after verification
+    res.status(200).json({
+      message: 'Email verified successfully',
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      userType: user.userType,
+      phone: user.phone || '',
+      bio: user.bio || '',
+      country: user.country || '',
+      city: user.city || '',
+      avatar: user.avatar || '',
+      settings: user.settings || {
+        notifications: { emailAlerts: true, weeklyNewsletter: false, bookingUpdates: true },
+        privacy: { profilePublic: true, showActivity: true },
+        paymentMethods: []
+      },
+      token: generateToken(user._id)
+    });
+  } catch (error) {
+    console.error('Verification error:', error);
+    res.status(500).json({ message: 'Server error during verification' });
   }
 };
 
@@ -251,5 +322,24 @@ export const changePassword = async (req, res) => {
   } catch (error) {
     console.error('Change password error:', error);
     res.status(500).json({ message: 'Server error during password update' });
+  }
+};
+
+// @desc    Delete user account
+// @route   DELETE /api/auth/profile
+// @access  Private
+export const deleteAccount = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    await User.findByIdAndDelete(req.user.id);
+
+    res.status(200).json({ message: 'Account deleted successfully' });
+  } catch (error) {
+    console.error('Delete account error:', error);
+    res.status(500).json({ message: 'Server error during account deletion' });
   }
 };
