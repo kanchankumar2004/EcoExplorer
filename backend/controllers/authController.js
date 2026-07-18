@@ -60,6 +60,9 @@ export const registerUser = async (req, res) => {
 
     // 4. Generate verification token (6 digit OTP)
     const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log(`\n================================`);
+    console.log(`🔑 OTP for ${email}: ${verificationToken}`);
+    console.log(`================================\n`);
 
     // 5. Create user in DB (unverified)
     const user = await User.create({

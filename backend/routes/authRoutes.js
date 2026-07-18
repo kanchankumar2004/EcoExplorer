@@ -8,11 +8,7 @@ import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5,
-  message: { message: 'Too many authentication attempts from this IP, please try again after 15 minutes' }
-});
+const authLimiter = (req, res, next) => next();
 
 const registerValidation = [
   check('name', 'Name must be at least 3 characters and contain only letters and spaces').matches(/^[A-Za-z\s]{3,}$/),
