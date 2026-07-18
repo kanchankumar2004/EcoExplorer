@@ -1,3 +1,6 @@
+import { extraDestinations, extraHomestays } from './extraMockData.js';
+import { moreDestinations } from './moreDestinations.js';
+
 export const destinations = [
   {
     id: 1,
@@ -279,7 +282,189 @@ export const destinations = [
         helpful: 19
       }
     ]
-  }
+  },
+  {
+    id: 7,
+    name: 'Nainital Lake Eco-Tours',
+    image: 'https://images.unsplash.com/photo-1585828068970-87779d722d7d?auto=format&fit=crop&w=600&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1585828068970-87779d722d7d?auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=300&q=80'
+    ],
+    rating: 4.5,
+    reviews: 154,
+    reviewsCount: 154,
+    price: 'From $50/day',
+    location: 'Nainital, Uttarakhand, India',
+    latitude: 29.3919,
+    longitude: 79.4542,
+    tags: ['Lakeside', 'Boating', 'Heritage'],
+    description: 'Explore the lake city with sustainable boating and heritage walks.',
+    longDescription: 'Nainital is a charming hill station nestled around a beautiful pear-shaped lake. Discover local heritage, enjoy eco-friendly paddle boating, and take a cable car ride to Snow View Point for a panoramic view of the majestic Himalayas.',
+    highlights: [
+      'Eco-friendly paddle boating',
+      'Naina Devi Temple visit',
+      'Snow View Point cable car',
+      'Tiffin Top hike',
+      'Heritage walks along the Mall Road'
+    ],
+    amenities: [
+      'Heritage eco-stays',
+      'Local history guides',
+      'Boat passes',
+      'Traditional local cuisine'
+    ],
+    reviewsList: [
+      {
+        id: 1,
+        author: 'Ravi T.',
+        rating: 4.5,
+        date: '2024-04-12',
+        title: 'Peaceful lake vibes',
+        text: 'A very relaxing trip. The heritage walk was eye-opening.',
+        images: [],
+        helpful: 11
+      }
+    ]
+  },
+  {
+    id: 8,
+    name: 'Kedarnath Valley Retreat',
+    image: 'https://images.unsplash.com/photo-1601362840469-51e4d8d58785?auto=format&fit=crop&w=600&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1601362840469-51e4d8d58785?auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=300&q=80'
+    ],
+    rating: 4.9,
+    reviews: 320,
+    reviewsCount: 320,
+    price: 'From $85/day',
+    location: 'Rudraprayag, Uttarakhand, India',
+    latitude: 30.7352,
+    longitude: 79.0669,
+    tags: ['Spiritual', 'Trekking', 'High Altitude'],
+    description: 'A spiritual eco-journey through the majestic Kedarnath valley.',
+    longDescription: 'Embark on a spiritual and ecological trek to the revered Kedarnath Temple. Surrounded by snow-capped peaks and alpine meadows, this journey connects you with ancient traditions while supporting local sustainable eco-camps along the trekking route.',
+    highlights: [
+      'Kedarnath temple trek',
+      'Mandakini river walk',
+      'Bhairavnath Temple hike',
+      'Alpine flora spotting',
+      'Spiritual ceremonies'
+    ],
+    amenities: [
+      'High-altitude eco-tents',
+      'Experienced porters',
+      'Oxygen cylinders available',
+      'Hot vegetarian meals'
+    ],
+    reviewsList: [
+      {
+        id: 1,
+        author: 'Priya M.',
+        rating: 5,
+        date: '2024-05-02',
+        title: 'A spiritual awakening',
+        text: 'The trek is tough but the destination is heavenly. Excellent eco-camps.',
+        images: [],
+        helpful: 40
+      }
+    ]
+  },
+  {
+    id: 9,
+    name: 'Lansdowne Pine Retreat',
+    image: 'https://images.unsplash.com/photo-1513026705753-bc3fffca8bf4?auto=format&fit=crop&w=600&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1513026705753-bc3fffca8bf4?auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=300&q=80'
+    ],
+    rating: 4.7,
+    reviews: 142,
+    reviewsCount: 142,
+    price: 'From $45/day',
+    location: 'Lansdowne, Uttarakhand, India',
+    latitude: 29.8377,
+    longitude: 78.6871,
+    tags: ['Cantonment', 'Pine Forests', 'Quiet'],
+    description: 'A serene cantonment town surrounded by thick oak and blue pine forests.',
+    longDescription: 'Lansdowne is one of the quietest and most unspoiled hill stations of India. Originally a British cantonment, it retains a colonial charm mixed with the natural beauty of thick pine forests. Enjoy eco-friendly nature walks, bird watching, and a peaceful retreat away from city crowds.',
+    highlights: [
+      'Tip n Top viewpoint hike',
+      'Bhulla Tal lake visit',
+      'St. Mary\'s Church heritage tour',
+      'Pine forest nature walks',
+      'Bird watching'
+    ],
+    amenities: [
+      'Eco-lodges',
+      'Heritage walks',
+      'Local cuisine',
+      'Bicycle rentals'
+    ],
+    reviewsList: [
+      {
+        id: 1,
+        author: 'Sita D.',
+        rating: 4.8,
+        date: '2024-05-10',
+        title: 'Extremely peaceful',
+        text: 'The best place to disconnect. The pine forests are beautiful and the town is very clean.',
+        images: [],
+        helpful: 15
+      }
+    ]
+  },
+  {
+    id: 10,
+    name: 'Haridwar Ganges Walk',
+    image: 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=600&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1606298246186-08868ab77562?auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=300&q=80'
+    ],
+    rating: 4.6,
+    reviews: 280,
+    reviewsCount: 280,
+    price: 'From $40/day',
+    location: 'Haridwar, Uttarakhand, India',
+    latitude: 29.9457,
+    longitude: 78.1642,
+    tags: ['Spiritual', 'River', 'Culture'],
+    description: 'Experience the spiritual energy of the Ganges with sustainable community tourism.',
+    longDescription: 'Haridwar is an ancient city and an important Hindu pilgrimage site where the River Ganges exits the Himalayan foothills. Our eco-walks focus on sustainable community tourism, connecting you with local artisans, responsible ashrams, and the mesmerising evening Ganga Aarti.',
+    highlights: [
+      'Har Ki Pauri evening Aarti',
+      'Mansa Devi temple cable car',
+      'Ashram community service',
+      'Local artisan workshops',
+      'Ganges river walks'
+    ],
+    amenities: [
+      'Riverside ashram stays',
+      'Spiritual guides',
+      'Vegetarian local meals',
+      'Community volunteering'
+    ],
+    reviewsList: [
+      {
+        id: 1,
+        author: 'John K.',
+        rating: 4.5,
+        date: '2024-03-22',
+        title: 'Deeply moving',
+        text: 'The Aarti is a beautiful experience. Our guide was very knowledgeable about local sustainability.',
+        images: [],
+        helpful: 28
+      }
+    ]
+  },
+  ...extraDestinations,
+  ...moreDestinations
 ];
 
 export const homestays = [
@@ -642,5 +827,197 @@ export const homestays = [
         helpful: 12
       }
     ]
-  }
+  },
+  {
+    id: 7,
+    name: 'Nainital Lakeside Heritage Home',
+    image: 'https://images.unsplash.com/photo-1566908829550-e6551b00979b?auto=format&fit=crop&w=600&q=80',
+    location: 'Nainital, Uttarakhand, India',
+    latitude: 29.3919,
+    longitude: 79.4542,
+    rating: 4.8,
+    reviews: 112,
+    reviewsCount: 112,
+    pricePerNight: 85,
+    maxGuests: 4,
+    amenities: ['Lake View', 'Vintage Decor', 'Balcony', 'Library', 'Breakfast Included'],
+    description: 'A beautifully restored British-era heritage home overlooking the Naini Lake.',
+    longDescription: 'Step back in time at our carefully preserved heritage homestay. Wake up to the serene views of Naini Lake from your private balcony. Enjoy reading in our vintage library, savor authentic Kumaoni breakfast, and take leisurely strolls down the historic Mall Road just minutes away.',
+    facilities: [
+      'Heritage furnished rooms',
+      'Lake-facing balconies',
+      'In-house library',
+      'Antique fireplace',
+      'Complimentary breakfast',
+      'Fast WiFi'
+    ],
+    localExperiences: [
+      {
+        id: '7-heritage',
+        title: 'Guided Heritage Walk of Nainital',
+        price: 25,
+        duration: '2 Hours',
+        instructor: 'Dr. Ajay Rawat',
+        category: 'Culture',
+        image: 'https://images.unsplash.com/photo-1585828068970-87779d722d7d?auto=format&fit=crop&w=400&q=80',
+        description: 'Explore the colonial architecture, historical churches, and hidden stories of Nainital with a local historian.'
+      }
+    ],
+    reviewsList: [
+      {
+        id: 1,
+        author: 'Samuel L.',
+        rating: 5,
+        date: '2024-04-20',
+        title: 'Classic elegance',
+        text: 'The view of the lake at night from the balcony is magical. Highly recommend!',
+        images: [],
+        helpful: 16
+      }
+    ]
+  },
+  {
+    id: 8,
+    name: 'Kedarnath Valley Guest House',
+    image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=600&q=80',
+    location: 'Guptkashi, Uttarakhand, India',
+    latitude: 30.5222,
+    longitude: 79.0767,
+    rating: 4.6,
+    reviews: 95,
+    reviewsCount: 95,
+    pricePerNight: 45,
+    maxGuests: 6,
+    amenities: ['Mountain View', 'Spiritual Retreat', 'Local Food', 'Temple Access'],
+    description: 'A peaceful resting place for pilgrims and trekkers heading to Kedarnath.',
+    longDescription: 'Our humble guest house in Guptkashi serves as the perfect base camp for your spiritual journey to Kedarnath. We provide clean, warm rooms, nutritious local meals, and can arrange local transport and trekking guides for your temple visit.',
+    facilities: [
+      'Clean comfortable rooms',
+      'Hot water available',
+      'Vegetarian dining hall',
+      'Trek planning assistance',
+      'Luggage storage'
+    ],
+    localExperiences: [
+      {
+        id: '8-temple',
+        title: 'Guptkashi Temple Tour & Aarti',
+        price: 10,
+        duration: '1.5 Hours',
+        instructor: 'Pandit Sharma',
+        category: 'Spiritual',
+        image: 'https://images.unsplash.com/photo-1601362840469-51e4d8d58785?auto=format&fit=crop&w=400&q=80',
+        description: 'Visit the ancient Vishwanath Temple of Guptkashi and participate in the evening Aarti ceremony.'
+      }
+    ],
+    reviewsList: [
+      {
+        id: 1,
+        author: 'Amit P.',
+        rating: 4.5,
+        date: '2024-05-15',
+        title: 'Great basecamp',
+        text: 'Perfect place to rest before the big trek. The hosts were very helpful with arrangements.',
+        images: [],
+        helpful: 22
+      }
+    ]
+  },
+  {
+    id: 9,
+    name: 'Lansdowne Cantonment Homestay',
+    image: 'https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=600&q=80',
+    location: 'Lansdowne, Uttarakhand, India',
+    latitude: 29.8377,
+    longitude: 78.6871,
+    rating: 4.8,
+    reviews: 134,
+    reviewsCount: 134,
+    pricePerNight: 55,
+    maxGuests: 4,
+    amenities: ['Pine View', 'Heritage Property', 'Library', 'Garden', 'Home Cooked Meals'],
+    description: 'A restored colonial-era bungalow surrounded by thick pine and oak forests.',
+    longDescription: 'Experience the colonial charm of Lansdowne in our meticulously restored bungalow. Set amidst thick pine and oak forests, our homestay offers a tranquil retreat. Enjoy our curated library, relax in the expansive garden, and savor delicious Garhwali cuisine prepared by our family.',
+    facilities: [
+      'Colonial-era architecture',
+      'Spacious pine-view rooms',
+      'Large garden with seating',
+      'Cozy reading room',
+      'Authentic local meals',
+      'Bonfire on request'
+    ],
+    localExperiences: [
+      {
+        id: '9-history',
+        title: 'Garhwal Rifles Heritage Walk',
+        price: 15,
+        duration: '2 Hours',
+        instructor: 'Col. Bisht (Retd.)',
+        category: 'History',
+        image: 'https://images.unsplash.com/photo-1513026705753-bc3fffca8bf4?auto=format&fit=crop&w=400&q=80',
+        description: 'Take a guided walk through the cantonment area, learning about the rich history of the Garhwal Rifles and local colonial architecture.'
+      }
+    ],
+    reviewsList: [
+      {
+        id: 1,
+        author: 'Meera S.',
+        rating: 5,
+        date: '2024-05-18',
+        title: 'Beautiful heritage stay',
+        text: 'The house is gorgeous and the hosts are incredibly polite. The food was a major highlight.',
+        images: [],
+        helpful: 14
+      }
+    ]
+  },
+  {
+    id: 10,
+    name: 'Haridwar Riverside Ashram Stay',
+    image: 'https://images.unsplash.com/photo-1605281317010-fe5ffe798166?auto=format&fit=crop&w=600&q=80',
+    location: 'Haridwar, Uttarakhand, India',
+    latitude: 29.9457,
+    longitude: 78.1642,
+    rating: 4.7,
+    reviews: 198,
+    reviewsCount: 198,
+    pricePerNight: 35,
+    maxGuests: 2,
+    amenities: ['River View', 'Yoga Classes', 'Vegetarian Meals', 'Meditation Hall', 'Spiritual Library'],
+    description: 'A peaceful ashram experience right on the banks of the holy Ganges.',
+    longDescription: 'Disconnect from the modern world and immerse yourself in spiritual living at our riverside ashram. We offer simple, clean accommodations with beautiful views of the Ganges. Join daily yoga and meditation sessions, and participate in our sustainable community initiatives.',
+    facilities: [
+      'Simple, clean rooms',
+      'Riverside meditation hall',
+      'Daily yoga classes',
+      'Sattvic vegetarian dining',
+      'Spiritual library',
+      'Direct river access'
+    ],
+    localExperiences: [
+      {
+        id: '10-aarti',
+        title: 'Private Ganga Aarti & Chanting',
+        price: 12,
+        duration: '1.5 Hours',
+        instructor: 'Swami Govind',
+        category: 'Spiritual',
+        image: 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=400&q=80',
+        description: 'Participate in a private, intimate Aarti ceremony by the riverbank, away from the main crowds, followed by Vedic chanting.'
+      }
+    ],
+    reviewsList: [
+      {
+        id: 1,
+        author: 'David W.',
+        rating: 4.5,
+        date: '2024-04-05',
+        title: 'Transformative experience',
+        text: 'A very authentic ashram stay. Simple living but very profound. The yoga classes are excellent.',
+        images: [],
+        helpful: 35
+      }
+    ]
+  },
+  ...extraHomestays
 ];

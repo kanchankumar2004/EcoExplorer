@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import connectDB from './config/db.js';
 import Destination from './models/Destination.js';
+import User from './models/User.js';
 import { destinations } from '../src/utils/mockData.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -18,12 +19,20 @@ const importData = async () => {
     // Clear existing destinations
     await Destination.deleteMany();
 
-    // The mock data has an 'id' field, but MongoDB creates '_id' automatically.
-    // We can map out the 'id' field to let Mongo handle IDs, or keep it.
-    // It's safer to remove the hardcoded 'id' and let Mongo generate '_id'.
+    // Get a user to act as host, or create one if none exist
+    let hostUser = await User.findOne({});
+    if (!hostUser) {
+      hostUser = await User.create({
+        name: 'Admin User',
+        email: 'admin@ecoexplorer.com',
+        password: 'password123',
+        userType: 'admin'
+      });
+    }
+
     const sampleDestinations = destinations.map((dest) => {
       const { id, ...rest } = dest;
-      return rest;
+      return { ...rest, host: hostUser._id };
     });
 
     await Destination.insertMany(sampleDestinations);
