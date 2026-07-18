@@ -20,6 +20,22 @@
   @apply grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-8;
 }
 
+.view-toggle {
+  @apply flex gap-2 bg-bg-secondary p-1 rounded-lg border border-border-color shadow-sm transition-colors duration-300;
+}
+
+.toggle-btn {
+  @apply py-2 px-4 rounded-md border-none bg-transparent text-text-muted cursor-pointer font-medium transition-all duration-300 flex items-center gap-2;
+}
+
+.toggle-btn:hover {
+  @apply text-text-primary bg-bg-tertiary;
+}
+
+.toggle-btn.active {
+  @apply bg-[#7fd051] text-white shadow-md;
+}
+
 @media (max-width: 768px) {
   .homestays-header {
     @apply flex-col items-start;
