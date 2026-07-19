@@ -1,108 +1,59 @@
-# EcoExplorer - AI-Assisted Eco-Tourism & Homestay Platform
+# EcoExplorer — AI-Assisted Eco-Tourism & Homestay Platform
 
-A modern, fully functional frontend for an eco-tourism and homestay booking platform powered by artificial intelligence. Built with React, React Router, and Tailwind CSS v4.
+EcoExplorer is a modern, full-stack platform designed to facilitate sustainable travel, eco-friendly stays, and green tourism. Built using the MERN stack (MongoDB, Express, React, Node.js), Tailwind CSS v4, and integrated with the Google Gemini API.
+
+---
 
 ## 🌿 Features
 
-### Pages
-- **Home** - Welcome page with featured destinations and homestays
-- **Destinations** - Browse all available eco-tourism destinations
-- **Destination Details** - View detailed information, reviews, and maps
-- **Homestays** - Browse all available homestays
-- **Homestay Details** - View homestay details with booking form
-- **AI Planner** - AI-powered travel planning assistant
-- **Login/Register** - User authentication pages (frontend forms only)
-- **Profile** - User profile management
-- **Favorites** - Save and manage favorite destinations
-- **My Bookings** - View and manage bookings
-- **Owner Dashboard** - Dashboard for homestay owners
-- **Admin Dashboard** - Admin panel for platform management
+### Core Modules
+* **AI Travel Planner**: Interactive, context-aware travel planner powered by `gemini-3.5-flash` with automatic request formatting, real-time loading/typing state animations, and descriptive error dialogs.
+* **In-App Messaging System**: A full traveler-host chat room with unread count notification badges, automated email notifications for new inquiries, quick-reply dashboard integrations, and granular message/full chat delete options.
+* **Host & Admin Dashboards**: Dynamic metrics cards tracking total listings, active bookings, unread incoming queries, ratings, and revenue, alongside table-based approval workflows for host management.
+* **Authentication Gating**: Secure client-side route guards powered by JWT tokens, persistent session context local-storage, and passport-based Google/GitHub OAuth integrations.
 
-### Components
-- **Navbar** - Responsive navigation with mobile menu
-- **Footer** - Comprehensive footer with links
-- **Hero** - Beautiful hero section for pages
-- **SearchBar** - Advanced search with filters
-- **DestinationCard** - Card component for destinations
-- **HomestayCard** - Card component for homestays
-- **AIChat** - Interactive AI chat assistant
-- **BookingCard** - Booking information display
-- **ReviewCard** - User review component
-- **MapView** - Location map placeholder
+### Navigation / Routing
+* `/` — Explore featured eco-lodges, homestays, and green destinations.
+* `/destinations` — Directory of available green travel points.
+* `/homestays` — Discover homestay opportunities.
+* `/travel-planner` — Prompt-engineered AI itinerary assistance.
+* `/messages` — Two-panel real-time chat interface.
+* `/owner-dashboard` — Control center for homestay owners and managers.
+* `/profile` — User account configuration.
 
-### Styling
-- **Tailwind CSS v4** (Utility-first styling compiled externally using `@apply` and `@reference` in CSS files)
-- Responsive design (Mobile-first approach)
-- Beautiful color scheme (Green theme: `#2d5016`, `#7fd051`)
-- Smooth animations and transitions
-- Professional UI/UX
+---
 
-## 📁 Project Structure
+## 📁 Repository Structure
 
 ```
 EcoExplorer/
-├── .vscode/
-│   └── settings.json       # Editor linting overrides
-├── src/
-│   ├── pages/              # Page components & Tailwind CSS files
-│   ├── components/         # Reusable components & Tailwind CSS files
-│   ├── layouts/            # Layout components & Tailwind CSS files
-│   ├── services/           # API services
-│   ├── context/            # React context (Auth)
-│   ├── App.jsx             # Main app with routing
-│   ├── main.jsx            # Entry point
-│   └── index.css           # Tailwind base & global styles
-├── public/                 # Static assets
-├── postcss.config.js       # PostCSS plugins config
-├── tailwind.config.js      # Tailwind configuration
-├── vite.config.js          # Vite configuration
-├── eslint.config.js        # ESLint configuration
-├── package.json            # Dependencies
-└── index.html              # HTML template
+├── backend/                # Node.js + Express API Service
+│   ├── controllers/        # Business logic controllers (Auth, AI, Message, Bookings)
+│   ├── models/             # Mongoose schemas (User, Message, Booking, Homestay, Destination)
+│   ├── routes/             # Express route mappings
+│   ├── middleware/         # Auth verification, role checks, error handlers
+│   └── server.js           # Server application configuration
+├── src/                    # Frontend React Application
+│   ├── context/            # React Auth context & session providers
+│   ├── components/         # Reusable widgets (AIChat, Navbar, SearchBar)
+│   ├── pages/              # Primary route view components & CSS sheets
+│   ├── App.jsx             # React routing & route guards
+│   └── index.css           # Global theme styling config (Tailwind v4)
+└── PROMPTS.md              # AI engineering prompt log
 ```
 
-## 🚀 Getting Started
+---
 
-### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn
-
-### Installation
-
-1. Navigate to the project directory:
-```bash
-cd EcoExplorer
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Start the development server:
-```bash
-npm run dev
-```
-
-4. Open your browser and navigate to:
-```
-http://localhost:3000
-```
-
-## 🗄️ Database Choice & Schema
+## 🗄️ Database Schema & Architecture
 
 **Database Chosen:** MongoDB (with Mongoose)
-
-**Why:** 
-1. **Flexibility:** As an eco-tourism platform, destinations and homestays can have highly variable data structures (e.g., varying amenities, highlights, and tags). A NoSQL document database like MongoDB easily accommodates this schema flexibility without requiring complex migrations.
-2. **Scalability:** MongoDB's horizontal scaling capabilities make it suitable for handling high volumes of searches, bookings, and user activity as the platform grows.
-3. **JSON-like Documents:** Since the backend is built with Node.js/Express and the frontend with React, using BSON/JSON throughout the entire stack allows for seamless data processing and faster development.
-
-### Schema Diagram
 
 ```mermaid
 erDiagram
     USER ||--o{ BOOKING : "makes"
+    USER ||--o{ MESSAGE : "sends/receives"
+    USER ||--o{ HOMESTAY : "hosts"
+    
     USER {
         ObjectId _id
         String name
@@ -110,37 +61,25 @@ erDiagram
         String password
         String userType
         String phone
-        String bio
-        String country
-        String city
         String avatar
-        Object settings
-        Date createdAt
-        Date updatedAt
     }
-    DESTINATION {
+    
+    MESSAGE {
         ObjectId _id
-        String name
-        String image
-        Array images
-        Number rating
-        Number reviews
-        Number reviewsCount
-        String price
-        String location
-        Number latitude
-        Number longitude
-        Array tags
-        String description
-        String longDescription
-        Array highlights
-        Array amenities
-        Date createdAt
-        Date updatedAt
+        ObjectId sender FK
+        ObjectId receiver FK
+        String conversationId
+        String text
+        String listingName
+        String listingType
+        Boolean read
     }
+
     BOOKING {
         ObjectId _id
         ObjectId user FK
+        ObjectId host FK
+        String guestName
         String name
         String type
         Date checkIn
@@ -148,152 +87,73 @@ erDiagram
         Number guests
         Number totalPrice
         String status
-        String image
-        Date createdAt
-        Date updatedAt
+    }
+    
+    HOMESTAY {
+        ObjectId _id
+        ObjectId host FK
+        String name
+        String location
+        String pricePerNight
+        Number rating
+        Array tags
+        Array amenities
     }
 ```
 
-### Set up the database and run backend locally
+---
 
-The project includes an Express/MongoDB backend located in the `backend/` directory.
+## 🚀 Getting Started Locally
 
+### 1. Backend Service
 1. Navigate to the backend directory:
-```bash
-cd backend
-```
+   ```bash
+   cd backend
+   ```
+2. Install dependency files:
+   ```bash
+   npm install
+   ```
+3. Set up your `.env` configuration file:
+   ```bash
+   cp .env.example .env
+   ```
+   * Configure `MONGO_URI`, `JWT_SECRET`, and `GEMINI_API_KEY`.
+4. Run the database seed script to populate mock items:
+   ```bash
+   npm run seed
+   ```
+5. Start development hot-reloading server:
+   ```bash
+   npm run dev
+   ```
 
-2. Install dependencies:
-```bash
-npm install
-```
+### 2. Frontend React Service
+1. Navigate to the project root:
+   ```bash
+   cd ..
+   ```
+2. Install dependency files:
+   ```bash
+   npm install
+   ```
+3. Start the local server:
+   ```bash
+   npm run dev
+   ```
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-3. Set up the environment variables:
-Create a `.env` file in the `backend` directory by copying the provided `.env.example`:
-```bash
-cp ../.env.example .env
-```
-Ensure you provide a valid `MONGO_URI` (MongoDB connection string from MongoDB Atlas or local instance) and a `JWT_SECRET`.
+---
 
-4. Start the backend server:
-```bash
-npm run dev
-```
+## 📡 API Reference
 
-The server will start on port `5000` (or the port specified in your `.env` file). You should see:
-`🌿 EcoExplorer Server running on port 5000`
-`📡 MongoDB Connected`
+### AI Travel Assistant
+* `POST /api/ai/chat` — Generates a concise, formatted travel itinerary from user messages.
 
-## 📦 Build
-
-To create a production build:
-
-```bash
-npm run build
-```
-
-This will generate optimized files in the `dist` folder.
-
-## 🎨 Styling Guide
-
-### Tailwind CSS v4 Setup
-The platform is styled using Tailwind CSS v4 with a CSS-first configuration model. Styles are separated into external CSS files for clean component structure, utilizing `@apply` to apply Tailwind classes.
-
-- **Main Entry CSS (`src/index.css`)**: Imports Tailwind CSS via `@import "tailwindcss";`
-- **Component & Page CSS**: Refer to the theme and utilities using `@reference "../index.css"` and use `@apply` for Tailwind declarations:
-  ```css
-  @reference "../index.css";
-
-  .my-component {
-    @apply flex items-center justify-between p-4 bg-white rounded-lg shadow;
-  }
-  ```
-
-### Color Palette
-- Primary Green: `#2d5016`
-- Accent Green: `#7fd051`
-- Neutral Light: `#f5f5f5`
-- Text: `#333`
-- Secondary Text: `#666`
-
-## 🔐 Authentication & Client Routing
-
-Authentication check gates (`PrivateRoute`) have been temporarily bypassed so that all pages (Profile, Favorites, Bookings, Dashboards) can be navigated and browsed freely without log-in/registration constraints.
-
-- **Login/Register Frontend**: Forms are fully rendered but submission functionality is disabled on the frontend. Form submissions display a warning indicating registration/login is currently disabled.
-- **Default State**: A default mock traveler session is pre-loaded in the global `AuthContext` to support context-based data displays.
-
-## 📡 API Integration
-
-The app has pre-configured API endpoints in `services/api.js`. Update the `API_BASE_URL` to connect to your backend:
-
-```javascript
-const API_BASE_URL = 'https://your-api.com/api';
-```
-
-### Available API Methods
-- **destinationAPI** - Get destinations
-- **homestayAPI** - Get homestays and book
-- **authAPI** - Login/register
-- **userAPI** - User profile and favorites
-- **bookingAPI** - User bookings
-- **reviewAPI** - Reviews
-
-## 🛣️ Routing
-
-Routes are configured in `App.jsx`:
-
-```javascript
-/                    - Home page
-/destinations        - Destinations listing
-/destinations/:id    - Destination details
-/homestays          - Homestays listing
-/homestays/:id      - Homestay details
-/ai-planner         - AI travel planner
-/login              - Login page
-/register           - Register page
-/profile            - User profile (publicly bypassed)
-/favorites          - Saved favorites (publicly bypassed)
-/my-bookings        - User bookings (publicly bypassed)
-/owner-dashboard    - Host dashboard (publicly bypassed)
-/admin-dashboard    - Admin panel (publicly bypassed)
-```
-
-## 🔧 Available Scripts
-
-```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm run preview  # Preview production build locally
-```
-
-## 📚 Dependencies
-
-- **react** - UI library
-- **react-dom** - DOM rendering
-- **react-router-dom** - Routing
-- **axios** - HTTP client
-- **tailwindcss** - CSS styling framework
-- **postcss** - CSS compiler toolchain
-- **vite** - Build tool
-
-## 🎯 Next Steps
-
-1. **Connect Backend** - Replace mock API calls with real endpoints
-2. **Add Payment Integration** - Implement payment gateway for bookings
-3. **Implement Real Maps** - Replace MapView placeholder with Google Maps
-4. **Add Image Upload** - Allow users to upload profile pictures
-5. **Enhance AI Chat** - Integrate with AI API (OpenAI, etc.)
-6. **Add Notifications** - Implement real-time notifications
-7. **Mobile App** - Consider React Native for mobile
-8. **Analytics** - Add Google Analytics or similar
-9. **SEO Optimization** - Add meta tags and structured data
-10. **Testing** - Add unit and integration tests
-
-## 🤝 Contributing
-
-Feel free to customize and extend this project according to your needs.
-
-**Happy Coding! 🌍🌿**
-
-
+### Message Board
+* `GET /api/messages/conversations` — Retrieves all message threads for the logged-in user.
+* `GET /api/messages/unread-count` — Count of unread messages.
+* `GET /api/messages/:userId` — Fetch thread history with a specific user.
+* `POST /api/messages` — Send a new in-app message.
+* `DELETE /api/messages/:messageId` — Delete a single sent message.
+* `DELETE /api/messages/conversation/:userId` — Delete the entire chat history with a user.
