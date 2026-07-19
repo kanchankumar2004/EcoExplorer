@@ -7,6 +7,19 @@ const bookingSchema = new mongoose.Schema(
       required: true,
       ref: 'User',
     },
+    guestName: {
+      type: String,
+      required: true,
+    },
+    host: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
+    },
+    itemId: {
+      type: mongoose.Schema.Types.ObjectId,
+      // Optional for now because mock homestays might not use ObjectIds
+    },
     name: {
       type: String,
       required: [true, 'Please add a homestay or destination name'],

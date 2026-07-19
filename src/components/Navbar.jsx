@@ -1,17 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import axios from 'axios';
 import './Navbar.css';
 
 const Navbar = () => {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, token, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
+  // Poll unread message count
+  useEffect(() => {
+    if (!isAuthenticated || !token) {
+      setUnreadCount(0);
+      return;
+    }
+
+    const fetchUnread = async () => {
+      try {
+        const { data } = await axios.get('/api/messages/unread-count', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUnreadCount(data.count || 0);
+      } catch (err) {
+        // Silently fail
+      }
+    };
+
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 30000); // Every 30s
+    return () => clearInterval(interval);
+  }, [isAuthenticated, token]);
 
   return (
     <nav className="navbar">
@@ -55,34 +80,40 @@ const Navbar = () => {
           
           {isAuthenticated ? (
             <>
-              {user?.userType === 'admin' && (
+              {(user?.userType === 'admin') && (
                 <li className="nav-item">
                   <NavLink to="/admin-dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
                     Admin Panel
                   </NavLink>
                 </li>
               )}
-              {user?.userType === 'host' && (
+              {(user?.userType === 'host' || user?.userType === 'both' || user?.userType === 'admin') && (
                 <li className="nav-item">
                   <NavLink to="/owner-dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
                     Host Dashboard
                   </NavLink>
                 </li>
               )}
-              {(!user?.userType || user?.userType === 'traveler' || user?.userType === 'both') && (
-                <>
-                  <li className="nav-item">
-                    <NavLink to="/favorites" className="nav-link" onClick={() => setMenuOpen(false)}>
-                      Favorites
-                    </NavLink>
-                  </li>
-                  <li className="nav-item">
-                    <NavLink to="/my-bookings" className="nav-link" onClick={() => setMenuOpen(false)}>
-                      My Bookings
-                    </NavLink>
-                  </li>
-                </>
-              )}
+              <li className="nav-item">
+                <NavLink to="/favorites" className="nav-link" onClick={() => setMenuOpen(false)}>
+                  Favorites
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/my-bookings" className="nav-link" onClick={() => setMenuOpen(false)}>
+                  My Bookings
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/messages" className="nav-link" onClick={() => setMenuOpen(false)}>
+                  Messages
+                  {unreadCount > 0 && (
+                    <span className="nav-messages-badge">
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
+                </NavLink>
+              </li>
               <li className="nav-item">
                 <NavLink to="/profile" className="nav-link" onClick={() => setMenuOpen(false)}>
                   Profile
@@ -120,3 +151,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

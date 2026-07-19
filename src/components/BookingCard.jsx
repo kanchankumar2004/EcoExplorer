@@ -1,10 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { destinations, homestays } from '../utils/mockData';
+import axios from 'axios';
 import './BookingCard.css';
 
 const BookingCard = ({
   id,
+  itemId,
   name,
   type = 'Homestay',
   checkIn,
@@ -30,21 +31,26 @@ const BookingCard = ({
     }
   };
 
-  const handleViewDetails = () => {
-    if (type === 'Homestay') {
-      const homestay = homestays.find(h => h.name === name);
-      if (homestay) {
-        navigate(`/homestays/${homestay.id}`);
+  const handleViewDetails = async () => {
+    const route = type === 'Homestay' ? 'homestays' : 'destinations';
+
+    // Use itemId from the booking if available
+    if (itemId) {
+      navigate(`/${route}/${itemId}`);
+      return;
+    }
+
+    // Fallback: look up by name from the API
+    try {
+      const res = await axios.get(`/api/${route}`);
+      const match = res.data.find(item => item.name === name);
+      if (match) {
+        navigate(`/${route}/${match._id}`);
       } else {
-        alert('Homestay details not found.');
+        alert(`${type} details not found.`);
       }
-    } else if (type === 'Destination') {
-      const destination = destinations.find(d => d.name === name);
-      if (destination) {
-        navigate(`/destinations/${destination.id}`);
-      } else {
-        alert('Destination details not found.');
-      }
+    } catch (err) {
+      alert(`Could not load ${type.toLowerCase()} details.`);
     }
   };
 

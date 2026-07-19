@@ -69,11 +69,7 @@ const Login = () => {
         navigate('/');
       }
     } else {
-      if (result.requiresVerification) {
-        navigate('/verify-email', { state: { email: result.email } });
-      } else {
-        setError(result.message || 'Invalid email or password.');
-      }
+      setError(result.message || 'Invalid email or password.');
     }
   };
 

@@ -10,7 +10,7 @@ import './DestinationDetails.css';
 const DestinationDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   
   const { addFavorite, removeFavorite, isFavorite: checkIsFavorite } = useFavorites();
   
@@ -20,15 +20,18 @@ const DestinationDetails = () => {
   const [selectedDates, setSelectedDates] = useState({ checkIn: '', checkOut: '' });
   const [guests, setGuests] = useState(1);
   const [showBookingSuccess, setShowBookingSuccess] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [contactMessage, setContactMessage] = useState('');
+  const [contactSending, setContactSending] = useState(false);
+  const [contactStatus, setContactStatus] = useState('');
 
   useEffect(() => {
     const fetchDestination = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/destinations/${id}`);
-        // Mock reviews since backend doesn't store them yet
+        const response = await axios.get(`/api/destinations/${id}`);
         setDestination({
           ...response.data,
-          reviews: [] 
+          reviews: response.data.reviewsList || []
         });
       } catch (error) {
         console.error('Error fetching destination:', error);
@@ -70,12 +73,17 @@ const DestinationDetails = () => {
   const pricePerNight = destination ? parsePrice(destination.price) : 0;
   const stayTotal = pricePerNight * nights;
   const grandTotal = stayTotal;
+  const canBook = isAuthenticated && user?.userType !== 'host';
 
   const handleBooking = async (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
       alert("Please login to book this destination!");
       navigate('/login');
+      return;
+    }
+    if (user?.userType === 'host') {
+      alert('Host-only accounts cannot create bookings. Use a traveler account or a traveler+host account.');
       return;
     }
     if (nights <= 0) {
@@ -91,7 +99,10 @@ const DestinationDetails = () => {
         checkOut: selectedDates.checkOut,
         guests: Number(guests),
         totalPrice: grandTotal,
-        image: destination.image
+        image: destination.image,
+        host: destination.host,
+        itemId: destination._id,
+        guestName: user.name
       };
 
       await axios.post('/api/bookings', bookingPayload);
@@ -99,6 +110,37 @@ const DestinationDetails = () => {
     } catch (err) {
       console.error('Error creating booking:', err);
       alert(err.response?.data?.message || 'Failed to submit booking. Please try again.');
+    }
+  };
+
+  const handleContactHost = async (e) => {
+    e.preventDefault();
+
+    if (!isAuthenticated) {
+      alert('Please login to contact the host.');
+      navigate('/login');
+      return;
+    }
+
+    if (!contactMessage.trim()) {
+      setContactStatus('Please enter a message before sending.');
+      return;
+    }
+
+    try {
+      setContactSending(true);
+      setContactStatus('');
+      await axios.post('/api/bookings/contact-host', {
+        type: 'Destination',
+        itemId: destination._id,
+        message: contactMessage.trim(),
+      });
+      setContactStatus('Message sent to host successfully.');
+      setContactMessage('');
+    } catch (err) {
+      setContactStatus(err.response?.data?.message || 'Failed to contact host.');
+    } finally {
+      setContactSending(false);
     }
   };
 
@@ -172,6 +214,12 @@ const DestinationDetails = () => {
                 ))}
               </div>
 
+              {!canBook && isAuthenticated && user?.userType === 'host' && (
+                <div className="booking-disabled-note">
+                  Host-only accounts cannot book destinations. Use a traveler account or a traveler+host account.
+                </div>
+              )}
+
               <form onSubmit={handleBooking} className="booking-form" style={{ marginTop: '20px' }}>
                 <div className="form-group">
                   <label>Check-in Date</label>
@@ -223,10 +271,10 @@ const DestinationDetails = () => {
                   </div>
                 )}
 
-                <button type="submit" className="book-btn" style={{ marginTop: '15px' }}>Book Now</button>
+                <button type="submit" className="book-btn" style={{ marginTop: '15px' }} disabled={!canBook}>Book Now</button>
               </form>
 
-              <button className="contact-btn">Contact Host</button>
+              <button className="contact-btn" type="button" onClick={() => setShowContactModal(true)}>Contact Host</button>
             </div>
 
             <div className="share-section">
@@ -245,10 +293,10 @@ const DestinationDetails = () => {
       {showBookingSuccess && (
         <div className="booking-modal-overlay">
           <div className="booking-success-modal">
-            <div className="modal-icon">✅</div>
-            <h2>Booking Confirmed!</h2>
+            <div className="modal-icon">⏳</div>
+            <h2>Booking Pending Approval</h2>
             <p className="modal-subtitle">
-              Your eco-adventure at {destination.location.split(',')[0]} is locked in.
+              Your eco-adventure at {destination.location.split(',')[0]} is awaiting host confirmation.
             </p>
             
             <div className="modal-summary-card">
@@ -289,6 +337,39 @@ const DestinationDetails = () => {
             >
               View My Bookings
             </button>
+          </div>
+        </div>
+      )}
+
+      {showContactModal && (
+        <div className="booking-modal-overlay">
+          <div className="booking-success-modal contact-modal">
+            <h2>Contact Host</h2>
+            <p className="modal-subtitle">Send a quick message to the host about this destination.</p>
+
+            <form onSubmit={handleContactHost} className="contact-form">
+              <div className="form-group">
+                <label htmlFor="contactMessage">Message</label>
+                <textarea
+                  id="contactMessage"
+                  value={contactMessage}
+                  onChange={(e) => setContactMessage(e.target.value)}
+                  rows="5"
+                  placeholder="Ask about availability, rules, or anything else..."
+                />
+              </div>
+
+              {contactStatus && <p className="contact-status">{contactStatus}</p>}
+
+              <div className="contact-modal-actions">
+                <button type="button" className="contact-cancel-btn" onClick={() => setShowContactModal(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="book-btn" disabled={contactSending}>
+                  {contactSending ? 'Sending...' : 'Send Message'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

@@ -14,17 +14,22 @@ import HomestayDetails from './pages/HomestayDetails';
 import TravelPlanner from './pages/TravelPlanner';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import VerifyEmail from './pages/VerifyEmail';
 import Profile from './pages/Profile';
 import Favorites from './pages/Favorites';
 import MyBookings from './pages/MyBookings';
 import OwnerDashboard from './pages/OwnerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import Showcase from './pages/Showcase';
+import Messages from './pages/Messages';
 
 // Private Route Component
 const PrivateRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return <div style={{ padding: '100px', textAlign: 'center' }}>Loading session...</div>;
+  }
+
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
@@ -33,7 +38,6 @@ function AppContent() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/verify-email" element={<VerifyEmail />} />
 
       <Route
         path="/"
@@ -150,6 +154,17 @@ function AppContent() {
           <MainLayout>
             <Showcase />
           </MainLayout>
+        }
+      />
+
+      <Route
+        path="/messages"
+        element={
+          <PrivateRoute>
+            <MainLayout>
+              <Messages />
+            </MainLayout>
+          </PrivateRoute>
         }
       />
 

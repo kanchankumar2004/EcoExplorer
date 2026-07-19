@@ -11,7 +11,9 @@ import passport from 'passport';
 import authRoutes from './routes/authRoutes.js';
 import bookingRoutes from './routes/bookingRoutes.js';
 import destinationRoutes from './routes/destinationRoutes.js';
+import homestayRoutes from './routes/homestayRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
+import messageRoutes from './routes/messageRoutes.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -34,7 +36,7 @@ configurePassport();
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
     ? process.env.FRONTEND_URL 
-    : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    : ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:3001', 'http://127.0.0.1:3001'],
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -52,7 +54,9 @@ app.use((req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/destinations', destinationRoutes);
+app.use('/api/homestays', homestayRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Root route
 app.get('/', (req, res) => {

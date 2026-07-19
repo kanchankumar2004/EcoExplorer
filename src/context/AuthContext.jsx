@@ -7,13 +7,15 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(localStorage.getItem('eco_token') || '');
 
   // Load user session on startup if token exists
   useEffect(() => {
     const loadUser = async () => {
-      const token = localStorage.getItem('eco_token');
-      if (token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      const storedToken = localStorage.getItem('eco_token');
+      if (storedToken) {
+        setToken(storedToken);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
         try {
           const res = await axios.get('/api/auth/me');
           setUser(res.data);
@@ -38,6 +40,7 @@ export const AuthProvider = ({ children }) => {
       const data = res.data;
       
       localStorage.setItem('eco_token', data.token);
+      setToken(data.token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
       
       const { token, ...userData } = data;
@@ -49,7 +52,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
       const data = error.response?.data || {};
       const message = data.message || 'Invalid email or password';
-      return { success: false, message, requiresVerification: data.requiresVerification, email: data.email };
+      return { success: false, message, email: data.email };
     }
   };
 
@@ -58,7 +61,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await axios.post('/api/auth/register', userData);
       setLoading(false);
-      return { success: true, requiresVerification: res.data.requiresVerification, email: res.data.email };
+      return { success: true, email: res.data.email };
     } catch (error) {
       setLoading(false);
       const message = error.response?.data?.message || 'Registration failed';
@@ -66,30 +69,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const verifyEmailCode = async (email, token) => {
-    setLoading(true);
-    try {
-      const res = await axios.post('/api/auth/verify-email', { email, token });
-      const data = res.data;
-
-      localStorage.setItem('eco_token', data.token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
-      
-      const { token: jwtToken, ...userData } = data;
-      setUser(userData);
-      setIsAuthenticated(true);
-      setLoading(false);
-      return { success: true, user: userData };
-    } catch (error) {
-      setLoading(false);
-      const message = error.response?.data?.message || 'Verification failed';
-      return { success: false, message };
-    }
-  };
+// verifyEmailCode removed
 
   const logout = () => {
     setIsAuthenticated(false);
     setUser(null);
+    setToken('');
     localStorage.removeItem('eco_token');
     delete axios.defaults.headers.common['Authorization'];
   };
@@ -137,6 +122,7 @@ export const AuthProvider = ({ children }) => {
   const loginWithToken = async (token) => {
     setLoading(true);
     localStorage.setItem('eco_token', token);
+    setToken(token);
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     try {
       const res = await axios.get('/api/auth/me');
@@ -160,11 +146,11 @@ export const AuthProvider = ({ children }) => {
       value={{
         isAuthenticated,
         user,
+        token,
         loading,
         login,
         loginWithToken,
         register,
-        verifyEmailCode,
         logout,
         updateProfile,
         changePassword,

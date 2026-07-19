@@ -1,0 +1,359 @@
+@reference "../index.css";
+
+.messages-page {
+  @apply w-full block relative z-0 bg-bg-primary min-h-screen transition-colors duration-300;
+}
+
+.messages-container {
+  @apply max-w-[1200px] mx-auto py-6 px-5 relative z-10;
+}
+
+.messages-header {
+  @apply flex justify-between items-center mb-6;
+}
+
+.messages-header h1 {
+  @apply text-[2rem] text-text-title transition-colors duration-300;
+}
+
+.messages-layout {
+  @apply grid grid-cols-[360px_1fr] gap-0 bg-bg-secondary rounded-xl overflow-hidden shadow-lg min-h-[70vh] border border-border-color transition-colors duration-300;
+}
+
+/* ─── Conversation List Panel ─── */
+.conversations-panel {
+  @apply border-r border-border-color flex flex-col transition-colors duration-300;
+}
+
+.conversations-search {
+  @apply p-4 border-b border-border-color;
+}
+
+.conversations-search input {
+  @apply w-full px-4 py-[10px] rounded-lg bg-bg-tertiary text-text-primary border border-border-color text-sm transition-colors duration-300;
+}
+
+.conversations-search input::placeholder {
+  @apply text-text-muted;
+}
+
+.conversations-search input:focus {
+  @apply outline-none border-[#7fd051];
+}
+
+.conversations-list {
+  @apply flex-1 overflow-y-auto;
+}
+
+.conversation-item {
+  @apply flex items-center gap-3 px-4 py-3 cursor-pointer border-b border-border-color transition-all duration-200;
+}
+
+.conversation-item:hover {
+  @apply bg-bg-tertiary;
+}
+
+.conversation-item.active {
+  background: rgba(127, 208, 81, 0.1);
+  border-left: 3px solid #7fd051;
+}
+
+.conversation-avatar {
+  @apply w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0;
+  background: linear-gradient(135deg, #7fd051, #5ba33a);
+}
+
+.conversation-info {
+  @apply flex-1 min-w-0;
+}
+
+.conversation-info-top {
+  @apply flex justify-between items-center mb-[2px];
+}
+
+.conversation-name {
+  @apply font-semibold text-text-title text-[0.95rem] truncate transition-colors duration-300;
+}
+
+.conversation-time {
+  @apply text-xs text-text-muted flex-shrink-0 ml-2;
+}
+
+.conversation-preview {
+  @apply text-sm text-text-secondary truncate transition-colors duration-300;
+}
+
+.conversation-meta {
+  @apply flex items-center gap-2 mt-[2px];
+}
+
+.conversation-listing-tag {
+  @apply text-[0.7rem] px-[6px] py-[1px] rounded-full bg-[rgba(127,208,81,0.15)] text-[#7fd051] font-medium;
+}
+
+.conversation-unread-badge {
+  @apply w-5 h-5 rounded-full bg-[#7fd051] text-white text-[0.65rem] font-bold flex items-center justify-center flex-shrink-0;
+}
+
+.conversation-item.unread .conversation-name {
+  @apply font-bold;
+}
+
+.conversation-item.unread .conversation-preview {
+  @apply text-text-primary font-medium;
+}
+
+/* ─── Chat Panel ─── */
+.chat-panel {
+  @apply flex flex-col bg-bg-primary transition-colors duration-300;
+}
+
+.chat-header {
+  @apply flex items-center gap-3 px-6 py-4 border-b border-border-color bg-bg-secondary transition-colors duration-300;
+}
+
+.chat-header-avatar {
+  @apply w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0;
+  background: linear-gradient(135deg, #7fd051, #5ba33a);
+}
+
+.chat-header-info h3 {
+  @apply text-text-title text-base font-semibold m-0 transition-colors duration-300;
+}
+
+.chat-header-info p {
+  @apply text-text-muted text-xs m-0;
+}
+
+.chat-messages {
+  @apply flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-3;
+}
+
+.message-bubble {
+  @apply max-w-[70%] px-4 py-3 rounded-2xl text-sm leading-relaxed;
+  word-break: break-word;
+}
+
+.message-bubble.sent {
+  @apply self-end text-white ml-auto;
+  background: linear-gradient(135deg, #7fd051, #5ba33a);
+  border-bottom-right-radius: 6px;
+}
+
+.message-bubble.received {
+  @apply self-start bg-bg-secondary text-text-primary border border-border-color mr-auto;
+  border-bottom-left-radius: 6px;
+}
+
+.message-text {
+  @apply m-0;
+}
+
+.message-time {
+  @apply text-[0.65rem] opacity-70;
+}
+
+.message-footer {
+  @apply flex items-center gap-2 mt-1;
+}
+
+.message-bubble.sent .message-footer {
+  @apply justify-end;
+}
+
+.message-bubble.received .message-footer {
+  @apply justify-start;
+}
+
+.message-bubble.sent .message-time {
+  @apply text-white;
+}
+
+.message-bubble.received .message-time {
+  @apply text-text-muted;
+}
+
+.message-delete-btn {
+  @apply bg-transparent border-none cursor-pointer text-[0.7rem] p-0 leading-none opacity-0 transition-opacity duration-200;
+}
+
+.message-bubble:hover .message-delete-btn {
+  @apply opacity-60;
+}
+
+.message-delete-btn:hover {
+  @apply opacity-100;
+}
+
+.message-listing-context {
+  @apply text-[0.7rem] italic opacity-80 mb-1;
+}
+
+.message-date-separator {
+  @apply text-center text-xs text-text-muted my-4;
+}
+
+.message-date-separator span {
+  @apply bg-bg-primary px-3 py-1 rounded-full border border-border-color;
+}
+
+/* ─── Chat Input ─── */
+.chat-input-area {
+  @apply flex items-center gap-3 px-6 py-4 border-t border-border-color bg-bg-secondary transition-colors duration-300;
+}
+
+.chat-input-area textarea {
+  @apply flex-1 px-4 py-3 rounded-xl bg-bg-tertiary text-text-primary border border-border-color text-sm resize-none transition-colors duration-300;
+  min-height: 44px;
+  max-height: 120px;
+}
+
+.chat-input-area textarea::placeholder {
+  @apply text-text-muted;
+}
+
+.chat-input-area textarea:focus {
+  @apply outline-none border-[#7fd051];
+}
+
+.chat-send-btn {
+  @apply px-5 py-3 rounded-xl text-white font-semibold text-sm border-none cursor-pointer transition-all duration-200 flex-shrink-0;
+  background: linear-gradient(135deg, #7fd051, #5ba33a);
+}
+
+.chat-send-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(127, 208, 81, 0.3);
+}
+
+.chat-send-btn:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+/* ─── Empty States ─── */
+.chat-empty-state,
+.conversations-empty {
+  @apply flex flex-col items-center justify-center h-full text-center p-8;
+}
+
+.chat-empty-state .empty-icon,
+.conversations-empty .empty-icon {
+  @apply text-6xl mb-4 opacity-50;
+}
+
+.chat-empty-state h3,
+.conversations-empty h3 {
+  @apply text-text-title text-lg font-semibold mb-2 transition-colors duration-300;
+}
+
+.chat-empty-state p,
+.conversations-empty p {
+  @apply text-text-secondary text-sm max-w-[280px] transition-colors duration-300;
+}
+
+/* ─── Navbar Badge ─── */
+.nav-messages-badge {
+  @apply inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full text-[0.65rem] font-bold text-white ml-[6px] px-[5px];
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  line-height: 1;
+}
+
+/* ─── Mobile Back Button ─── */
+.chat-back-btn {
+  @apply bg-transparent border-none text-text-title cursor-pointer text-lg p-1 mr-1 transition-colors duration-300;
+  display: none;
+}
+
+/* ─── Owner Dashboard Messages Card ─── */
+.dashboard-messages-section {
+  @apply bg-bg-secondary rounded-lg p-6 shadow-md transition-colors duration-300;
+}
+
+.dashboard-messages-section h2 {
+  @apply text-text-title mt-0 mb-4 text-[1.5rem] transition-colors duration-300;
+}
+
+.dashboard-message-item {
+  @apply flex items-center gap-3 py-3 border-b border-border-color transition-colors duration-300;
+}
+
+.dashboard-message-item:last-child {
+  @apply border-b-0;
+}
+
+.dashboard-msg-avatar {
+  @apply w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0;
+  background: linear-gradient(135deg, #7fd051, #5ba33a);
+}
+
+.dashboard-msg-content {
+  @apply flex-1 min-w-0;
+}
+
+.dashboard-msg-name {
+  @apply font-semibold text-text-title text-sm transition-colors duration-300;
+}
+
+.dashboard-msg-preview {
+  @apply text-text-secondary text-xs truncate transition-colors duration-300;
+}
+
+.dashboard-msg-time {
+  @apply text-text-muted text-xs flex-shrink-0;
+}
+
+.dashboard-msg-reply-btn {
+  @apply px-3 py-1 rounded-md text-white text-xs font-semibold border-none cursor-pointer flex-shrink-0;
+  background: linear-gradient(135deg, #7fd051, #5ba33a);
+}
+
+.dashboard-msg-reply-btn:hover {
+  @apply opacity-90;
+}
+
+.dashboard-view-all-btn {
+  @apply w-full mt-4 py-2 rounded-lg bg-bg-tertiary text-text-title border border-border-color cursor-pointer text-sm font-semibold transition-all duration-200;
+}
+
+.dashboard-view-all-btn:hover {
+  @apply border-[#7fd051] text-[#7fd051];
+}
+
+.chat-delete-conv-btn {
+  @apply ml-auto px-3 py-1.5 rounded-lg text-xs font-semibold border border-transparent bg-transparent text-[#dc3545] cursor-pointer transition-all duration-200;
+}
+
+.chat-delete-conv-btn:hover {
+  @apply bg-[rgba(220,53,69,0.1)] border-[rgba(220,53,69,0.3)];
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .messages-layout {
+    @apply grid-cols-1;
+  }
+
+  .conversations-panel {
+    @apply border-r-0;
+  }
+
+  .conversations-panel.hidden-mobile {
+    display: none;
+  }
+
+  .chat-panel.hidden-mobile {
+    display: none;
+  }
+
+  .chat-back-btn {
+    display: block;
+  }
+
+  .message-bubble {
+    @apply max-w-[85%];
+  }
+
+  .messages-header h1 {
+    @apply text-[1.5rem];
+  }
+}

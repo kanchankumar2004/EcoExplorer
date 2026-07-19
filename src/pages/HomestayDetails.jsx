@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
 import ReviewCard from '../components/ReviewCard';
 import MapView from '../components/MapView';
-import { homestays } from '../utils/mockData';
 import './HomestayDetails.css';
 
 const HomestayDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   
   const { addFavorite, removeFavorite, isFavorite: checkIsFavorite } = useFavorites();
   
@@ -19,21 +18,37 @@ const HomestayDetails = () => {
   const [selectedExperiences, setSelectedExperiences] = useState([]);
   const [guests, setGuests] = useState(1);
   const [showBookingSuccess, setShowBookingSuccess] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [contactMessage, setContactMessage] = useState('');
+  const [contactSending, setContactSending] = useState(false);
+  const [contactStatus, setContactStatus] = useState('');
+  const [homestay, setHomestay] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const homestayId = parseInt(id, 10);
-  const foundHomestay = homestays.find(h => h.id === homestayId) || homestays[0];
+  useEffect(() => {
+    const fetchHomestay = async () => {
+      try {
+        const response = await axios.get(`/api/homestays/${id}`);
+        setHomestay({
+          ...response.data,
+          reviews: response.data.reviewsList || []
+        });
+      } catch (error) {
+        console.error('Error fetching homestay:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const homestay = {
-    ...foundHomestay,
-    reviews: foundHomestay.reviewsList || []
-  };
+    fetchHomestay();
+  }, [id]);
 
-  const isFavorite = homestay ? checkIsFavorite(homestay.id) : false;
+  const isFavorite = homestay ? checkIsFavorite(homestay._id) : false;
 
   const handleFavorite = () => {
     if (!homestay) return;
     if (isFavorite) {
-      removeFavorite(homestay.id);
+      removeFavorite(homestay._id);
     } else {
       addFavorite(homestay, 'homestay');
     }
@@ -57,10 +72,11 @@ const HomestayDetails = () => {
   };
 
   const nights = calculateNights();
-  const stayTotal = homestay.pricePerNight * nights;
+  const stayTotal = homestay ? homestay.pricePerNight * nights : 0;
+  const canBook = isAuthenticated && user?.userType !== 'host';
   
   const experiencesTotal = selectedExperiences.reduce((sum, expId) => {
-    const exp = homestay.localExperiences?.find(e => e.id === expId);
+    const exp = homestay?.localExperiences?.find(e => e.id === expId);
     return sum + (exp ? exp.price * guests : 0);
   }, 0);
 
@@ -71,6 +87,10 @@ const HomestayDetails = () => {
     if (!isAuthenticated) {
       alert("Please login to book this homestay!");
       navigate('/login');
+      return;
+    }
+    if (user?.userType === 'host') {
+      alert('Host-only accounts cannot create bookings. Use a traveler account or a traveler+host account.');
       return;
     }
     if (nights <= 0) {
@@ -86,7 +106,10 @@ const HomestayDetails = () => {
         checkOut: selectedDates.checkOut,
         guests: Number(guests),
         totalPrice: grandTotal,
-        image: homestay.image
+        image: homestay.image,
+        host: homestay.host,
+        itemId: homestay._id,
+        guestName: user.name
       };
 
       await axios.post('/api/bookings', bookingPayload);
@@ -96,6 +119,45 @@ const HomestayDetails = () => {
       alert(err.response?.data?.message || 'Failed to submit booking. Please try again.');
     }
   };
+
+  const handleContactHost = async (e) => {
+    e.preventDefault();
+
+    if (!isAuthenticated) {
+      alert('Please login to contact the host.');
+      navigate('/login');
+      return;
+    }
+
+    if (!contactMessage.trim()) {
+      setContactStatus('Please enter a message before sending.');
+      return;
+    }
+
+    try {
+      setContactSending(true);
+      setContactStatus('');
+      await axios.post('/api/bookings/contact-host', {
+        type: 'Homestay',
+        itemId: homestay._id,
+        message: contactMessage.trim(),
+      });
+      setContactStatus('Message sent to host successfully.');
+      setContactMessage('');
+    } catch (err) {
+      setContactStatus(err.response?.data?.message || 'Failed to contact host.');
+    } finally {
+      setContactSending(false);
+    }
+  };
+
+  if (loading) {
+    return <div style={{ padding: '100px', textAlign: 'center' }}>Loading homestay details...</div>;
+  }
+
+  if (!homestay) {
+    return <div style={{ padding: '100px', textAlign: 'center' }}>Homestay not found</div>;
+  }
 
   return (
     <div className="homestay-details">
@@ -125,7 +187,7 @@ const HomestayDetails = () => {
           <div className="details-section">
             <h2>Facilities</h2>
             <ul className="facilities-list">
-              {homestay.facilities.map((facility, idx) => (
+              {homestay.amenities.map((facility, idx) => (
                 <li key={idx}>✓ {facility}</li>
               ))}
             </ul>
@@ -205,6 +267,12 @@ const HomestayDetails = () => {
                 <span className="rating">⭐ {homestay.rating} ({homestay.reviewsCount} reviews)</span>
               </div>
 
+              {!canBook && isAuthenticated && user?.userType === 'host' && (
+                <div className="booking-disabled-note">
+                  Host-only accounts cannot book homestays. Use a traveler account or a traveler+host account.
+                </div>
+              )}
+
               <form onSubmit={handleBooking} className="booking-form">
                 <div className="form-group">
                   <label>Check-in Date</label>
@@ -279,10 +347,10 @@ const HomestayDetails = () => {
                   </div>
                 </div>
 
-                <button type="submit" className="book-btn">Book Now</button>
+                <button type="submit" className="book-btn" disabled={!canBook}>Book Now</button>
               </form>
 
-              <button className="contact-btn">Message Host</button>
+              <button className="contact-btn" type="button" onClick={() => setShowContactModal(true)}>Message Host</button>
             </div>
 
             <div className="host-info">
@@ -297,14 +365,14 @@ const HomestayDetails = () => {
         </div>
       </div>
 
-      {/* BOOKING SUCCESS CUSTOM OVERLAY MODAL */}
+      {/* BOOKING SUCCESS MODAL */}
       {showBookingSuccess && (
         <div className="booking-modal-overlay">
           <div className="booking-success-modal">
-            <div className="modal-icon">🌸</div>
-            <h2>Booking Request Submitted!</h2>
+            <div className="modal-icon">⏳</div>
+            <h2>Booking Pending Approval</h2>
             <p className="modal-subtitle">
-              Your host in {homestay.location.split(',')[0]} has been notified and will respond within 1 hour.
+              Your eco-adventure at {homestay.name} is awaiting host confirmation.
             </p>
             
             <div className="modal-summary-card">
@@ -358,6 +426,39 @@ const HomestayDetails = () => {
             >
               Great, Let's Explorer!
             </button>
+          </div>
+        </div>
+      )}
+
+      {showContactModal && (
+        <div className="booking-modal-overlay">
+          <div className="booking-success-modal contact-modal">
+            <h2>Message Host</h2>
+            <p className="modal-subtitle">Send a quick message to the host about this homestay.</p>
+
+            <form onSubmit={handleContactHost} className="contact-form">
+              <div className="form-group">
+                <label htmlFor="contactMessage">Message</label>
+                <textarea
+                  id="contactMessage"
+                  value={contactMessage}
+                  onChange={(e) => setContactMessage(e.target.value)}
+                  rows="5"
+                  placeholder="Ask about availability, facilities, or anything else..."
+                />
+              </div>
+
+              {contactStatus && <p className="contact-status">{contactStatus}</p>}
+
+              <div className="contact-modal-actions">
+                <button type="button" className="contact-cancel-btn" onClick={() => setShowContactModal(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="book-btn" disabled={contactSending}>
+                  {contactSending ? 'Sending...' : 'Send Message'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

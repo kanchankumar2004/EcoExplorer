@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser, getMe, updateUserProfile, changePassword, verifyEmail, deleteAccount } from '../controllers/authController.js';
+import { registerUser, loginUser, getMe, updateUserProfile, changePassword, deleteAccount } from '../controllers/authController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { check } from 'express-validator';
 import rateLimit from 'express-rate-limit';
@@ -23,7 +23,6 @@ const loginValidation = [
 
 router.post('/register', authLimiter, registerValidation, registerUser);
 router.post('/login', authLimiter, loginValidation, loginUser);
-router.post('/verify-email', verifyEmail);
 router.get('/me', protect, getMe);
 router.put('/profile', protect, updateUserProfile);
 router.put('/change-password', protect, changePassword);

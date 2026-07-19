@@ -2,6 +2,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
 import User from '../models/User.js';
+import Booking from '../models/Booking.js';
+import Destination from '../models/Destination.js';
+import Homestay from '../models/Homestay.js';
 import crypto from 'crypto';
 import sendEmail from '../utils/sendEmail.js';
 
@@ -39,9 +42,9 @@ export const registerUser = async (req, res) => {
     return res.status(400).json({ message: errors.array()[0].msg, errors: errors.array() });
   }
 
-  const { name, email, password, userType } = req.body;
+  const { name, email, password, userType, phone, bio, country, city } = req.body;
 
-  const validRoles = ['traveler', 'host', 'both', 'admin'];
+  const validRoles = ['traveler', 'host', 'admin'];
   const role = userType || 'traveler';
   if (!validRoles.includes(role)) {
     return res.status(400).json({ message: 'Invalid user type' });
@@ -58,45 +61,23 @@ export const registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(12);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // 4. Generate verification token (6 digit OTP)
-    const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
-    console.log(`\n================================`);
-    console.log(`🔑 OTP for ${email}: ${verificationToken}`);
-    console.log(`================================\n`);
-
-    // 5. Create user in DB (unverified)
+    // 4. Create user in DB (verified by default now)
     const user = await User.create({
       name: name.trim(),
       email: email.toLowerCase().trim(),
       password: hashedPassword,
       userType: role,
-      isVerified: false,
-      verificationToken,
-      phone: '',
-      bio: '',
-      country: '',
-      city: ''
+      phone: phone?.trim() || '',
+      bio: bio?.trim() || '',
+      country: country?.trim() || '',
+      city: city?.trim() || ''
     });
 
     if (user) {
-      // 6. Send verification email
-      const message = `Welcome to EcoExplorer!\n\nYour verification code is: ${verificationToken}\n\nPlease enter this code on the verification page to activate your account.`;
-      
-      try {
-        await sendEmail({
-          email: user.email,
-          subject: 'EcoExplorer - Verify your email',
-          message,
-        });
-      } catch (err) {
-        console.error('Email sending failed:', err);
-        // We still created the user, but maybe tell them email failed
-      }
-
       res.status(201).json({
-        message: 'Registration successful! Please check your email to verify your account.',
+        message: 'Registration successful! You can now log in.',
         email: user.email,
-        requiresVerification: true
+        requiresVerification: false
       });
     } else {
       res.status(400).json({ message: 'Invalid user data' });
@@ -123,15 +104,6 @@ export const loginUser = async (req, res) => {
     const user = await User.findOne({ email: email.toLowerCase().trim() });
     if (!user) {
       return res.status(400).json({ message: 'Invalid email or password' });
-    }
-
-    // 2.5 Check if user is verified
-    if (!user.isVerified) {
-      return res.status(403).json({ 
-        message: 'Please verify your email address before logging in.',
-        requiresVerification: true,
-        email: user.email 
-      });
     }
 
     // 3. Compare password
@@ -164,59 +136,7 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// @desc    Verify email with OTP
-// @route   POST /api/auth/verify-email
-// @access  Public
-export const verifyEmail = async (req, res) => {
-  const { email, token } = req.body;
-  
-  if (!email || !token) {
-    return res.status(400).json({ message: 'Email and token are required' });
-  }
-
-  try {
-    const user = await User.findOne({ email: email.toLowerCase().trim() });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    if (user.isVerified) {
-      return res.status(400).json({ message: 'Email is already verified' });
-    }
-
-    if (user.verificationToken !== token) {
-      return res.status(400).json({ message: 'Invalid verification code' });
-    }
-
-    // Mark as verified
-    user.isVerified = true;
-    user.verificationToken = '';
-    await user.save();
-
-    // Generate login token automatically after verification
-    res.status(200).json({
-      message: 'Email verified successfully',
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      userType: user.userType,
-      phone: user.phone || '',
-      bio: user.bio || '',
-      country: user.country || '',
-      city: user.city || '',
-      avatar: user.avatar || '',
-      settings: user.settings || {
-        notifications: { emailAlerts: true, weeklyNewsletter: false, bookingUpdates: true },
-        privacy: { profilePublic: true, showActivity: true },
-        paymentMethods: []
-      },
-      token: generateToken(user._id)
-    });
-  } catch (error) {
-    console.error('Verification error:', error);
-    res.status(500).json({ message: 'Server error during verification' });
-  }
-};
+// Removed verifyEmail function
 
 // @desc    Get current user profile
 // @route   GET /api/auth/me
@@ -333,12 +253,34 @@ export const changePassword = async (req, res) => {
 // @access  Private
 export const deleteAccount = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const userId = req.user.id;
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    await User.findByIdAndDelete(req.user.id);
+    // Prevent deletion of the permanent host account
+    const PERMANENT_HOST_EMAIL = 'kanchankanak2002@gmail.com';
+    if (user.email === PERMANENT_HOST_EMAIL) {
+      return res.status(403).json({ message: 'This host account cannot be deleted.' });
+    }
+
+    // Find the permanent host to reassign destinations/homestays
+    const permanentHost = await User.findOne({ email: PERMANENT_HOST_EMAIL });
+
+    if (permanentHost) {
+      // Reassign this user's destinations and homestays to the permanent host
+      await Promise.all([
+        Destination.updateMany({ host: userId }, { host: permanentHost._id }),
+        Homestay.updateMany({ host: userId }, { host: permanentHost._id }),
+      ]);
+    }
+
+    // Delete only the user's bookings and the user record itself
+    await Promise.all([
+      Booking.deleteMany({ $or: [{ user: userId }, { host: userId }] }),
+      User.findByIdAndDelete(userId),
+    ]);
 
     res.status(200).json({ message: 'Account deleted successfully' });
   } catch (error) {

@@ -144,6 +144,46 @@
   @apply -translate-y-[2px] shadow-[0_6px_20px_rgba(111,201,62,0.3)] brightness-[1.05];
 }
 
+.book-btn:disabled {
+  @apply opacity-50 cursor-not-allowed transform-none shadow-none brightness-100;
+}
+
+.booking-disabled-note {
+  @apply rounded-lg border border-[#f7b32b]/30 bg-[rgba(247,179,43,0.12)] px-4 py-3 text-sm font-medium text-text-title;
+}
+
+.contact-modal {
+  @apply text-left;
+}
+
+.contact-form {
+  @apply flex flex-col gap-4;
+}
+
+.contact-form textarea {
+  @apply w-full p-4 border border-border-color rounded-lg bg-bg-tertiary text-text-primary resize-y transition-colors duration-300;
+}
+
+.contact-form textarea:focus {
+  @apply outline-none border-[#7fd051] bg-bg-secondary;
+}
+
+.contact-status {
+  @apply text-sm font-medium text-text-secondary m-0;
+}
+
+.contact-modal-actions {
+  @apply flex items-center justify-end gap-3;
+}
+
+.contact-cancel-btn {
+  @apply px-4 py-2 rounded-lg border border-border-color bg-bg-tertiary text-text-title font-semibold cursor-pointer transition-colors duration-300;
+}
+
+.contact-cancel-btn:hover {
+  @apply bg-bg-primary;
+}
+
 .contact-btn {
   @apply w-full p-[0.9rem] bg-bg-tertiary text-text-title border border-border-color-strong rounded-lg text-[0.95rem] font-semibold cursor-pointer transition-all duration-300;
 }

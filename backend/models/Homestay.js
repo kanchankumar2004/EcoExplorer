@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const destinationSchema = new mongoose.Schema(
+const homestaySchema = new mongoose.Schema(
   {
     host: {
       type: mongoose.Schema.Types.ObjectId,
@@ -34,7 +34,7 @@ const destinationSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
-    price: {
+    pricePerNight: {
       type: String,
       required: true,
     },
@@ -60,14 +60,18 @@ const destinationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    highlights: {
-      type: [String],
-      default: [],
-    },
     amenities: {
       type: [String],
       default: [],
     },
+    experiences: [
+      {
+        id: { type: String },
+        name: { type: String, required: true },
+        price: { type: Number, required: true },
+        description: { type: String },
+      }
+    ],
     reviewsList: {
       type: [mongoose.Schema.Types.Mixed],
       default: [],
@@ -78,6 +82,6 @@ const destinationSchema = new mongoose.Schema(
   }
 );
 
-const Destination = mongoose.model('Destination', destinationSchema);
+const Homestay = mongoose.model('Homestay', homestaySchema);
 
-export default Destination;
+export default Homestay;

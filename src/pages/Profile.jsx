@@ -216,7 +216,9 @@ const Profile = () => {
   const handleDeleteAccount = async () => {
     if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
       const res = await deleteAccount();
-      if (!res.success) {
+      if (res.success) {
+        window.alert('Your account has been deleted permanently. You will need to register again to use EcoExplorer.');
+      } else {
         showAlert(res.message, 'error');
       }
     }

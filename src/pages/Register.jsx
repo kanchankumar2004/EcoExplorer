@@ -10,6 +10,10 @@ const Register = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
+    phone: '',
+    bio: '',
+    country: '',
+    city: '',
     password: '',
     confirmPassword: '',
     userType: 'traveler'
@@ -70,16 +74,16 @@ const Register = () => {
     const result = await register({
       name: nameTrimmed,
       email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      bio: formData.bio.trim(),
+      country: formData.country.trim(),
+      city: formData.city.trim(),
       password: formData.password,
       userType: formData.userType
     });
 
     if (result.success) {
-      if (result.requiresVerification) {
-        navigate('/verify-email', { state: { email: result.email } });
-      } else {
-        navigate('/login');
-      }
+      navigate('/login');
     } else {
       setError(result.message || 'Registration failed.');
     }
@@ -121,6 +125,52 @@ const Register = () => {
             />
 
             <Input
+              label="Phone Number"
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="+91 98765 43210"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
+
+            <div className="form-group">
+              <label htmlFor="bio">Bio</label>
+              <textarea
+                id="bio"
+                name="bio"
+                placeholder="Tell us a little about yourself"
+                value={formData.bio}
+                onChange={handleChange}
+                rows="4"
+                required
+              />
+            </div>
+
+            <Input
+              label="Country"
+              type="text"
+              id="country"
+              name="country"
+              placeholder="India"
+              value={formData.country}
+              onChange={handleChange}
+              required
+            />
+
+            <Input
+              label="City"
+              type="text"
+              id="city"
+              name="city"
+              placeholder="Dehradun"
+              value={formData.city}
+              onChange={handleChange}
+              required
+            />
+
+            <Input
               label="Password"
               type="password"
               id="password"
@@ -152,7 +202,6 @@ const Register = () => {
               >
                 <option value="traveler">Traveler</option>
                 <option value="host">Homestay Host</option>
-                <option value="both">Both</option>
               </select>
             </div>
 

@@ -5,28 +5,32 @@ import Hero from '../components/Hero';
 import SearchBar from '../components/SearchBar';
 import DestinationCard from '../components/DestinationCard';
 import HomestayCard from '../components/HomestayCard';
-import { homestays } from '../utils/mockData';
 import './Home.css';
 
 const Home = () => {
   const navigate = useNavigate();
   const [searchResults, setSearchResults] = useState(null);
   const [destinations, setDestinations] = useState([]);
+  const [homestays, setHomestays] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchDestinations = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/destinations');
-        setDestinations(response.data);
+        const [destRes, homeRes] = await Promise.all([
+          axios.get('/api/destinations'),
+          axios.get('/api/homestays')
+        ]);
+        setDestinations(destRes.data);
+        setHomestays(homeRes.data);
       } catch (error) {
-        console.error('Error fetching destinations:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDestinations();
+    fetchData();
   }, []);
 
   const handleSearch = (query, filters) => {
@@ -131,7 +135,7 @@ const Home = () => {
                   <h3 style={{ marginBottom: '20px', fontSize: '1.5rem', color: 'var(--text-title)' }}>Homestays ({filteredHomestays.length})</h3>
                   <div className="cards-grid">
                     {filteredHomestays.map(homestay => (
-                      <HomestayCard key={homestay.id} {...homestay} />
+                      <HomestayCard key={homestay._id || homestay.id} id={homestay._id || homestay.id} {...homestay} />
                     ))}
                   </div>
                 </div>
@@ -164,11 +168,15 @@ const Home = () => {
               <p>Stay with local hosts and experience authentic hospitality</p>
             </div>
 
-            <div className="cards-grid">
-              {featuredHomestays.map(homestay => (
-                <HomestayCard key={homestay.id} {...homestay} />
-              ))}
-            </div>
+            {loading ? (
+              <p>Loading homestays...</p>
+            ) : (
+              <div className="cards-grid">
+                {featuredHomestays.map(homestay => (
+                  <HomestayCard key={homestay._id || homestay.id} id={homestay._id || homestay.id} {...homestay} />
+                ))}
+              </div>
+            )}
           </div>
         </>
       )}
