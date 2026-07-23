@@ -80,22 +80,36 @@ const Navbar = () => {
           
           {isAuthenticated ? (
             <>
-              <li className="nav-item">
-                <NavLink to="/dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
-                  Dashboard
-                </NavLink>
-              </li>
-              {(user?.userType === 'admin') && (
+              {user?.userType === 'host' ? (
+                <>
+                  <li className="nav-item">
+                    <NavLink to="/owner-dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
+                      Host Dashboard
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink to="/dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
+                      Traveler Dashboard
+                    </NavLink>
+                  </li>
+                </>
+              ) : user?.userType === 'admin' ? (
+                <>
+                  <li className="nav-item">
+                    <NavLink to="/admin-dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
+                      Admin Panel
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink to="/dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
+                      Dashboard
+                    </NavLink>
+                  </li>
+                </>
+              ) : (
                 <li className="nav-item">
-                  <NavLink to="/admin-dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
-                    Admin Panel
-                  </NavLink>
-                </li>
-              )}
-              {(user?.userType === 'host' || user?.userType === 'both' || user?.userType === 'admin') && (
-                <li className="nav-item">
-                  <NavLink to="/owner-dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
-                    Host Dashboard
+                  <NavLink to="/dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
+                    Dashboard
                   </NavLink>
                 </li>
               )}

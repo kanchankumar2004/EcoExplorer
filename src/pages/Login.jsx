@@ -63,6 +63,8 @@ const Login = () => {
     if (result.success) {
       if (result.user?.userType === 'admin') {
         navigate('/admin-dashboard');
+      } else if (result.user?.userType === 'host') {
+        navigate('/owner-dashboard');
       } else {
         navigate('/dashboard');
       }
