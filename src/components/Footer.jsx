@@ -22,14 +22,10 @@ const Footer = () => {
         </div>
 
         <div className="footer-section">
-          <h4 >Follow Us</h4>
+          <h4>Follow Us</h4>
           <div className="social-links">
-            <a href="#facebook">Facebook</a>
-           
-            <a href="#instagram">Instagram</a>
-            
-            <a href="#linkedin">LinkedIn</a>
-            
+            <a href="https://www.instagram.com/urvil_kanchan/" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="https://www.linkedin.com/in/kanchan-kumar-mandal-5bb7b634b/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
           </div>
         </div>
 
