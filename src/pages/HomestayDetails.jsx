@@ -81,16 +81,16 @@ const HomestayDetails = () => {
     return differenceInDays > 0 ? differenceInDays : 0;
   };
 
-  const nights = calculateNights();
-  const stayTotal = homestay ? homestay.pricePerNight * nights : 0;
-  const canBook = isAuthenticated && user?.userType !== 'host';
-  
-  const experiencesTotal = selectedExperiences.reduce((sum, expId) => {
-    const exp = homestay?.localExperiences?.find(e => e.id === expId);
-    return sum + (exp ? exp.price * guests : 0);
-  }, 0);
+  const homestayHostId = homestay?.host?._id || homestay?.host;
+  const currentUserId = user?.id || user?._id;
+  const isOwnListing = Boolean(
+    isAuthenticated &&
+    homestayHostId &&
+    currentUserId &&
+    homestayHostId.toString() === currentUserId.toString()
+  );
 
-  const grandTotal = stayTotal + experiencesTotal;
+  const canBook = isAuthenticated && !isOwnListing;
 
   const handleBooking = async (e) => {
     e.preventDefault();
@@ -99,8 +99,8 @@ const HomestayDetails = () => {
       navigate('/login');
       return;
     }
-    if (user?.userType === 'host') {
-      setToast({ message: 'Host-only accounts cannot create bookings.', type: 'error' });
+    if (isOwnListing) {
+      setToast({ message: 'You cannot book your own property listing.', type: 'error' });
       return;
     }
     if (nights <= 0) {
@@ -297,90 +297,92 @@ const HomestayDetails = () => {
                 <span className="rating">⭐ {homestay.rating} ({homestay.reviewsCount || homestay.reviews?.length || 0} reviews)</span>
               </div>
 
-              {!canBook && isAuthenticated && user?.userType === 'host' && (
-                <div className="booking-disabled-note">
-                  Host-only accounts cannot book homestays. Use a traveler account or a traveler+host account.
+              {isOwnListing ? (
+                <div style={{ background: '#fef3c7', border: '1px solid #f59e0b', color: '#92400e', padding: '16px 20px', borderRadius: '12px', textAlign: 'center', marginTop: '20px', fontWeight: 'bold' }}>
+                  🏡 You are the host of this homestay listing.
                 </div>
-              )}
+              ) : (
+                <>
+                  <form onSubmit={handleBooking} className="booking-form">
+                    <div className="form-group">
+                      <label>Check-in Date</label>
+                      <input 
+                        type="date" 
+                        value={selectedDates.checkIn}
+                        onChange={(e) => setSelectedDates({...selectedDates, checkIn: e.target.value})}
+                        required
+                      />
+                    </div>
 
-              <form onSubmit={handleBooking} className="booking-form">
-                <div className="form-group">
-                  <label>Check-in Date</label>
-                  <input 
-                    type="date" 
-                    value={selectedDates.checkIn}
-                    onChange={(e) => setSelectedDates({...selectedDates, checkIn: e.target.value})}
-                    required
-                  />
-                </div>
+                    <div className="form-group">
+                      <label>Check-out Date</label>
+                      <input 
+                        type="date"
+                        value={selectedDates.checkOut}
+                        onChange={(e) => setSelectedDates({...selectedDates, checkOut: e.target.value})}
+                        required
+                      />
+                    </div>
 
-                <div className="form-group">
-                  <label>Check-out Date</label>
-                  <input 
-                    type="date"
-                    value={selectedDates.checkOut}
-                    onChange={(e) => setSelectedDates({...selectedDates, checkOut: e.target.value})}
-                    required
-                  />
-                </div>
+                    <div className="form-group">
+                      <label>Number of Guests</label>
+                      <select 
+                        value={guests} 
+                        onChange={(e) => setGuests(parseInt(e.target.value, 10))} 
+                        required
+                      >
+                        {Array.from({ length: homestay.maxGuests || 4 }, (_, i) => i + 1).map(num => (
+                          <option key={num} value={num}>{num} guest{num > 1 ? 's' : ''}</option>
+                        ))}
+                      </select>
+                    </div>
 
-                <div className="form-group">
-                  <label>Number of Guests</label>
-                  <select 
-                    value={guests} 
-                    onChange={(e) => setGuests(parseInt(e.target.value, 10))} 
-                    required
-                  >
-                    {Array.from({ length: homestay.maxGuests || 4 }, (_, i) => i + 1).map(num => (
-                      <option key={num} value={num}>{num} guest{num > 1 ? 's' : ''}</option>
-                    ))}
-                  </select>
-                </div>
+                    <div className="price-breakdown">
+                      <div className="breakdown-item">
+                        <span>Price per night:</span>
+                        <span>${homestay.pricePerNight}</span>
+                      </div>
+                      <div className="breakdown-item">
+                        <span>Number of nights:</span>
+                        <span>{nights} {nights === 1 ? 'night' : 'nights'}</span>
+                      </div>
+                      <div className="breakdown-item">
+                        <span>Stay Base Price:</span>
+                        <span>${stayTotal}</span>
+                      </div>
 
-                <div className="price-breakdown">
-                  <div className="breakdown-item">
-                    <span>Price per night:</span>
-                    <span>${homestay.pricePerNight}</span>
-                  </div>
-                  <div className="breakdown-item">
-                    <span>Number of nights:</span>
-                    <span>{nights} {nights === 1 ? 'night' : 'nights'}</span>
-                  </div>
-                  <div className="breakdown-item">
-                    <span>Stay Base Price:</span>
-                    <span>${stayTotal}</span>
-                  </div>
-
-                  {selectedExperiences.length > 0 && (
-                    <div className="experiences-breakdown">
-                      <div className="breakdown-subtitle">Experiences ({selectedExperiences.length})</div>
-                      {selectedExperiences.map(expId => {
-                        const exp = homestay.localExperiences?.find(e => e.id === expId);
-                        if (!exp) return null;
-                        return (
-                          <div key={expId} className="breakdown-item item-sub">
-                            <span>• {exp.title} (${exp.price} × {guests} guest{guests > 1 ? 's' : ''})</span>
-                            <span>${exp.price * guests}</span>
+                      {selectedExperiences.length > 0 && (
+                        <div className="experiences-breakdown">
+                          <div className="breakdown-subtitle">Experiences ({selectedExperiences.length})</div>
+                          {selectedExperiences.map(expId => {
+                            const exp = homestay.localExperiences?.find(e => e.id === expId);
+                            if (!exp) return null;
+                            return (
+                              <div key={expId} className="breakdown-item item-sub">
+                                <span>• {exp.title} (${exp.price} × {guests} guest{guests > 1 ? 's' : ''})</span>
+                                <span>${exp.price * guests}</span>
+                              </div>
+                            );
+                          })}
+                          <div className="breakdown-item item-sub-total">
+                            <span>Activities Subtotal:</span>
+                            <span>${experiencesTotal}</span>
                           </div>
-                        );
-                      })}
-                      <div className="breakdown-item item-sub-total">
-                        <span>Activities Subtotal:</span>
-                        <span>${experiencesTotal}</span>
+                        </div>
+                      )}
+
+                      <div className="breakdown-item total">
+                        <span>Total:</span>
+                        <span>${grandTotal}</span>
                       </div>
                     </div>
-                  )}
 
-                  <div className="breakdown-item total">
-                    <span>Total:</span>
-                    <span>${grandTotal}</span>
-                  </div>
-                </div>
+                    <button type="submit" className="book-btn">Book Now</button>
+                  </form>
 
-                <button type="submit" className="book-btn" disabled={!canBook}>Book Now</button>
-              </form>
-
-              <button className="contact-btn" type="button" onClick={() => setShowContactModal(true)}>Message Host</button>
+                  <button className="contact-btn" type="button" onClick={() => setShowContactModal(true)}>Message Host</button>
+                </>
+              )}
             </div>
 
             <div className="host-info">

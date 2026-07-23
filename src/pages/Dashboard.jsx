@@ -6,7 +6,7 @@ import { useFavorites } from '../context/FavoritesContext';
 import BookingCard from '../components/BookingCard';
 import DestinationCard from '../components/DestinationCard';
 import HomestayCard from '../components/HomestayCard';
-import { Loader, Toast } from '../components/ui';
+import { Loader, Toast, ConfirmModal } from '../components/ui';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -19,6 +19,9 @@ const Dashboard = () => {
   const [recentConversations, setRecentConversations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
+
+  const [confirmCancelId, setConfirmCancelId] = useState(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -53,33 +56,47 @@ const Dashboard = () => {
     }
   }, [token]);
 
-  const handleCancelBooking = async (id) => {
-    if (window.confirm('Are you sure you want to cancel this booking?')) {
-      try {
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-        const res = await axios.put(`/api/bookings/${id}/cancel`, {}, config);
-        setBookings(prev =>
-          prev.map(b => (b._id === id || b.id === id ? res.data : b))
-        );
-        setToast({ message: 'Booking cancelled successfully.', type: 'info' });
-      } catch (err) {
-        console.error('Error cancelling booking:', err);
-        setToast({ message: err.response?.data?.message || 'Failed to cancel booking', type: 'error' });
-      }
+  const executeCancelBooking = async () => {
+    if (!confirmCancelId) return;
+    try {
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      const res = await axios.put(`/api/bookings/${confirmCancelId}/cancel`, {}, config);
+      setBookings(prev =>
+        prev.map(b => (b._id === confirmCancelId || b.id === confirmCancelId ? res.data : b))
+      );
+      setToast({ message: 'Booking cancelled successfully.', type: 'info' });
+    } catch (err) {
+      console.error('Error cancelling booking:', err);
+      setToast({ message: err.response?.data?.message || 'Failed to cancel booking', type: 'error' });
+    } finally {
+      setConfirmCancelId(null);
     }
   };
 
-  const handleDeleteBooking = async (id) => {
-    if (window.confirm('Delete this booking record?')) {
-      try {
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-        await axios.delete(`/api/bookings/${id}`, config);
-        setBookings(prev => prev.filter(b => (b._id || b.id) !== id));
-        setToast({ message: 'Booking deleted.', type: 'success' });
-      } catch (err) {
-        console.error('Error deleting booking:', err);
-        setToast({ message: err.response?.data?.message || 'Failed to delete booking', type: 'error' });
-      }
+  const executeDeleteBooking = async () => {
+    if (!confirmDeleteId) return;
+    try {
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      await axios.delete(`/api/bookings/${confirmDeleteId}`, config);
+      setBookings(prev => prev.filter(b => (b._id || b.id) !== confirmDeleteId));
+      setToast({ message: 'Booking deleted.', type: 'success' });
+    } catch (err) {
+      console.error('Error deleting booking:', err);
+      setToast({ message: err.response?.data?.message || 'Failed to delete booking', type: 'error' });
+    } finally {
+      setConfirmDeleteId(null);
+    }
+  };
+
+  const handleUpdateBooking = async (id, updatedData) => {
+    try {
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      const res = await axios.put(`/api/bookings/${id}`, updatedData, config);
+      setBookings(prev => prev.map(b => (b._id === id || b.id === id ? res.data : b)));
+      setToast({ message: 'Booking details updated successfully!', type: 'success' });
+    } catch (err) {
+      console.error('Error updating booking:', err);
+      setToast({ message: err.response?.data?.message || 'Failed to update booking', type: 'error' });
     }
   };
 
@@ -182,14 +199,15 @@ const Dashboard = () => {
                 <Link to="/destinations" className="dash-btn dash-btn-primary">Explore Destinations</Link>
               </div>
             ) : (
-              <div className="cards-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
+              <div className="cards-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
                 {bookings.slice(0, 3).map((booking) => (
                   <BookingCard
                     key={booking._id || booking.id}
                     id={booking._id || booking.id}
                     {...booking}
-                    onCancel={handleCancelBooking}
-                    onDelete={handleDeleteBooking}
+                    onCancel={(id) => setConfirmCancelId(id)}
+                    onDelete={(id) => setConfirmDeleteId(id)}
+                    onUpdate={handleUpdateBooking}
                   />
                 ))}
               </div>
@@ -260,6 +278,26 @@ const Dashboard = () => {
           </div>
         </>
       )}
+
+      {/* CONFIRMATION MODALS */}
+      <ConfirmModal 
+        isOpen={Boolean(confirmCancelId)}
+        title="Cancel Reservation?"
+        message="Are you sure you want to cancel this reservation?"
+        confirmText="Cancel Booking"
+        variant="warning"
+        onConfirm={executeCancelBooking}
+        onCancel={() => setConfirmCancelId(null)}
+      />
+
+      <ConfirmModal 
+        isOpen={Boolean(confirmDeleteId)}
+        title="Delete Booking Record?"
+        message="Are you sure you want to permanently delete this booking record?"
+        confirmText="Delete Record"
+        onConfirm={executeDeleteBooking}
+        onCancel={() => setConfirmDeleteId(null)}
+      />
 
       {toast && (
         <Toast 

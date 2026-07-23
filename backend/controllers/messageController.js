@@ -47,6 +47,10 @@ export const getConversations = async (req, res) => {
         const otherUserId = allParticipants.find(
           (id) => id.toString() !== userId.toString()
         );
+
+        // Self-conversation: user sent messages to themselves (e.g., host contacted own listing)
+        const isSelfConversation = !otherUserId;
+
         const otherUser = otherUserId
           ? await User.findById(otherUserId).select('name email avatar userType')
           : null;
@@ -59,6 +63,8 @@ export const getConversations = async (req, res) => {
           listingName: conv.listingName,
           listingType: conv.listingType,
           unreadCount: conv.unreadCount,
+          otherUserId: otherUserId ? otherUserId.toString() : null,
+          isSelfConversation,
           otherUser: otherUser
             ? {
                 _id: otherUser._id,
@@ -115,6 +121,10 @@ export const sendMessage = async (req, res) => {
 
     if (senderId.toString() === receiverId.toString()) {
       return res.status(400).json({ message: 'Cannot send a message to yourself' });
+    }
+
+    if (senderId.toString() === receiverId.toString()) {
+      return res.status(400).json({ message: 'You cannot send messages to yourself' });
     }
 
     // Verify receiver exists
@@ -227,6 +237,33 @@ export const deleteConversation = async (req, res) => {
     res.status(200).json({ message: 'Conversation deleted successfully', deletedCount: result.deletedCount });
   } catch (error) {
     console.error('Delete conversation error:', error);
+    res.status(500).json({ message: 'Server error deleting conversation' });
+  }
+};
+
+// @desc    Delete conversation by conversationId (for self-conversations or orphaned chats)
+// @route   DELETE /api/messages/conversation-by-id/:conversationId
+// @access  Private
+export const deleteConversationById = async (req, res) => {
+  try {
+    const currentUserId = req.user._id;
+    const { conversationId } = req.params;
+
+    // Verify the user is a participant in this conversation
+    const sample = await Message.findOne({
+      conversationId,
+      $or: [{ sender: currentUserId }, { receiver: currentUserId }],
+    });
+
+    if (!sample) {
+      return res.status(404).json({ message: 'Conversation not found or you are not a participant' });
+    }
+
+    const result = await Message.deleteMany({ conversationId });
+
+    res.status(200).json({ message: 'Conversation deleted successfully', deletedCount: result.deletedCount });
+  } catch (error) {
+    console.error('Delete conversation by id error:', error);
     res.status(500).json({ message: 'Server error deleting conversation' });
   }
 };

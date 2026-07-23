@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Loader, Toast } from '../components/ui';
 import './Messages.css';
 
 const Messages = () => {
   const { user, token } = useAuth();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [conversations, setConversations] = useState([]);
   const [activeChat, setActiveChat] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -107,17 +108,19 @@ const Messages = () => {
 
   const handleSelectConversation = async (conversation) => {
     const otherUser = conversation.otherUser;
-    if (!otherUser) return;
+    const resolvedUserId = otherUser?._id || conversation.otherUserId;
+    if (!resolvedUserId) return;
 
     setActiveChat({
-      userId: otherUser._id,
-      name: otherUser.name,
-      avatar: otherUser.avatar,
-      userType: otherUser.userType,
+      userId: resolvedUserId,
+      name: otherUser?.name || 'Unknown User',
+      avatar: otherUser?.avatar || '',
+      userType: otherUser?.userType || '',
+      isDeleted: !otherUser,
     });
 
-    await fetchMessages(otherUser._id);
-    await markAsRead(otherUser._id);
+    await fetchMessages(resolvedUserId);
+    if (otherUser) await markAsRead(resolvedUserId);
     fetchConversations();
   };
 
@@ -174,7 +177,16 @@ const Messages = () => {
     if (!window.confirm(`Are you sure you want to delete the entire chat with ${activeChat.name}? This action cannot be undone.`)) return;
 
     try {
-      await axios.delete(`/api/messages/conversation/${activeChat.userId}`, config);
+      // For self-conversations or deleted users, find the matching conversation to get its conversationId
+      if (activeChat.isDeleted && !activeChat.userId) {
+        // Find the conversation in our list by name match
+        const conv = conversations.find(c => !c.otherUser && !c.otherUserId);
+        if (conv) {
+          await axios.delete(`/api/messages/conversation-by-id/${encodeURIComponent(conv.conversationId)}`, config);
+        }
+      } else {
+        await axios.delete(`/api/messages/conversation/${activeChat.userId}`, config);
+      }
       setActiveChat(null);
       setMessages([]);
       fetchConversations();
@@ -281,10 +293,26 @@ const Messages = () => {
                   <Loader size="md" text="Loading messages..." />
                 </div>
               ) : filteredConversations.length === 0 ? (
-                <div className="conversations-empty">
-                  <div className="empty-icon">📭</div>
-                  <h3>No messages yet</h3>
-                  <p>When you contact a host or receive a message, it will appear here.</p>
+                <div className="conversations-empty" style={{ padding: '24px 16px', textAlign: 'center' }}>
+                  <div className="empty-icon" style={{ fontSize: '2.5rem', marginBottom: '10px' }}>📭</div>
+                  <h3 style={{ margin: '0 0 8px 0', fontSize: '1.1rem' }}>No messages yet</h3>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '16px' }}>
+                    Contact a host from any destination or homestay page to start a conversation.
+                  </p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <button 
+                      onClick={() => navigate('/homestays')}
+                      style={{ padding: '8px 14px', background: '#7fd051', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.85rem' }}
+                    >
+                      🏠 Browse Homestays & Contact Host
+                    </button>
+                    <button 
+                      onClick={() => navigate('/destinations')}
+                      style={{ padding: '8px 14px', background: 'var(--bg-tertiary, #e2e8f0)', border: '1px solid var(--border-color)', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem' }}
+                    >
+                      🏔️ Browse Destinations
+                    </button>
+                  </div>
                 </div>
               ) : (
                 filteredConversations.map((conv) => (
@@ -329,6 +357,36 @@ const Messages = () => {
                         )}
                       </div>
                     </div>
+
+                    {!conv.otherUser && (
+                      <button
+                        className="conv-delete-unknown-btn"
+                        title="Delete this conversation"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!window.confirm('Delete this conversation?')) return;
+                          
+                          // Use otherUserId if available, otherwise fall back to conversationId
+                          const deleteUrl = conv.otherUserId
+                            ? `/api/messages/conversation/${conv.otherUserId}`
+                            : `/api/messages/conversation-by-id/${encodeURIComponent(conv.conversationId)}`;
+
+                          axios.delete(deleteUrl, config)
+                            .then(() => {
+                              setActiveChat(null);
+                              setMessages([]);
+                              fetchConversations();
+                              setToast({ message: 'Conversation deleted.', type: 'info' });
+                            })
+                            .catch((err) => {
+                              setToast({ message: err.response?.data?.message || 'Failed to delete conversation.', type: 'error' });
+                            });
+                        }}
+                        style={{ background: '#ef4444', color: '#fff', border: 'none', borderRadius: '6px', padding: '4px 8px', fontSize: '0.75rem', cursor: 'pointer', flexShrink: 0 }}
+                      >
+                        🗑️
+                      </button>
+                    )}
 
                     {conv.unreadCount > 0 && (
                       <div className="conversation-unread-badge">
@@ -426,23 +484,29 @@ const Messages = () => {
                   <div ref={messagesEndRef} />
                 </div>
 
-                <form className="chat-input-area" onSubmit={handleSendMessage}>
-                  <textarea
-                    ref={textareaRef}
-                    value={newMessage}
-                    onChange={handleTextareaInput}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Type your message..."
-                    rows={1}
-                  />
-                  <button
-                    type="submit"
-                    className="chat-send-btn"
-                    disabled={!newMessage.trim() || sending}
-                  >
-                    {sending ? '...' : 'Send ➤'}
-                  </button>
-                </form>
+                {activeChat.isDeleted ? (
+                  <div style={{ padding: '12px 16px', textAlign: 'center', background: 'var(--bg-tertiary, #f1f5f9)', borderTop: '1px solid var(--border-color)', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                    ⚠️ This user account has been deleted. You can review or delete this conversation.
+                  </div>
+                ) : (
+                  <form className="chat-input-area" onSubmit={handleSendMessage}>
+                    <textarea
+                      ref={textareaRef}
+                      value={newMessage}
+                      onChange={handleTextareaInput}
+                      onKeyDown={handleKeyDown}
+                      placeholder="Type your message..."
+                      rows={1}
+                    />
+                    <button
+                      type="submit"
+                      className="chat-send-btn"
+                      disabled={!newMessage.trim() || sending}
+                    >
+                      {sending ? '...' : 'Send ➤'}
+                    </button>
+                  </form>
+                )}
               </>
             ) : (
               <div className="chat-empty-state">

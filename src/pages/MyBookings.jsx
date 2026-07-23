@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BookingCard from '../components/BookingCard';
-import { Loader, Toast } from '../components/ui';
+import { Loader, Toast, ConfirmModal } from '../components/ui';
 import './MyBookings.css';
 
 const MyBookings = () => {
@@ -9,6 +9,9 @@ const MyBookings = () => {
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
   const [filter, setFilter] = useState('all');
+
+  const [confirmCancelId, setConfirmCancelId] = useState(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
   const fetchBookings = async () => {
     try {
@@ -30,37 +33,53 @@ const MyBookings = () => {
     fetchBookings();
   }, []);
 
-  const handleCancelBooking = async (id) => {
-    if (window.confirm('Are you sure you want to cancel this booking?')) {
-      try {
-        const res = await axios.put(`/api/bookings/${id}/cancel`);
-        setBookings(prev =>
-          prev.map(booking => (booking._id === id || booking.id === id ? res.data : booking))
-        );
-        setToast({ message: 'Booking cancelled successfully', type: 'info' });
-      } catch (err) {
-        console.error('Error cancelling booking:', err);
-        setToast({
-          message: err.response?.data?.message || 'Failed to cancel booking',
-          type: 'error'
-        });
-      }
+  const executeCancelBooking = async () => {
+    if (!confirmCancelId) return;
+    try {
+      const res = await axios.put(`/api/bookings/${confirmCancelId}/cancel`);
+      setBookings(prev =>
+        prev.map(booking => (booking._id === confirmCancelId || booking.id === confirmCancelId ? res.data : booking))
+      );
+      setToast({ message: 'Booking cancelled successfully', type: 'info' });
+    } catch (err) {
+      console.error('Error cancelling booking:', err);
+      setToast({
+        message: err.response?.data?.message || 'Failed to cancel booking',
+        type: 'error'
+      });
+    } finally {
+      setConfirmCancelId(null);
     }
   };
 
-  const handleDeleteBooking = async (id) => {
-    if (window.confirm('Are you sure you want to completely delete this booking record?')) {
-      try {
-        await axios.delete(`/api/bookings/${id}`);
-        setBookings(prev => prev.filter(booking => (booking._id || booking.id) !== id));
-        setToast({ message: 'Booking record deleted', type: 'success' });
-      } catch (err) {
-        console.error('Error deleting booking:', err);
-        setToast({
-          message: err.response?.data?.message || 'Failed to delete booking',
-          type: 'error'
-        });
-      }
+  const executeDeleteBooking = async () => {
+    if (!confirmDeleteId) return;
+    try {
+      await axios.delete(`/api/bookings/${confirmDeleteId}`);
+      setBookings(prev => prev.filter(booking => (booking._id || booking.id) !== confirmDeleteId));
+      setToast({ message: 'Booking record deleted', type: 'success' });
+    } catch (err) {
+      console.error('Error deleting booking:', err);
+      setToast({
+        message: err.response?.data?.message || 'Failed to delete booking',
+        type: 'error'
+      });
+    } finally {
+      setConfirmDeleteId(null);
+    }
+  };
+
+  const handleUpdateBooking = async (id, updatedData) => {
+    try {
+      const res = await axios.put(`/api/bookings/${id}`, updatedData);
+      setBookings(prev => prev.map(b => (b._id === id || b.id === id ? res.data : b)));
+      setToast({ message: 'Booking dates/guests updated successfully!', type: 'success' });
+    } catch (err) {
+      console.error('Error updating booking:', err);
+      setToast({
+        message: err.response?.data?.message || 'Failed to update booking details',
+        type: 'error'
+      });
     }
   };
 
@@ -106,8 +125,9 @@ const MyBookings = () => {
                 key={booking._id || booking.id} 
                 id={booking._id || booking.id} 
                 {...booking} 
-                onCancel={handleCancelBooking}
-                onDelete={handleDeleteBooking}
+                onCancel={(id) => setConfirmCancelId(id)}
+                onDelete={(id) => setConfirmDeleteId(id)}
+                onUpdate={handleUpdateBooking}
               />
             ))}
           </div>
@@ -118,6 +138,25 @@ const MyBookings = () => {
           </div>
         )}
       </div>
+
+      <ConfirmModal 
+        isOpen={Boolean(confirmCancelId)}
+        title="Cancel Reservation?"
+        message="Are you sure you want to cancel this booking reservation? The host will be notified."
+        confirmText="Cancel Booking"
+        variant="warning"
+        onConfirm={executeCancelBooking}
+        onCancel={() => setConfirmCancelId(null)}
+      />
+
+      <ConfirmModal 
+        isOpen={Boolean(confirmDeleteId)}
+        title="Delete Booking Record?"
+        message="Are you sure you want to permanently delete this booking record?"
+        confirmText="Delete Record"
+        onConfirm={executeDeleteBooking}
+        onCancel={() => setConfirmDeleteId(null)}
+      />
 
       {toast && (
         <Toast 

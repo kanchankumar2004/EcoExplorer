@@ -73,6 +73,10 @@ export const createBooking = async (req, res) => {
   try {
     host = await resolveBookingHostId({ type, itemId, host, userId: req.user.id });
 
+    if (host && host.toString() === req.user.id.toString()) {
+      return res.status(400).json({ message: 'Hosts cannot book their own property listing.' });
+    }
+
     const booking = await Booking.create({
       user: req.user.id,
       guestName,
@@ -168,11 +172,46 @@ export const updateBooking = async (req, res) => {
     if (booking.user.toString() !== req.user.id) {
       return res.status(401).json({ message: 'Not authorized to update this booking' });
     }
-    const updatedBooking = await Booking.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+
+    const checkIn = req.body.checkIn ? new Date(req.body.checkIn) : booking.checkIn;
+    const checkOut = req.body.checkOut ? new Date(req.body.checkOut) : booking.checkOut;
+    const guests = req.body.guests !== undefined ? Number(req.body.guests) : booking.guests;
+
+    // Calculate number of stay nights
+    const diffTime = checkOut.getTime() - checkIn.getTime();
+    const nights = Math.max(1, Math.ceil(diffTime / (1000 * 3600 * 24)));
+
+    // Determine unit price per night per guest
+    let unitRate = 45;
+    if (booking.itemId && booking.type) {
+      const ListingModel = getListingModel(booking.type);
+      const listing = await ListingModel.findById(booking.itemId);
+      if (listing) {
+        const match = String(listing.price || listing.pricePerNight || '').match(/\d+/);
+        if (match) {
+          unitRate = parseInt(match[0], 10);
+        }
+      }
+    } else if (booking.totalPrice && booking.checkIn && booking.checkOut && booking.guests) {
+      const origDiff = new Date(booking.checkOut).getTime() - new Date(booking.checkIn).getTime();
+      const origNights = Math.max(1, Math.ceil(origDiff / (1000 * 3600 * 24)));
+      const origGuests = Number(booking.guests) || 1;
+      unitRate = booking.totalPrice / (origNights * origGuests);
+    }
+
+    const numGuests = Math.max(1, Number(guests) || 1);
+    const calculatedTotal = req.body.totalPrice ? Number(req.body.totalPrice) : Math.round(unitRate * nights * numGuests);
+
+    booking.checkIn = checkIn;
+    booking.checkOut = checkOut;
+    booking.guests = numGuests;
+    booking.totalPrice = calculatedTotal;
+
+    if (req.body.status) {
+      booking.status = req.body.status;
+    }
+
+    const updatedBooking = await booking.save();
     res.status(200).json(updatedBooking);
   } catch (error) {
     console.error('Update booking error:', error);
@@ -319,6 +358,10 @@ export const contactHost = async (req, res) => {
       return res.status(404).json({ message: 'Host email not found for this listing' });
     }
 
+    if (hostUser._id.toString() === req.user.id.toString()) {
+      return res.status(400).json({ message: 'Hosts cannot send messages to their own listing.' });
+    }
+
     const sender = await User.findById(req.user.id).select('name email');
     const senderName = sender?.name || 'EcoExplorer user';
     const senderEmail = sender?.email || 'unknown email';
@@ -352,18 +395,16 @@ export const contactHost = async (req, res) => {
       'Log in to EcoExplorer to reply to this message.'
     ].join('\n');
 
-    try {
-      await sendEmail({
-        email: hostUser.email,
-        subject,
-        message: emailMessage,
-      });
-    } catch (emailErr) {
-      // Email failure is non-critical — message is already saved in-app
-      console.error('Email notification failed (message still saved):', emailErr.message);
-    }
+    // Send email notification asynchronously in background (non-blocking)
+    sendEmail({
+      email: hostUser.email,
+      subject,
+      message: emailMessage,
+    }).catch(emailErr => {
+      console.error('Email notification failed (message saved in-app):', emailErr.message);
+    });
 
-    res.status(200).json({ message: 'Message sent to host successfully' });
+    return res.status(200).json({ message: 'Message sent to host successfully' });
   } catch (error) {
     console.error('Contact host error:', error);
     res.status(500).json({ message: 'Server error sending host message' });

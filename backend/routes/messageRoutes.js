@@ -7,6 +7,7 @@ import {
   getUnreadCount,
   deleteMessage,
   deleteConversation,
+  deleteConversationById,
 } from '../controllers/messageController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -14,6 +15,7 @@ const router = express.Router();
 
 router.get('/conversations', protect, getConversations);
 router.get('/unread-count', protect, getUnreadCount);
+router.delete('/conversation-by-id/:conversationId', protect, deleteConversationById);
 router.delete('/conversation/:userId', protect, deleteConversation);
 router.delete('/:messageId', protect, deleteMessage);
 router.get('/:userId', protect, getMessages);

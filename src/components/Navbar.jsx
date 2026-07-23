@@ -38,6 +38,9 @@ const Navbar = () => {
     return () => clearInterval(interval);
   }, [isAuthenticated, token]);
 
+  const isHost = user?.userType === 'host' || user?.userType === 'both';
+  const isAdmin = user?.userType === 'admin';
+
   return (
     <nav className="navbar">
       <div className="nav-container">
@@ -45,7 +48,7 @@ const Navbar = () => {
           🌿 EcoExplorer
         </Link>
         
-        <button className="hamburger" onClick={toggleMenu}>
+        <button className="hamburger" onClick={toggleMenu} aria-label="Toggle navigation menu">
           <span></span>
           <span></span>
           <span></span>
@@ -57,47 +60,40 @@ const Navbar = () => {
               Home
             </NavLink>
           </li>
+
           <li className="nav-item">
             <NavLink to="/destinations" className="nav-link" onClick={() => setMenuOpen(false)}>
               Destinations
             </NavLink>
           </li>
+
           <li className="nav-item">
             <NavLink to="/homestays" className="nav-link" onClick={() => setMenuOpen(false)}>
               Homestays
             </NavLink>
           </li>
-          <li className="nav-item">
-            <NavLink to="/travel-planner" className="nav-link" onClick={() => setMenuOpen(false)}>
-              Travel Planner
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/showcase" className="nav-link" onClick={() => setMenuOpen(false)}>
-              Showcase
-            </NavLink>
-          </li>
-          
+
+          {/* ROLE SPECIFIC NAVIGATION */}
           {isAuthenticated ? (
             <>
-              {user?.userType === 'host' ? (
+              {isHost ? (
                 <>
                   <li className="nav-item">
-                    <NavLink to="/owner-dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
-                      Host Dashboard
+                    <NavLink to="/owner-dashboard" className="nav-link nav-host-badge" onClick={() => setMenuOpen(false)}>
+                      🏡 Host Dashboard
                     </NavLink>
                   </li>
                   <li className="nav-item">
                     <NavLink to="/dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
-                      Traveler Dashboard
+                      Traveler View
                     </NavLink>
                   </li>
                 </>
-              ) : user?.userType === 'admin' ? (
+              ) : isAdmin ? (
                 <>
                   <li className="nav-item">
-                    <NavLink to="/admin-dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
-                      Admin Panel
+                    <NavLink to="/admin-dashboard" className="nav-link nav-admin-badge" onClick={() => setMenuOpen(false)}>
+                      🛡️ Admin Panel
                     </NavLink>
                   </li>
                   <li className="nav-item">
@@ -107,25 +103,34 @@ const Navbar = () => {
                   </li>
                 </>
               ) : (
-                <li className="nav-item">
-                  <NavLink to="/dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
-                    Dashboard
-                  </NavLink>
-                </li>
+                <>
+                  <li className="nav-item">
+                    <NavLink to="/dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
+                      Dashboard
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink to="/my-bookings" className="nav-link" onClick={() => setMenuOpen(false)}>
+                      My Bookings
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink to="/travel-planner" className="nav-link" onClick={() => setMenuOpen(false)}>
+                      AI Planner 🤖
+                    </NavLink>
+                  </li>
+                </>
               )}
+
               <li className="nav-item">
                 <NavLink to="/favorites" className="nav-link" onClick={() => setMenuOpen(false)}>
-                  Favorites
+                  Favorites ❤️
                 </NavLink>
               </li>
-              <li className="nav-item">
-                <NavLink to="/my-bookings" className="nav-link" onClick={() => setMenuOpen(false)}>
-                  My Bookings
-                </NavLink>
-              </li>
+
               <li className="nav-item">
                 <NavLink to="/messages" className="nav-link" onClick={() => setMenuOpen(false)}>
-                  Messages
+                  Messages 💬
                   {unreadCount > 0 && (
                     <span className="nav-messages-badge">
                       {unreadCount > 99 ? '99+' : unreadCount}
@@ -133,11 +138,13 @@ const Navbar = () => {
                   )}
                 </NavLink>
               </li>
+
               <li className="nav-item">
-                <NavLink to="/profile" className="nav-link" onClick={() => setMenuOpen(false)}>
-                  Profile
+                <NavLink to="/profile" className="nav-link nav-profile-pill" onClick={() => setMenuOpen(false)}>
+                  👤 Profile
                 </NavLink>
               </li>
+
               <li className="nav-item">
                 <button className="nav-link logout-btn" onClick={() => { logout(); setMenuOpen(false); }}>
                   Logout
@@ -146,6 +153,16 @@ const Navbar = () => {
             </>
           ) : (
             <>
+              <li className="nav-item">
+                <NavLink to="/travel-planner" className="nav-link" onClick={() => setMenuOpen(false)}>
+                  AI Planner 🤖
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/showcase" className="nav-link" onClick={() => setMenuOpen(false)}>
+                  Showcase
+                </NavLink>
+              </li>
               <li className="nav-item">
                 <NavLink to="/login" className="nav-link" onClick={() => setMenuOpen(false)}>
                   Login
@@ -158,6 +175,7 @@ const Navbar = () => {
               </li>
             </>
           )}
+
           <li className="nav-item theme-toggle-item">
             <button className="theme-toggle-btn" onClick={toggleTheme} title="Toggle Theme" aria-label="Toggle Theme">
               {theme === 'dark' ? '☀️' : '🌙'}
@@ -170,4 +188,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

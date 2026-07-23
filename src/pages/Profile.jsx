@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Toast } from '../components/ui';
+import { Toast, ConfirmModal } from '../components/ui';
 import './Profile.css';
 
 const Profile = () => {
@@ -8,6 +8,8 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [alert, setAlert] = useState({ text: '', type: '' });
   const [activeModal, setActiveModal] = useState(null); // 'password', 'notifications', 'privacy', 'payments', 'avatar'
+  const [confirmDeleteAccount, setConfirmDeleteAccount] = useState(false);
+  const [confirmDeleteCardId, setConfirmDeleteCardId] = useState(null);
 
   // Profile data state
   const [profileData, setProfileData] = useState({
@@ -214,15 +216,14 @@ const Profile = () => {
     }
   };
 
-  const handleDeleteAccount = async () => {
-    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
-      const res = await deleteAccount();
-      if (res.success) {
-        window.alert('Your account has been deleted permanently. You will need to register again to use EcoExplorer.');
-      } else {
-        showAlert(res.message, 'error');
-      }
+  const executeDeleteAccount = async () => {
+    const res = await deleteAccount();
+    if (res.success) {
+      showAlert('Your account has been deleted permanently.');
+    } else {
+      showAlert(res.message, 'error');
     }
+    setConfirmDeleteAccount(false);
   };
 
   // Cards Helpers
@@ -271,23 +272,25 @@ const Profile = () => {
       showAlert('Card added successfully!');
     } else {
       showAlert('Failed to add card', 'error');
-      setSettings(settings); // revert
+      setSettings(settings);
     }
   };
 
-  const handleDeleteCard = async (cardId) => {
+  const executeDeleteCard = async () => {
+    if (!confirmDeleteCardId) return;
     const updatedSettings = {
       ...settings,
-      paymentMethods: settings.paymentMethods.filter(c => c.id !== cardId)
+      paymentMethods: settings.paymentMethods.filter(c => c.id !== confirmDeleteCardId)
     };
     setSettings(updatedSettings);
+    setConfirmDeleteCardId(null);
 
     const res = await updateProfile({ ...profileData, settings: updatedSettings });
     if (res.success) {
       showAlert('Card deleted successfully!');
     } else {
       showAlert('Failed to delete card', 'error');
-      setSettings(settings); // revert
+      setSettings(settings);
     }
   };
 
@@ -472,7 +475,7 @@ const Profile = () => {
               <h3>Actions</h3>
               <button className="action-btn" onClick={handleDownloadData}>Download My Data</button>
               <button className="action-btn logout-btn" onClick={logout}>Logout</button>
-              <button className="action-btn delete-account-btn" style={{marginTop: '10px', backgroundColor: '#dc3545', color: 'white', borderColor: '#dc3545'}} onClick={handleDeleteAccount}>Delete Account</button>
+              <button className="action-btn delete-account-btn" style={{marginTop: '10px', backgroundColor: '#dc3545', color: 'white', borderColor: '#dc3545'}} onClick={() => setConfirmDeleteAccount(true)}>Delete Account</button>
             </div>
           </div>
         </div>
@@ -687,7 +690,7 @@ const Profile = () => {
                       <div key={card.id} className="payment-card-item">
                         <div className="card-top">
                           <span className="card-brand">{card.cardType}</span>
-                          <button className="delete-card-btn" onClick={() => handleDeleteCard(card.id)} title="Remove Card">
+                          <button className="delete-card-btn" onClick={() => setConfirmDeleteCardId(card.id)} title="Remove Card">
                             &times;
                           </button>
                         </div>
@@ -766,6 +769,25 @@ const Profile = () => {
           </div>
         </div>
       )}
+
+      {/* CONFIRMATION MODALS */}
+      <ConfirmModal 
+        isOpen={confirmDeleteAccount}
+        title="Delete Account?"
+        message="Are you sure you want to permanently delete your EcoExplorer account? All your data, bookings, and profile settings will be erased."
+        confirmText="Delete Account"
+        onConfirm={executeDeleteAccount}
+        onCancel={() => setConfirmDeleteAccount(false)}
+      />
+
+      <ConfirmModal 
+        isOpen={Boolean(confirmDeleteCardId)}
+        title="Remove Saved Card?"
+        message="Are you sure you want to remove this saved payment method from your account?"
+        confirmText="Remove Card"
+        onConfirm={executeDeleteCard}
+        onCancel={() => setConfirmDeleteCardId(null)}
+      />
     </div>
   );
 };

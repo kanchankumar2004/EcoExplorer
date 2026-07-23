@@ -79,11 +79,16 @@ const DestinationDetails = () => {
     return differenceInDays > 0 ? differenceInDays : 0;
   };
 
-  const nights = calculateNights();
-  const pricePerNight = destination ? parsePrice(destination.price) : 0;
-  const stayTotal = pricePerNight * nights;
-  const grandTotal = stayTotal;
-  const canBook = isAuthenticated && user?.userType !== 'host';
+  const destinationHostId = destination?.host?._id || destination?.host;
+  const currentUserId = user?.id || user?._id;
+  const isOwnListing = Boolean(
+    isAuthenticated &&
+    destinationHostId &&
+    currentUserId &&
+    destinationHostId.toString() === currentUserId.toString()
+  );
+
+  const canBook = isAuthenticated && !isOwnListing;
 
   const handleBooking = async (e) => {
     e.preventDefault();
@@ -92,8 +97,8 @@ const DestinationDetails = () => {
       navigate('/login');
       return;
     }
-    if (user?.userType === 'host') {
-      setToast({ message: 'Host-only accounts cannot create bookings.', type: 'error' });
+    if (isOwnListing) {
+      setToast({ message: 'You cannot book your own property listing.', type: 'error' });
       return;
     }
     if (nights <= 0) {
@@ -251,67 +256,69 @@ const DestinationDetails = () => {
                 </div>
               )}
 
-              {!canBook && isAuthenticated && user?.userType === 'host' && (
-                <div className="booking-disabled-note">
-                  Host-only accounts cannot book destinations. Use a traveler account or a traveler+host account.
+              {isOwnListing ? (
+                <div style={{ background: '#fef3c7', border: '1px solid #f59e0b', color: '#92400e', padding: '16px 20px', borderRadius: '12px', textAlign: 'center', marginTop: '20px', fontWeight: 'bold' }}>
+                  🏡 You are the host of this destination listing.
                 </div>
+              ) : (
+                <>
+                  <form onSubmit={handleBooking} className="booking-form" style={{ marginTop: '20px' }}>
+                    <div className="form-group">
+                      <label>Check-in Date</label>
+                      <input 
+                        type="date" 
+                        value={selectedDates.checkIn}
+                        onChange={(e) => setSelectedDates({...selectedDates, checkIn: e.target.value})}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Check-out Date</label>
+                      <input 
+                        type="date"
+                        value={selectedDates.checkOut}
+                        onChange={(e) => setSelectedDates({...selectedDates, checkOut: e.target.value})}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Number of Guests</label>
+                      <select 
+                        value={guests} 
+                        onChange={(e) => setGuests(parseInt(e.target.value, 10))} 
+                        required
+                      >
+                        {[1, 2, 3, 4, 5, 6].map(num => (
+                          <option key={num} value={num}>{num} guest{num > 1 ? 's' : ''}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {nights > 0 && (
+                      <div className="price-breakdown">
+                        <div className="breakdown-item">
+                          <span>Price per night:</span>
+                          <span>${pricePerNight}</span>
+                        </div>
+                        <div className="breakdown-item">
+                          <span>Number of nights:</span>
+                          <span>{nights} {nights === 1 ? 'night' : 'nights'}</span>
+                        </div>
+                        <div className="breakdown-item total">
+                          <span>Total:</span>
+                          <span>${grandTotal}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    <button type="submit" className="book-btn" style={{ marginTop: '15px' }}>Book Now</button>
+                  </form>
+
+                  <button className="contact-btn" type="button" onClick={() => setShowContactModal(true)}>Contact Host</button>
+                </>
               )}
-
-              <form onSubmit={handleBooking} className="booking-form" style={{ marginTop: '20px' }}>
-                <div className="form-group">
-                  <label>Check-in Date</label>
-                  <input 
-                    type="date" 
-                    value={selectedDates.checkIn}
-                    onChange={(e) => setSelectedDates({...selectedDates, checkIn: e.target.value})}
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Check-out Date</label>
-                  <input 
-                    type="date"
-                    value={selectedDates.checkOut}
-                    onChange={(e) => setSelectedDates({...selectedDates, checkOut: e.target.value})}
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Number of Guests</label>
-                  <select 
-                    value={guests} 
-                    onChange={(e) => setGuests(parseInt(e.target.value, 10))} 
-                    required
-                  >
-                    {[1, 2, 3, 4, 5, 6].map(num => (
-                      <option key={num} value={num}>{num} guest{num > 1 ? 's' : ''}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {nights > 0 && (
-                  <div className="price-breakdown">
-                    <div className="breakdown-item">
-                      <span>Price per night:</span>
-                      <span>${pricePerNight}</span>
-                    </div>
-                    <div className="breakdown-item">
-                      <span>Number of nights:</span>
-                      <span>{nights} {nights === 1 ? 'night' : 'nights'}</span>
-                    </div>
-                    <div className="breakdown-item total">
-                      <span>Total:</span>
-                      <span>${grandTotal}</span>
-                    </div>
-                  </div>
-                )}
-
-                <button type="submit" className="book-btn" style={{ marginTop: '15px' }} disabled={!canBook}>Book Now</button>
-              </form>
-
-              <button className="contact-btn" type="button" onClick={() => setShowContactModal(true)}>Contact Host</button>
             </div>
           </div>
         </div>
