@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { Loader, Toast } from '../components/ui';
 import './OwnerDashboard.css';
 
 const DEFAULT_LISTING_IMAGE = 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80';
@@ -15,6 +16,7 @@ const OwnerDashboard = () => {
   const [bookingsLoading, setBookingsLoading] = useState(true);
   const [recentMessages, setRecentMessages] = useState([]);
   const [unreadMsgCount, setUnreadMsgCount] = useState(0);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     const fetchListingsAndBookings = async () => {
@@ -26,7 +28,6 @@ const OwnerDashboard = () => {
           axios.get('/api/bookings/host-bookings', config)
         ]);
         
-        // Combine both types of listings
         const combinedListings = [
           ...destinationsRes.data.map(d => ({ ...d, type: 'Destination' })),
           ...homestaysRes.data.map(h => ({ ...h, type: 'Homestay' }))
@@ -36,6 +37,10 @@ const OwnerDashboard = () => {
         setHostBookings(bookingsRes.data);
       } catch (error) {
         console.error('Failed to fetch dashboard data', error);
+        setToast({
+          message: error.response?.data?.message || 'Failed to load host dashboard data',
+          type: 'error'
+        });
       } finally {
         setLoading(false);
         setBookingsLoading(false);
@@ -49,7 +54,7 @@ const OwnerDashboard = () => {
           axios.get('/api/messages/conversations', config),
           axios.get('/api/messages/unread-count', config),
         ]);
-        setRecentMessages(convRes.data.slice(0, 5)); // Show latest 5
+        setRecentMessages(convRes.data.slice(0, 5));
         setUnreadMsgCount(unreadRes.data.count || 0);
       } catch (error) {
         console.error('Failed to fetch messages', error);
@@ -59,6 +64,9 @@ const OwnerDashboard = () => {
     if (token) {
       fetchListingsAndBookings();
       fetchMessages();
+    } else {
+      setLoading(false);
+      setBookingsLoading(false);
     }
   }, [token]);
 
@@ -67,9 +75,10 @@ const OwnerDashboard = () => {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       const { data } = await axios.put(`/api/bookings/${bookingId}/confirm`, {}, config);
       setHostBookings(prev => prev.map(b => b._id === bookingId ? data : b));
+      setToast({ message: 'Booking confirmed successfully!', type: 'success' });
     } catch (error) {
       console.error('Failed to confirm booking', error);
-      alert('Failed to confirm booking');
+      setToast({ message: error.response?.data?.message || 'Failed to confirm booking', type: 'error' });
     }
   };
 
@@ -78,9 +87,10 @@ const OwnerDashboard = () => {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       const { data } = await axios.put(`/api/bookings/${bookingId}/decline`, {}, config);
       setHostBookings(prev => prev.map(b => b._id === bookingId ? data : b));
+      setToast({ message: 'Booking declined.', type: 'info' });
     } catch (error) {
       console.error('Failed to decline booking', error);
-      alert('Failed to decline booking');
+      setToast({ message: error.response?.data?.message || 'Failed to decline booking', type: 'error' });
     }
   };
 
@@ -93,9 +103,10 @@ const OwnerDashboard = () => {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       await axios.delete(`/api/bookings/${bookingId}`, config);
       setHostBookings(prev => prev.filter(b => b._id !== bookingId));
+      setToast({ message: 'Booking request deleted.', type: 'info' });
     } catch (error) {
       console.error('Failed to delete booking', error);
-      alert('Failed to delete booking request');
+      setToast({ message: error.response?.data?.message || 'Failed to delete booking request', type: 'error' });
     }
   };
 
@@ -118,7 +129,7 @@ const OwnerDashboard = () => {
     totalListings: listings.length,
     totalBookings: hostBookings.length,
     pendingApprovals: hostBookings.filter(b => b.status === 'Pending').length,
-    revenue: `$${hostBookings.filter(b => b.status === 'Confirmed').reduce((sum, b) => sum + b.totalPrice, 0)}`,
+    revenue: `$${hostBookings.filter(b => b.status === 'Confirmed').reduce((sum, b) => sum + (b.totalPrice || 0), 0)}`,
     ratings: 4.8
   };
 
@@ -195,7 +206,9 @@ const OwnerDashboard = () => {
           <div className="section">
             <h2>Booking Requests</h2>
             {bookingsLoading ? (
-              <p>Loading bookings...</p>
+              <div style={{ padding: '30px 0', textAlign: 'center' }}>
+                <Loader size="md" text="Loading booking requests..." />
+              </div>
             ) : hostBookings.length === 0 ? (
               <p>You have no bookings yet.</p>
             ) : (
@@ -218,7 +231,7 @@ const OwnerDashboard = () => {
                       <td>{new Date(booking.checkIn).toLocaleDateString()} - {new Date(booking.checkOut).toLocaleDateString()}</td>
                       <td>${booking.totalPrice}</td>
                       <td>
-                        <span className={`status-badge ${booking.status.toLowerCase()}`}>
+                        <span className={`status-badge ${booking.status?.toLowerCase()}`}>
                           {booking.status}
                         </span>
                       </td>
@@ -287,7 +300,9 @@ const OwnerDashboard = () => {
           <div className="section">
             <h2>My Listings</h2>
             {loading ? (
-              <p>Loading listings...</p>
+              <div style={{ padding: '30px 0', textAlign: 'center' }}>
+                <Loader size="md" text="Loading my listings..." />
+              </div>
             ) : listings.length === 0 ? (
               <p>You haven't added any listings yet.</p>
             ) : (
@@ -313,10 +328,16 @@ const OwnerDashboard = () => {
           </div>
         </div>
       </div>
-      
+
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
+      )}
     </div>
   );
 };
 
 export default OwnerDashboard;
-

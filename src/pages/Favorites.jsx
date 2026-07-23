@@ -2,27 +2,36 @@ import React, { useState, useEffect } from 'react';
 import DestinationCard from '../components/DestinationCard';
 import HomestayCard from '../components/HomestayCard';
 import { useFavorites } from '../context/FavoritesContext';
+import { Loader, Toast } from '../components/ui';
 import './Favorites.css';
 
 const Favorites = () => {
   const { favorites, removeFavorite } = useFavorites();
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
-    // Simulate loading for better UX
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setLoading(false);
-    }, 500);
+    }, 300);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleRemove = (id) => {
     removeFavorite(id);
+    setToast({ message: 'Item removed from favorites', type: 'info' });
   };
 
   const destinations = favorites.filter(f => f.type === 'destination');
   const homestays = favorites.filter(f => f.type === 'homestay');
 
-  if (loading) return <div className="loading">Loading favorites...</div>;
+  if (loading) {
+    return (
+      <div className="favorites-page" style={{ padding: '80px 0', textAlign: 'center' }}>
+        <Loader size="lg" text="Loading your saved favorites..." />
+      </div>
+    );
+  }
 
   return (
     <div className="favorites-page">
@@ -77,6 +86,14 @@ const Favorites = () => {
           </div>
         )}
       </div>
+
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
+      )}
     </div>
   );
 };

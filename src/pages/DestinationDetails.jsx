@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
 import ReviewCard from '../components/ReviewCard';
 import MapView from '../components/MapView';
+import { Loader, Toast } from '../components/ui';
 import './DestinationDetails.css';
 
 const DestinationDetails = () => {
@@ -16,6 +17,7 @@ const DestinationDetails = () => {
   
   const [destination, setDestination] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState(null);
   
   const [selectedDates, setSelectedDates] = useState({ checkIn: '', checkOut: '' });
   const [guests, setGuests] = useState(1);
@@ -28,6 +30,7 @@ const DestinationDetails = () => {
   useEffect(() => {
     const fetchDestination = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(`/api/destinations/${id}`);
         setDestination({
           ...response.data,
@@ -35,6 +38,10 @@ const DestinationDetails = () => {
         });
       } catch (error) {
         console.error('Error fetching destination:', error);
+        setToast({
+          message: error.response?.data?.message || 'Failed to load destination details from server.',
+          type: 'error'
+        });
       } finally {
         setLoading(false);
       }
@@ -43,20 +50,23 @@ const DestinationDetails = () => {
     fetchDestination();
   }, [id]);
 
-  const isFavorite = destination ? checkIsFavorite(destination._id) : false;
+  const isFavorite = destination ? checkIsFavorite(destination._id || destination.id) : false;
 
   const handleFavorite = () => {
     if (!destination) return;
+    const destId = destination._id || destination.id;
     if (isFavorite) {
-      removeFavorite(destination._id);
+      removeFavorite(destId);
+      setToast({ message: 'Removed from favorites', type: 'info' });
     } else {
       addFavorite(destination, 'destination');
+      setToast({ message: 'Saved to favorites!', type: 'success' });
     }
   };
 
   const parsePrice = (priceStr) => {
     if (!priceStr) return 0;
-    const match = priceStr.match(/\d+/);
+    const match = String(priceStr).match(/\d+/);
     return match ? parseInt(match[0], 10) : 0;
   };
 
@@ -78,16 +88,16 @@ const DestinationDetails = () => {
   const handleBooking = async (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
-      alert("Please login to book this destination!");
+      setToast({ message: 'Please login to book this destination!', type: 'info' });
       navigate('/login');
       return;
     }
     if (user?.userType === 'host') {
-      alert('Host-only accounts cannot create bookings. Use a traveler account or a traveler+host account.');
+      setToast({ message: 'Host-only accounts cannot create bookings.', type: 'error' });
       return;
     }
     if (nights <= 0) {
-      alert("Please check your Check-in and Check-out dates. Ensure checkout is after check-in.");
+      setToast({ message: 'Please check your dates. Checkout must be after check-in.', type: 'error' });
       return;
     }
 
@@ -101,7 +111,7 @@ const DestinationDetails = () => {
         totalPrice: grandTotal,
         image: destination.image,
         host: destination.host,
-        itemId: destination._id,
+        itemId: destination._id || destination.id,
         guestName: user.name
       };
 
@@ -109,7 +119,10 @@ const DestinationDetails = () => {
       setShowBookingSuccess(true);
     } catch (err) {
       console.error('Error creating booking:', err);
-      alert(err.response?.data?.message || 'Failed to submit booking. Please try again.');
+      setToast({
+        message: err.response?.data?.message || 'Failed to submit booking. Please try again.',
+        type: 'error'
+      });
     }
   };
 
@@ -117,7 +130,7 @@ const DestinationDetails = () => {
     e.preventDefault();
 
     if (!isAuthenticated) {
-      alert('Please login to contact the host.');
+      setToast({ message: 'Please login to contact the host.', type: 'info' });
       navigate('/login');
       return;
     }
@@ -132,20 +145,36 @@ const DestinationDetails = () => {
       setContactStatus('');
       await axios.post('/api/bookings/contact-host', {
         type: 'Destination',
-        itemId: destination._id,
+        itemId: destination._id || destination.id,
         message: contactMessage.trim(),
       });
       setContactStatus('Message sent to host successfully.');
       setContactMessage('');
+      setToast({ message: 'Message sent to host successfully!', type: 'success' });
     } catch (err) {
-      setContactStatus(err.response?.data?.message || 'Failed to contact host.');
+      const msg = err.response?.data?.message || 'Failed to contact host.';
+      setContactStatus(msg);
+      setToast({ message: msg, type: 'error' });
     } finally {
       setContactSending(false);
     }
   };
 
-  if (loading) return <div className="loading">Loading destination details...</div>;
-  if (!destination) return <div className="error">Destination not found</div>;
+  if (loading) {
+    return (
+      <div style={{ padding: '100px 0', textAlign: 'center' }}>
+        <Loader size="lg" text="Loading destination details..." />
+      </div>
+    );
+  }
+
+  if (!destination) {
+    return (
+      <div className="error" style={{ textAlign: 'center', padding: '100px 0', fontSize: '1.2rem', color: '#666' }}>
+        Destination not found
+      </div>
+    );
+  }
 
   return (
     <div className="destination-details">
@@ -172,14 +201,16 @@ const DestinationDetails = () => {
             <p>{destination.longDescription}</p>
           </div>
 
-          <div className="details-section">
-            <h2>Highlights</h2>
-            <ul className="highlights-list">
-              {destination.highlights.map((highlight, idx) => (
-                <li key={idx}>✓ {highlight}</li>
-              ))}
-            </ul>
-          </div>
+          {destination.highlights && destination.highlights.length > 0 && (
+            <div className="details-section">
+              <h2>Highlights</h2>
+              <ul className="highlights-list">
+                {destination.highlights.map((highlight, idx) => (
+                  <li key={idx}>✓ {highlight}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div className="details-section">
             <h2>Location</h2>
@@ -192,10 +223,14 @@ const DestinationDetails = () => {
           </div>
 
           <div className="details-section">
-            <h2>Reviews ({destination.reviews.length})</h2>
-            {destination.reviews.map(review => (
-              <ReviewCard key={review.id} {...review} />
-            ))}
+            <h2>Reviews ({destination.reviews?.length || 0})</h2>
+            {destination.reviews && destination.reviews.length > 0 ? (
+              destination.reviews.map(review => (
+                <ReviewCard key={review.id || review._id} {...review} />
+              ))
+            ) : (
+              <p style={{ color: '#888' }}>No reviews yet for this destination.</p>
+            )}
           </div>
         </div>
 
@@ -204,15 +239,17 @@ const DestinationDetails = () => {
             <div className="detail-booking-card">
               <div className="price-section">
                 <span className="price">{destination.price}</span>
-                <span className="rating">⭐ {destination.rating} ({destination.reviewsCount} reviews)</span>
+                <span className="rating">⭐ {destination.rating} ({destination.reviewsCount || destination.reviews?.length || 0} reviews)</span>
               </div>
 
-              <div className="amenities-section">
-                <h3>Included</h3>
-                {destination.amenities.map((amenity, idx) => (
-                  <p key={idx}>• {amenity}</p>
-                ))}
-              </div>
+              {destination.amenities && destination.amenities.length > 0 && (
+                <div className="amenities-section">
+                  <h3>Included</h3>
+                  {destination.amenities.map((amenity, idx) => (
+                    <p key={idx}>• {amenity}</p>
+                  ))}
+                </div>
+              )}
 
               {!canBook && isAuthenticated && user?.userType === 'host' && (
                 <div className="booking-disabled-note">
@@ -276,15 +313,6 @@ const DestinationDetails = () => {
 
               <button className="contact-btn" type="button" onClick={() => setShowContactModal(true)}>Contact Host</button>
             </div>
-
-            <div className="share-section">
-              <h3>Share</h3>
-              <div className="share-buttons">
-                <button className="share-btn">Facebook</button>
-                <button className="share-btn">Twitter</button>
-                <button className="share-btn">Email</button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -296,7 +324,7 @@ const DestinationDetails = () => {
             <div className="modal-icon">⏳</div>
             <h2>Booking Pending Approval</h2>
             <p className="modal-subtitle">
-              Your eco-adventure at {destination.location.split(',')[0]} is awaiting host confirmation.
+              Your eco-adventure at {destination.location?.split(',')[0]} is awaiting host confirmation.
             </p>
             
             <div className="modal-summary-card">
@@ -372,6 +400,14 @@ const DestinationDetails = () => {
             </form>
           </div>
         </div>
+      )}
+
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
       )}
     </div>
   );

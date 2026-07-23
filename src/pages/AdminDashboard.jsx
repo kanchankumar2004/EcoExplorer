@@ -1,13 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import { Loader, Toast } from '../components/ui';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
-  const stats = {
-    totalUsers: 1250,
-    totalListings: 856,
-    totalBookings: 3420,
-    revenue: '$125,400'
-  };
+  const { token } = useAuth();
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    const fetchAdminData = async () => {
+      try {
+        setLoading(true);
+        const config = { headers: { Authorization: `Bearer ${token}` } };
+        const response = await axios.get('/api/admin/stats', config);
+        setData(response.data);
+      } catch (error) {
+        console.error('Failed to fetch admin stats:', error);
+        setToast({
+          message: error.response?.data?.message || 'Failed to load administrative analytics from server',
+          type: 'error'
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (token) {
+      fetchAdminData();
+    } else {
+      setLoading(false);
+    }
+  }, [token]);
+
+  const recentUsers = data?.recentUsers || [];
+  const filteredUsers = recentUsers.filter(u => 
+    !searchTerm.trim() || 
+    u.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    u.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="admin-dashboard">
@@ -15,95 +49,121 @@ const AdminDashboard = () => {
         <div className="dashboard-header">
           <h1>Admin Dashboard</h1>
           <div className="header-actions">
-            <input type="text" placeholder="Search..." className="search-box" />
+            <input 
+              type="text" 
+              placeholder="Filter users..." 
+              className="search-box" 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
         </div>
 
-        <div className="stats-grid">
-          <div className="stat-card">
-            <span className="stat-icon">👥</span>
-            <div className="stat-content">
-              <p className="stat-label">Total Users</p>
-              <p className="stat-value">{stats.totalUsers}</p>
+        {loading ? (
+          <div style={{ padding: '60px 0', textAlign: 'center' }}>
+            <Loader size="lg" text="Loading real-time admin analytics..." />
+          </div>
+        ) : (
+          <>
+            <div className="stats-grid">
+              <div className="stat-card">
+                <span className="stat-icon">👥</span>
+                <div className="stat-content">
+                  <p className="stat-label">Total Users</p>
+                  <p className="stat-value">{data?.totalUsers ?? 0}</p>
+                </div>
+              </div>
+
+              <div className="stat-card">
+                <span className="stat-icon">🏠</span>
+                <div className="stat-content">
+                  <p className="stat-label">Total Listings</p>
+                  <p className="stat-value">{data?.totalListings ?? 0}</p>
+                </div>
+              </div>
+
+              <div className="stat-card">
+                <span className="stat-icon">📅</span>
+                <div className="stat-content">
+                  <p className="stat-label">Total Bookings</p>
+                  <p className="stat-value">{data?.totalBookings ?? 0}</p>
+                </div>
+              </div>
+
+              <div className="stat-card">
+                <span className="stat-icon">💰</span>
+                <div className="stat-content">
+                  <p className="stat-label">Platform Revenue</p>
+                  <p className="stat-value">{data?.revenue ?? '$0'}</p>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className="stat-card">
-            <span className="stat-icon">🏠</span>
-            <div className="stat-content">
-              <p className="stat-label">Total Listings</p>
-              <p className="stat-value">{stats.totalListings}</p>
+            <div className="admin-content">
+              <div className="admin-section">
+                <h2>Recent Users ({filteredUsers.length})</h2>
+                {filteredUsers.length === 0 ? (
+                  <p style={{ color: '#888', marginTop: '10px' }}>No users found.</p>
+                ) : (
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Joined</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredUsers.map((u) => (
+                        <tr key={u._id}>
+                          <td>{u.name}</td>
+                          <td>{u.email}</td>
+                          <td>
+                            <span className={`badge ${u.userType === 'admin' ? 'admin' : 'active'}`}>
+                              {u.userType || 'traveler'}
+                            </span>
+                          </td>
+                          <td>{u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+
+              <div className="admin-section">
+                <h2>System Overview</h2>
+                <ul className="report-list">
+                  <li>
+                    <span>Destinations Count</span>
+                    <span className="report-count">{data?.reports?.totalDestinations ?? 0}</span>
+                  </li>
+                  <li>
+                    <span>Homestays Count</span>
+                    <span className="report-count">{data?.reports?.totalHomestays ?? 0}</span>
+                  </li>
+                  <li>
+                    <span>Pending Bookings</span>
+                    <span className="report-count">{data?.reports?.pendingBookings ?? 0}</span>
+                  </li>
+                  <li>
+                    <span>Canceled Bookings</span>
+                    <span className="report-count">{data?.reports?.canceledBookings ?? 0}</span>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </div>
+          </>
+        )}
 
-          <div className="stat-card">
-            <span className="stat-icon">📅</span>
-            <div className="stat-content">
-              <p className="stat-label">Total Bookings</p>
-              <p className="stat-value">{stats.totalBookings}</p>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <span className="stat-icon">💰</span>
-            <div className="stat-content">
-              <p className="stat-label">Platform Revenue</p>
-              <p className="stat-value">{stats.revenue}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="admin-content">
-          <div className="admin-section">
-            <h2>Recent Users</h2>
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>User</th>
-                  <th>Email</th>
-                  <th>Status</th>
-                  <th>Joined</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>John Doe</td>
-                  <td>john@example.com</td>
-                  <td><span className="badge active">Active</span></td>
-                  <td>2024-01-15</td>
-                </tr>
-                <tr>
-                  <td>Sarah Wilson</td>
-                  <td>sarah@example.com</td>
-                  <td><span className="badge active">Active</span></td>
-                  <td>2024-01-10</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div className="admin-section">
-            <h2>Reports</h2>
-            <ul className="report-list">
-              <li>
-                <a href="#disputed-bookings">Disputed Bookings</a>
-                <span className="report-count">3</span>
-              </li>
-              <li>
-                <a href="#flagged-listings">Flagged Listings</a>
-                <span className="report-count">5</span>
-              </li>
-              <li>
-                <a href="#user-complaints">User Complaints</a>
-                <span className="report-count">2</span>
-              </li>
-              <li>
-                <a href="#payment-issues">Payment Issues</a>
-                <span className="report-count">1</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        {toast && (
+          <Toast 
+            message={toast.message} 
+            type={toast.type} 
+            onClose={() => setToast(null)} 
+          />
+        )}
       </div>
     </div>
   );

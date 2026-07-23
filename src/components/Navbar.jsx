@@ -80,6 +80,11 @@ const Navbar = () => {
           
           {isAuthenticated ? (
             <>
+              <li className="nav-item">
+                <NavLink to="/dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
+                  Dashboard
+                </NavLink>
+              </li>
               {(user?.userType === 'admin') && (
                 <li className="nav-item">
                   <NavLink to="/admin-dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>

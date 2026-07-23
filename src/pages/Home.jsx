@@ -5,6 +5,7 @@ import Hero from '../components/Hero';
 import SearchBar from '../components/SearchBar';
 import DestinationCard from '../components/DestinationCard';
 import HomestayCard from '../components/HomestayCard';
+import { Loader, Toast } from '../components/ui';
 import './Home.css';
 
 const Home = () => {
@@ -13,10 +14,12 @@ const Home = () => {
   const [destinations, setDestinations] = useState([]);
   const [homestays, setHomestays] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const [destRes, homeRes] = await Promise.all([
           axios.get('/api/destinations'),
           axios.get('/api/homestays')
@@ -24,7 +27,11 @@ const Home = () => {
         setDestinations(destRes.data);
         setHomestays(homeRes.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching home data:', error);
+        setToast({
+          message: error.response?.data?.message || 'Failed to connect to backend server. Please try again.',
+          type: 'error'
+        });
       } finally {
         setLoading(false);
       }
@@ -51,13 +58,13 @@ const Home = () => {
   const getFilteredResults = () => {
     if (!searchResults) return { filteredDestinations: [], filteredHomestays: [] };
     const { query, filters } = searchResults;
-    const lowerQuery = query.toLowerCase();
+    const lowerQuery = (query || '').toLowerCase();
 
     const matchesQuery = (item) => {
       if (!query) return true;
       return (
-        item.name.toLowerCase().includes(lowerQuery) || 
-        item.location.toLowerCase().includes(lowerQuery) || 
+        (item.name && item.name.toLowerCase().includes(lowerQuery)) || 
+        (item.location && item.location.toLowerCase().includes(lowerQuery)) || 
         (item.tags && item.tags.some(t => t.toLowerCase().includes(lowerQuery)))
       );
     };
@@ -75,7 +82,7 @@ const Home = () => {
     const matchesRating = (item) => {
       if (filters.rating === 'all') return true;
       const rating = Number(filters.rating);
-      return item.rating >= rating;
+      return (item.rating || 0) >= rating;
     };
 
     let filteredDestinations = destinations.filter(d => matchesQuery(d) && matchesPrice(d) && matchesRating(d));
@@ -152,7 +159,9 @@ const Home = () => {
             </div>
 
             {loading ? (
-              <p>Loading destinations...</p>
+              <div style={{ padding: '40px 0', textAlign: 'center' }}>
+                <Loader size="lg" text="Loading featured destinations..." />
+              </div>
             ) : (
               <div className="cards-grid">
                 {featuredDestinations.map(destination => (
@@ -169,7 +178,9 @@ const Home = () => {
             </div>
 
             {loading ? (
-              <p>Loading homestays...</p>
+              <div style={{ padding: '40px 0', textAlign: 'center' }}>
+                <Loader size="lg" text="Loading featured homestays..." />
+              </div>
             ) : (
               <div className="cards-grid">
                 {featuredHomestays.map(homestay => (
@@ -186,6 +197,14 @@ const Home = () => {
         <p>Join thousands of travelers exploring sustainable tourism</p>
         <button className="cta-btn" onClick={() => navigate('/destinations')}>Explore Now</button>
       </div>
+
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
+      )}
     </div>
   );
 };

@@ -21,6 +21,7 @@ import OwnerDashboard from './pages/OwnerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import Showcase from './pages/Showcase';
 import Messages from './pages/Messages';
+import Dashboard from './pages/Dashboard';
 
 // Private Route Component
 const PrivateRoute = ({ children }) => {
@@ -90,6 +91,17 @@ function AppContent() {
           <MainLayout>
             <TravelPlanner />
           </MainLayout>
+        }
+      />
+
+      <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute>
+            <MainLayout>
+              <Dashboard />
+            </MainLayout>
+          </PrivateRoute>
         }
       />
 

@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
 import ReviewCard from '../components/ReviewCard';
 import MapView from '../components/MapView';
+import { Loader, Toast } from '../components/ui';
 import './HomestayDetails.css';
 
 const HomestayDetails = () => {
@@ -24,10 +25,12 @@ const HomestayDetails = () => {
   const [contactStatus, setContactStatus] = useState('');
   const [homestay, setHomestay] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     const fetchHomestay = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(`/api/homestays/${id}`);
         setHomestay({
           ...response.data,
@@ -35,6 +38,10 @@ const HomestayDetails = () => {
         });
       } catch (error) {
         console.error('Error fetching homestay:', error);
+        setToast({
+          message: error.response?.data?.message || 'Failed to load homestay details from server.',
+          type: 'error'
+        });
       } finally {
         setLoading(false);
       }
@@ -43,14 +50,17 @@ const HomestayDetails = () => {
     fetchHomestay();
   }, [id]);
 
-  const isFavorite = homestay ? checkIsFavorite(homestay._id) : false;
+  const isFavorite = homestay ? checkIsFavorite(homestay._id || homestay.id) : false;
 
   const handleFavorite = () => {
     if (!homestay) return;
+    const homestayId = homestay._id || homestay.id;
     if (isFavorite) {
-      removeFavorite(homestay._id);
+      removeFavorite(homestayId);
+      setToast({ message: 'Removed from favorites', type: 'info' });
     } else {
       addFavorite(homestay, 'homestay');
+      setToast({ message: 'Saved to favorites!', type: 'success' });
     }
   };
 
@@ -58,7 +68,7 @@ const HomestayDetails = () => {
     setSelectedExperiences(prev => 
       prev.includes(expId) 
         ? prev.filter(id => id !== expId) 
-         : [...prev, expId]
+        : [...prev, expId]
     );
   };
 
@@ -85,16 +95,16 @@ const HomestayDetails = () => {
   const handleBooking = async (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
-      alert("Please login to book this homestay!");
+      setToast({ message: 'Please login to book this homestay!', type: 'info' });
       navigate('/login');
       return;
     }
     if (user?.userType === 'host') {
-      alert('Host-only accounts cannot create bookings. Use a traveler account or a traveler+host account.');
+      setToast({ message: 'Host-only accounts cannot create bookings.', type: 'error' });
       return;
     }
     if (nights <= 0) {
-      alert("Please check your Check-in and Check-out dates. Ensure checkout is after check-in.");
+      setToast({ message: 'Please check your dates. Checkout must be after check-in.', type: 'error' });
       return;
     }
 
@@ -108,7 +118,7 @@ const HomestayDetails = () => {
         totalPrice: grandTotal,
         image: homestay.image,
         host: homestay.host,
-        itemId: homestay._id,
+        itemId: homestay._id || homestay.id,
         guestName: user.name
       };
 
@@ -116,7 +126,10 @@ const HomestayDetails = () => {
       setShowBookingSuccess(true);
     } catch (err) {
       console.error('Error creating booking:', err);
-      alert(err.response?.data?.message || 'Failed to submit booking. Please try again.');
+      setToast({
+        message: err.response?.data?.message || 'Failed to submit booking. Please try again.',
+        type: 'error'
+      });
     }
   };
 
@@ -124,7 +137,7 @@ const HomestayDetails = () => {
     e.preventDefault();
 
     if (!isAuthenticated) {
-      alert('Please login to contact the host.');
+      setToast({ message: 'Please login to contact the host.', type: 'info' });
       navigate('/login');
       return;
     }
@@ -139,24 +152,35 @@ const HomestayDetails = () => {
       setContactStatus('');
       await axios.post('/api/bookings/contact-host', {
         type: 'Homestay',
-        itemId: homestay._id,
+        itemId: homestay._id || homestay.id,
         message: contactMessage.trim(),
       });
       setContactStatus('Message sent to host successfully.');
       setContactMessage('');
+      setToast({ message: 'Message sent to host successfully!', type: 'success' });
     } catch (err) {
-      setContactStatus(err.response?.data?.message || 'Failed to contact host.');
+      const msg = err.response?.data?.message || 'Failed to contact host.';
+      setContactStatus(msg);
+      setToast({ message: msg, type: 'error' });
     } finally {
       setContactSending(false);
     }
   };
 
   if (loading) {
-    return <div style={{ padding: '100px', textAlign: 'center' }}>Loading homestay details...</div>;
+    return (
+      <div style={{ padding: '100px 0', textAlign: 'center' }}>
+        <Loader size="lg" text="Loading homestay details..." />
+      </div>
+    );
   }
 
   if (!homestay) {
-    return <div style={{ padding: '100px', textAlign: 'center' }}>Homestay not found</div>;
+    return (
+      <div style={{ padding: '100px 0', textAlign: 'center', fontSize: '1.2rem', color: '#666' }}>
+        Homestay not found
+      </div>
+    );
   }
 
   return (
@@ -184,14 +208,16 @@ const HomestayDetails = () => {
             <p>{homestay.longDescription}</p>
           </div>
 
-          <div className="details-section">
-            <h2>Facilities</h2>
-            <ul className="facilities-list">
-              {homestay.amenities.map((facility, idx) => (
-                <li key={idx}>✓ {facility}</li>
-              ))}
-            </ul>
-          </div>
+          {homestay.amenities && homestay.amenities.length > 0 && (
+            <div className="details-section">
+              <h2>Facilities</h2>
+              <ul className="facilities-list">
+                {homestay.amenities.map((facility, idx) => (
+                  <li key={idx}>✓ {facility}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* LOCAL EXPERIENCES SECTION */}
           {homestay.localExperiences && homestay.localExperiences.length > 0 && (
@@ -252,10 +278,14 @@ const HomestayDetails = () => {
           </div>
 
           <div className="details-section">
-            <h2>Guest Reviews ({homestay.reviews.length})</h2>
-            {homestay.reviews.map(review => (
-              <ReviewCard key={review.id} {...review} />
-            ))}
+            <h2>Guest Reviews ({homestay.reviews?.length || 0})</h2>
+            {homestay.reviews && homestay.reviews.length > 0 ? (
+              homestay.reviews.map(review => (
+                <ReviewCard key={review.id || review._id} {...review} />
+              ))
+            ) : (
+              <p style={{ color: '#888' }}>No reviews yet for this homestay.</p>
+            )}
           </div>
         </div>
 
@@ -264,7 +294,7 @@ const HomestayDetails = () => {
             <div className="booking-form-card">
               <div className="price-section">
                 <span className="price">${homestay.pricePerNight}/night</span>
-                <span className="rating">⭐ {homestay.rating} ({homestay.reviewsCount} reviews)</span>
+                <span className="rating">⭐ {homestay.rating} ({homestay.reviewsCount || homestay.reviews?.length || 0} reviews)</span>
               </div>
 
               {!canBook && isAuthenticated && user?.userType === 'host' && (
@@ -325,7 +355,7 @@ const HomestayDetails = () => {
                     <div className="experiences-breakdown">
                       <div className="breakdown-subtitle">Experiences ({selectedExperiences.length})</div>
                       {selectedExperiences.map(expId => {
-                        const exp = homestay.localExperiences.find(e => e.id === expId);
+                        const exp = homestay.localExperiences?.find(e => e.id === expId);
                         if (!exp) return null;
                         return (
                           <div key={expId} className="breakdown-item item-sub">
@@ -402,10 +432,10 @@ const HomestayDetails = () => {
                   <h4>🌿 Custom Activities Included:</h4>
                   <ul>
                     {selectedExperiences.map(expId => {
-                      const exp = homestay.localExperiences.find(e => e.id === expId);
+                      const exp = homestay.localExperiences?.find(e => e.id === expId);
                       return (
                         <li key={expId}>
-                          • {exp.title} ({exp.duration}) - <em>Hosted by {exp.instructor}</em>
+                          • {exp?.title} ({exp?.duration}) - <em>Hosted by {exp?.instructor}</em>
                         </li>
                       );
                     })}
@@ -422,9 +452,12 @@ const HomestayDetails = () => {
             
             <button 
               className="modal-close-btn" 
-              onClick={() => setShowBookingSuccess(false)}
+              onClick={() => {
+                setShowBookingSuccess(false);
+                navigate('/my-bookings');
+              }}
             >
-              Great, Let's Explorer!
+              Great, Let's Explore!
             </button>
           </div>
         </div>
@@ -461,6 +494,14 @@ const HomestayDetails = () => {
             </form>
           </div>
         </div>
+      )}
+
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
       )}
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
+import { Toast } from './ui';
 import './AIChat.css';
 
 const defaultMessages = [
@@ -14,6 +15,7 @@ const AIChat = () => {
   });
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     localStorage.setItem('aiChatMessages', JSON.stringify(messages));
@@ -23,6 +25,7 @@ const AIChat = () => {
     if (window.confirm("Are you sure you want to delete this chat history?")) {
       setMessages(defaultMessages);
       localStorage.removeItem('aiChatMessages');
+      setToast({ message: 'Chat history cleared.', type: 'info' });
     }
   };
 
@@ -30,7 +33,6 @@ const AIChat = () => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // Add user message
     const userMessage = { id: Date.now(), text: input, sender: 'user' };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
@@ -38,7 +40,7 @@ const AIChat = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/ai/chat', {
+      const response = await axios.post('/api/ai/chat', {
         messages: newMessages
       });
 
@@ -56,6 +58,10 @@ const AIChat = () => {
         sender: 'ai'
       };
       setMessages(prev => [...prev, errorMsg]);
+      setToast({
+        message: 'Could not connect to AI service backend.',
+        type: 'error'
+      });
     } finally {
       setLoading(false);
     }
@@ -104,6 +110,14 @@ const AIChat = () => {
           <i className="fas fa-paper-plane"></i> Send
         </button>
       </form>
+
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
+      )}
     </div>
   );
 };

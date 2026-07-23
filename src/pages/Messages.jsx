@@ -2,39 +2,39 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useSearchParams } from 'react-router-dom';
+import { Loader, Toast } from '../components/ui';
 import './Messages.css';
 
 const Messages = () => {
   const { user, token } = useAuth();
   const [searchParams] = useSearchParams();
   const [conversations, setConversations] = useState([]);
-  const [activeChat, setActiveChat] = useState(null); // { userId, name, avatar, userType }
+  const [activeChat, setActiveChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [toast, setToast] = useState(null);
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
   const pollInterval = useRef(null);
   const chatContainerRef = useRef(null);
-  const shouldAutoScroll = useRef(true);
 
   const config = { headers: { Authorization: `Bearer ${token}` } };
 
-  // Fetch conversations
   const fetchConversations = useCallback(async () => {
     try {
       const { data } = await axios.get('/api/messages/conversations', config);
       setConversations(data);
     } catch (error) {
       console.error('Failed to fetch conversations:', error);
+      setToast({ message: 'Failed to load conversations.', type: 'error' });
     } finally {
       setLoading(false);
     }
   }, [token]);
 
-  // Fetch messages for a specific user
   const fetchMessages = useCallback(async (userId) => {
     try {
       const { data } = await axios.get(`/api/messages/${userId}`, config);
@@ -44,7 +44,6 @@ const Messages = () => {
     }
   }, [token]);
 
-  // Mark messages as read
   const markAsRead = useCallback(async (userId) => {
     try {
       await axios.put(`/api/messages/read/${userId}`, {}, config);
@@ -53,14 +52,14 @@ const Messages = () => {
     }
   }, [token]);
 
-  // Initial load
   useEffect(() => {
     if (token) {
       fetchConversations();
+    } else {
+      setLoading(false);
     }
   }, [token, fetchConversations]);
 
-  // Handle URL param to open a specific conversation
   useEffect(() => {
     const chatWith = searchParams.get('chatWith');
     const chatName = searchParams.get('name');
@@ -74,17 +73,14 @@ const Messages = () => {
       if (existing) {
         handleSelectConversation(existing);
       } else if (chatName) {
-        // New conversation with this user
         setActiveChat({ userId: chatWith, name: chatName, avatar: '', userType: '' });
         setMessages([]);
       }
     }
   }, [searchParams, conversations, activeChat?.userId]);
 
-  // Poll for new messages in active chat
   useEffect(() => {
     if (activeChat) {
-      // Poll every 5 seconds
       pollInterval.current = setInterval(() => {
         fetchMessages(activeChat.userId);
         fetchConversations();
@@ -96,7 +92,6 @@ const Messages = () => {
     };
   }, [activeChat, fetchMessages, fetchConversations]);
 
-  // Only auto-scroll when user is already near the bottom
   const scrollToBottom = (force = false) => {
     const container = chatContainerRef.current;
     if (!container) return;
@@ -123,7 +118,7 @@ const Messages = () => {
 
     await fetchMessages(otherUser._id);
     await markAsRead(otherUser._id);
-    fetchConversations(); // Refresh unread counts
+    fetchConversations();
   };
 
   const handleSendMessage = async (e) => {
@@ -141,14 +136,13 @@ const Messages = () => {
       setNewMessage('');
       fetchConversations();
 
-      // Auto-resize textarea back and force scroll to bottom
       if (textareaRef.current) {
         textareaRef.current.style.height = '44px';
       }
       setTimeout(() => scrollToBottom(true), 50);
     } catch (error) {
       console.error('Failed to send message:', error);
-      alert('Failed to send message. Please try again.');
+      setToast({ message: 'Failed to send message. Please try again.', type: 'error' });
     } finally {
       setSending(false);
     }
@@ -168,9 +162,10 @@ const Messages = () => {
       await axios.delete(`/api/messages/${messageId}`, config);
       setMessages((prev) => prev.filter((m) => m._id !== messageId));
       fetchConversations();
+      setToast({ message: 'Message deleted.', type: 'info' });
     } catch (error) {
       console.error('Failed to delete message:', error);
-      alert(error.response?.data?.message || 'Failed to delete message.');
+      setToast({ message: error.response?.data?.message || 'Failed to delete message.', type: 'error' });
     }
   };
 
@@ -183,9 +178,10 @@ const Messages = () => {
       setActiveChat(null);
       setMessages([]);
       fetchConversations();
+      setToast({ message: 'Conversation deleted.', type: 'info' });
     } catch (error) {
       console.error('Failed to delete conversation:', error);
-      alert(error.response?.data?.message || 'Failed to delete conversation.');
+      setToast({ message: error.response?.data?.message || 'Failed to delete conversation.', type: 'error' });
     }
   };
 
@@ -193,14 +189,12 @@ const Messages = () => {
     const el = e.target;
     setNewMessage(el.value);
 
-    // Auto-resize only if the height would actually change
     const oldHeight = el.style.height;
     el.style.height = 'auto';
     const newHeight = Math.min(el.scrollHeight, 120) + 'px';
     
     if (oldHeight !== newHeight) {
       el.style.height = newHeight;
-      // Scroll to bottom to keep input visible if container height changed
       setTimeout(() => scrollToBottom(true), 10);
     } else {
       el.style.height = oldHeight;
@@ -241,7 +235,6 @@ const Messages = () => {
     return date.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
   };
 
-  // Group messages by date
   const groupedMessages = messages.reduce((groups, msg) => {
     const dateKey = new Date(msg.createdAt).toDateString();
     if (!groups[dateKey]) groups[dateKey] = [];
@@ -284,8 +277,8 @@ const Messages = () => {
 
             <div className="conversations-list">
               {loading ? (
-                <div className="conversations-empty">
-                  <p>Loading conversations...</p>
+                <div style={{ padding: '40px 0', textAlign: 'center' }}>
+                  <Loader size="md" text="Loading messages..." />
                 </div>
               ) : filteredConversations.length === 0 ? (
                 <div className="conversations-empty">
@@ -461,6 +454,14 @@ const Messages = () => {
           </div>
         </div>
       </div>
+
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast(null)} 
+        />
+      )}
     </div>
   );
 };

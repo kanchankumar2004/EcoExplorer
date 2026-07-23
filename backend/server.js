@@ -14,6 +14,7 @@ import destinationRoutes from './routes/destinationRoutes.js';
 import homestayRoutes from './routes/homestayRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -57,6 +58,7 @@ app.use('/api/destinations', destinationRoutes);
 app.use('/api/homestays', homestayRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Root route
 app.get('/', (req, res) => {

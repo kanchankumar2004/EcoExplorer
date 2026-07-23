@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { Toast } from '../components/ui';
 import './Profile.css';
 
 const Profile = () => {
@@ -329,9 +330,11 @@ const Profile = () => {
     <div className="profile-page">
       <div className="profile-container">
         {alert.text && (
-          <div className={`alert-banner ${alert.type === 'error' ? 'alert-error' : 'alert-success'}`}>
-            {alert.text}
-          </div>
+          <Toast 
+            message={alert.text} 
+            type={alert.type === 'error' ? 'error' : 'success'} 
+            onClose={() => setAlert({ text: '', type: '' })} 
+          />
         )}
 
         <div className="profile-header">

@@ -22,7 +22,7 @@ const Login = () => {
     if (token) {
       loginWithToken(token).then((result) => {
         if (result.success) {
-          navigate('/');
+          navigate('/dashboard');
         } else {
           setError('OAuth login failed.');
         }
@@ -63,10 +63,8 @@ const Login = () => {
     if (result.success) {
       if (result.user?.userType === 'admin') {
         navigate('/admin-dashboard');
-      } else if (result.user?.userType === 'host') {
-        navigate('/owner-dashboard');
       } else {
-        navigate('/');
+        navigate('/dashboard');
       }
     } else {
       setError(result.message || 'Invalid email or password.');
