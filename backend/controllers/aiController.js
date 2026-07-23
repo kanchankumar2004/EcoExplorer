@@ -27,7 +27,7 @@ export const chatWithAI = async (req, res, next) => {
     const systemInstruction = "You are a friendly and knowledgeable AI Travel Planner for an eco-tourism app called EcoExplorer. Always focus on sustainable travel, eco-friendly stays, and green transportation. Keep responses concise, engaging, and beautifully formatted with bullet points when applicable.";
     
     const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash',
+      model: 'gemini-flash-latest',
       contents: formattedMessages,
       config: {
         systemInstruction,
