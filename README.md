@@ -157,3 +157,22 @@ erDiagram
 * `POST /api/messages` — Send a new in-app message.
 * `DELETE /api/messages/:messageId` — Delete a single sent message.
 * `DELETE /api/messages/conversation/:userId` — Delete the entire chat history with a user.
+
+---
+
+## 🌐 Live Deployment & Tech Stack
+
+### 🔗 Live URLs
+* **Frontend (Vercel):** [https://your-app.vercel.app](https://your-app.vercel.app) *(Replace with your actual Vercel URL)*
+* **Backend (Render/Railway):** [https://your-api.onrender.com](https://your-api.onrender.com) *(Replace with your actual backend URL)*
+
+### 🛠️ Tech Stack Summary
+* **Frontend:** React, Vite, Tailwind CSS v4, Axios, Leaflet (Map Integration)
+* **Backend:** Node.js, Express, Mongoose (MongoDB Atlas), Passport.js (GitHub OAuth)
+* **AI Integration:** Google Gemini API (`gemini-3.5-flash`)
+* **Email Service:** Nodemailer
+
+### ⚠️ Known Limitations on Free Tier
+* **Backend Cold Starts:** Because the backend runs on Render's free tier, the server automatically spins down after 15 minutes of inactivity. When a user first visits the app after it has been idle, the initial API request (e.g., during login or checking status) will take **30–60 seconds** to wake up the server. Subsequent requests will be fast.
+* **Database Connection Limits:** MongoDB Atlas (M0 Free Tier) has a connection limit of 500 concurrent connections, which is plenty for evaluation but not suitable for high traffic.
+* **Gemini API Free Tier limits:** Free tier API keys for Google Gemini are subject to rate limiting (typically 15 RPM / 1 million TPM).
