@@ -23,6 +23,22 @@ EcoExplorer is a modern, full-stack platform designed to facilitate sustainable 
 
 ---
 
+## 📸 Application Previews
+
+Below are screenshots of the EcoExplorer application in action, showcasing the user interface, destination directory, host management tools, and AI itinerary features.
+
+<p align="center">
+  <img src="image/1.png" alt="EcoExplorer Interface 1" width="48%" />
+  <img src="image/2.png" alt="EcoExplorer Interface 2" width="48%" />
+</p>
+<br />
+<p align="center">
+  <img src="image/3.png" alt="EcoExplorer Interface 3" width="48%" />
+  <img src="image/4.png" alt="EcoExplorer Interface 4" width="48%" />
+</p>
+
+---
+
 ## 📁 Repository Structure
 
 ```
