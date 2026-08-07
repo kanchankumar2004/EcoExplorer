@@ -179,8 +179,8 @@ erDiagram
 ## 🌐 Live Deployment & Tech Stack
 
 ### 🔗 Live URLs
-* **Frontend (Vercel):** [https://your-app.vercel.app](https://your-app.vercel.app) *(Replace with your actual Vercel URL)*
-* **Backend (Render/Railway):** [https://your-api.onrender.com](https://your-api.onrender.com) *(Replace with your actual backend URL)*
+* **Frontend (Vercel):** https://eco-explorer-six.vercel.app/ 
+* **Backend (Render/Railway):** https://ecoexplorer-xao5.onrender.com 
 
 ### 🛠️ Tech Stack Summary
 * **Frontend:** React, Vite, Tailwind CSS v4, Axios, Leaflet (Map Integration)
