@@ -90,6 +90,10 @@ const DestinationDetails = () => {
 
   const canBook = isAuthenticated && !isOwnListing;
 
+  const nights = calculateNights();
+  const pricePerNight = parsePrice(destination?.price);
+  const grandTotal = nights * pricePerNight * guests;
+
   const handleBooking = async (e) => {
     e.preventDefault();
     if (!isAuthenticated) {

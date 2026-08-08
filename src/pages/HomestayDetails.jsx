@@ -92,6 +92,14 @@ const HomestayDetails = () => {
 
   const canBook = isAuthenticated && !isOwnListing;
 
+  const nights = calculateNights();
+  const stayTotal = nights * (homestay?.pricePerNight || 0);
+  const experiencesTotal = selectedExperiences.reduce((sum, expId) => {
+    const exp = homestay.localExperiences?.find(e => e.id === expId);
+    return sum + (exp ? exp.price * guests : 0);
+  }, 0);
+  const grandTotal = stayTotal + experiencesTotal;
+
   const handleBooking = async (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
